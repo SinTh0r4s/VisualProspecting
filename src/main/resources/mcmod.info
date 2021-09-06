@@ -1,0 +1,16 @@
+[
+{
+  "modid": "visualprospecting",
+  "name": "VisualProspecting",
+  "description": "VisualProspecting tracks discovered GT Ore Veins and displays them in JourneyMap",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["SinTh0r4s"],
+  "credits": "The Forge and FML guys, for making this example",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
