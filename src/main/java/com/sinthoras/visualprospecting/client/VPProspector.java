@@ -13,7 +13,5 @@ public class VPProspector
     public static void prospectPotentialNewVein(World world, int blockX, int blockY, int blockZ)
     {
         VP.info("clicked\n");
-
-        VPVeinCaching.getVeinTypes();
     }
 }

@@ -9,18 +9,15 @@ import java.util.List;
 import static com.sinthoras.visualprospecting.VPUtils.isBartworksInstalled;
 import static com.sinthoras.visualprospecting.client.VPReflection.*;
 
-public class VPVeinCaching {
+public class VPVeinCaching implements Runnable {
 
     public static List<VPVeinType> veinTypes;
 
     // BartWorks initializes veins in FML preInit
     // GalacticGreg initializes veins in FML postInit, but only copies all base game veins to make them available on all planets
     // GregTech initializes veins in a thread in FML postInit
-    // Therefore, this method must be called the first time the data is required ingame. Singletone style
-    public static List<VPVeinType> getVeinTypes() {
-        if(veinTypes != null)
-            return veinTypes;
-
+    // Therefore, this method must be called after GregTech postInit
+    public void run() {
         veinTypes = new ArrayList<>();
         for(GT_Worldgen_GT_Ore_Layer vein : GT_Worldgen_GT_Ore_Layer.sList) {
             veinTypes.add(new VPVeinType(vein.mWorldGenName, vein.mPrimaryMeta, vein.mSecondaryMeta, vein.mBetweenMeta, vein.mSporadicMeta));
@@ -39,6 +36,5 @@ public class VPVeinCaching {
         for(VPVeinType veinType : veinTypes) {
             VP.info(veinType.name + " " + veinType.primaryOreMeta + " " + veinType.secondaryOreMeta + " " + veinType.inBetweenOreMeta + " " + veinType.sporadicOreMeta);
         }
-        return veinTypes;
     }
 }
