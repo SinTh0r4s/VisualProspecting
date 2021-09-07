@@ -1,8 +1,6 @@
 package com.sinthoras.visualprospecting.hooks;
 
-import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.VPTags;
-
+import com.sinthoras.visualprospecting.blocks.VPDemoBlock;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -12,9 +10,7 @@ import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraftforge.common.MinecraftForge;
 
 
@@ -23,7 +19,7 @@ public class VPHooksShared {
 	// preInit "Run before anything else. Read your config, create blocks, items, 
 	// etc, and register them with the GameRegistry."
 	public void fmlLifeCycleEvent(FMLPreInitializationEvent event) 	{
-
+		GameRegistry.registerBlock(new VPDemoBlock(), VPDemoBlock.NAME);
 	}
 	
 	// load "Do your mod setup. Build whatever data structures you care about. Register recipes."
