@@ -9,6 +9,10 @@ public class VP {
 
     public static SimpleNetworkWrapper network;
     private static Logger LOG = LogManager.getLogger(VPTags.MODID);
+    public static final int chunkWidth = 16;
+    public static final int chunkHeight = 16;
+    public static final int chunkDepth = 16;
+    public static final int gregTechSmallOreMinimumMeta = 16000;
 
 
     public static void debug(String message) {
