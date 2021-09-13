@@ -1,5 +1,6 @@
 package com.sinthoras.visualprospecting.hooks;
 
+import com.sinthoras.visualprospecting.VPConfig;
 import com.sinthoras.visualprospecting.blocks.VPDemoBlock;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -19,6 +20,8 @@ public class VPHooksShared {
 	// preInit "Run before anything else. Read your config, create blocks, items, 
 	// etc, and register them with the GameRegistry."
 	public void fmlLifeCycleEvent(FMLPreInitializationEvent event) 	{
+		VPConfig.syncronizeConfiguration(event.getSuggestedConfigurationFile());
+
 		GameRegistry.registerBlock(new VPDemoBlock(), VPDemoBlock.NAME);
 	}
 	
