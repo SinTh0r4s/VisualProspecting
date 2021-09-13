@@ -14,6 +14,7 @@ public class VPReflection {
     private static Field veinSecondaryOreMeta;
     private static Field veinInBetweenOreMeta;
     private static Field veinSporadicOreMeta;
+    private static Field veinSize;
 
     static {
         if(isBartworksInstalled()) {
@@ -24,6 +25,7 @@ public class VPReflection {
                 veinSecondaryOreMeta = bw_OreLayer.getDeclaredField("mSecondaryMeta");
                 veinInBetweenOreMeta = bw_OreLayer.getDeclaredField("mBetweenMeta");
                 veinSporadicOreMeta = bw_OreLayer.getDeclaredField("mSporadicMeta");
+                veinSize = bw_OreLayer.getDeclaredField("mSize");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -78,6 +80,15 @@ public class VPReflection {
     public static short getBWOreVeinSporadicMeta(Object vein) {
         try {
             return (short)veinSporadicOreMeta.getInt(vein);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public static int getBWOreVeinSize(Object vein) {
+        try {
+            return veinSize.getInt(vein);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             return 0;
