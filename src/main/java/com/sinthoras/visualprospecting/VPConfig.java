@@ -7,7 +7,7 @@ public class VPConfig {
     private static class Defaults {
         public static final boolean enableProspecting = true;
         public static final int veinSearchDiameter = 8;
-        public static final int veinIdentificationHeightUpDown = 5;
+        public static final int veinIdentificationMaxUpDown = 10;
     }
 
     private static class Categories {
@@ -16,7 +16,7 @@ public class VPConfig {
 
     public static boolean enableProspecting;
     public static int veinSearchDiameter;
-    public static int veinIdentificationHeightUpDown;
+    public static int veinIdentificationMaxUpDown;
 
     public static void syncronizeConfiguration(java.io.File configurationFile) {
         Configuration configuration = new Configuration(configurationFile);
@@ -31,9 +31,9 @@ public class VPConfig {
                         "the lower it takes, but the lower is the chance to miss/missidentify a vein.");
         veinSearchDiameter = veinSearchDiameterProperty.getInt();
 
-        Property veinIdentificationHeightUpDownProperty = configuration.get(Categories.general, "veinIdentificationHeightUpDown",
-                Defaults.veinIdentificationHeightUpDown, "What height will be looked up and down when " +
-                        "prospecting is looking for all vein metas.");
-        veinIdentificationHeightUpDown = veinIdentificationHeightUpDownProperty.getInt();
+        Property veinIdentificationMaxUpDownProperty = configuration.get(Categories.general, "veinIdentificationMaxUpDown",
+                Defaults.veinIdentificationMaxUpDown, "What height will be looked up and down when " +
+                        "prospecting is looking for all vein metas. This is a upper limit. Will terminate earlier if possible!");
+        veinIdentificationMaxUpDown = veinIdentificationMaxUpDownProperty.getInt();
     }
 }
