@@ -83,7 +83,7 @@ repositories {
 }
 
 dependencies {
-    compile("com.github.GTNewHorizons:GT5-Unofficial:experimental-SNAPSHOT:dev") {
+    compile("com.github.GTNewHorizons:GT5-Unofficial:visual-prospecting-interop-SNAPSHOT:dev") {
         setChanging(true)
     }
 }
