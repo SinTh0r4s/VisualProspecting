@@ -1,8 +1,10 @@
 package com.sinthoras.visualprospecting.client;
 
 import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.VPConfig;
 import com.sinthoras.visualprospecting.VPUtils;
 import com.sinthoras.visualprospecting.client.database.VPVeinCaching;
+import com.sinthoras.visualprospecting.client.database.VPVeinType;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.common.blocks.GT_Block_Ores_Abstract;
@@ -12,12 +14,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 
-public class VPProspector
-{
+
+public class VPProspector {
     @SideOnly(Side.CLIENT)
-    public static void prospectPotentialNewVein(World world, int blockX, int blockY, int blockZ, short oreMeta)
-    {
+    public static void prospectPotentialNewVein(World world, int blockX, int blockY, int blockZ, short oreMeta) {
         final int chunkX = VPUtils.coordBlockToChunk(blockX);
         final int chunkZ = VPUtils.coordBlockToChunk(blockZ);
         final int oreChunkX = toOreChunkCenter(chunkX);
@@ -29,7 +32,8 @@ public class VPProspector
         if(world.getChunkProvider().chunkExists(oreChunkX, oreChunkZ)) {
             VP.info("Checking closest chunk");
             if (chunkContainsOre(world, oreChunkX, oreChunkZ, oreMeta, blockY)) {
-                // identify vein
+                VP.info("Found ORE!");
+                final VPVeinType veinType = identifyVein(world, oreChunkX, oreChunkZ, blockY);
                 // add to prospected
                 return;
             }
@@ -77,41 +81,107 @@ public class VPProspector
             else
                 return;
 
-            if(world.getChunkProvider().chunkExists(oreChunkX + offsetX1, oreChunkZ + offsetZ1)) {
-                VP.info("Checking secondary chunk 1");
-                if (chunkContainsOre(world, oreChunkX + offsetX1, oreChunkZ + offsetZ1, oreMeta, blockY)) {
-                    // identify vein
-                    // add to prospected
-                    return;
+            for(int secondaryOreChunkId = 0;secondaryOreChunkId < offsetX.length;secondaryOreChunkId++) {
+                final int secondaryOreChunkX = oreChunkX + offsetX[secondaryOreChunkId];
+                final int secondaryOreChunkZ = oreChunkZ + offsetZ[secondaryOreChunkId];
+                if (world.getChunkProvider().chunkExists(secondaryOreChunkX, secondaryOreChunkZ)) {
+                    VP.info("Checking secondary chunk " + secondaryOreChunkId);
+                    if (chunkContainsOre(world, secondaryOreChunkX, secondaryOreChunkZ, oreMeta, blockY)) {
+                        VP.info("Found ORE!");
+                        final VPVeinType veinType = identifyVein(world, secondaryOreChunkX, secondaryOreChunkZ, blockY);
+                        // add to prospected
+                        return;
+                    }
                 }
             }
         }
     }
 
-    private static boolean chunkContainsOre(World world, int chunkX, int chunkZ, short oreMeta, int blockY)
-    {
+    private static boolean chunkContainsOre(World world, int chunkX, int chunkZ, short oreMeta, int blockY) {
         final Chunk chunk = world.provider.worldObj.getChunkFromChunkCoords(chunkX, chunkZ);
-        // TODO: reduce number of checked blocks as much as possible. Search area of 8x8 SHOULD be enough
-        for(int blockX=0;blockX<VP.chunkWidth;blockX++)
-            for(int blockZ=0;blockZ<P.chunkDepth;blockZ++) {
+        for(int blockX=0;blockX<VPConfig.veinSearchDiameter;blockX++)
+            for(int blockZ=0;blockZ<VPConfig.veinSearchDiameter;blockZ++) {
                 final Block block = chunk.getBlock(blockX, blockY, blockZ);
                 if(block instanceof GT_Block_Ores_Abstract) {
                     final TileEntity tileEntity = chunk.getTileEntityUnsafe(blockX, blockY, blockZ);
-                    if (tileEntity instanceof GT_TileEntity_Ores)
-                        return oreMeta == ((GT_TileEntity_Ores) tileEntity).mMetaData;
+                    if (tileEntity instanceof GT_TileEntity_Ores
+                            && oreMeta == ((GT_TileEntity_Ores) tileEntity).mMetaData)
+                        return true;
 
                 }
             }
         return false;
     }
 
-    private static int toOreChunkCenter(int chunkXorZ)
-    {
+    private static int toOreChunkCenter(int chunkXorZ) {
         final int remainder = chunkXorZ % 3;
         if(remainder == 0)
             return chunkXorZ + 1;
         if(remainder == 1)
             return chunkXorZ;
         return  chunkXorZ - 1;
+    }
+
+    private static boolean sampleYLevel(Chunk chunk, HashSet<Short> foundOres, int levelY) {
+        boolean foundOre = false;
+        for (int blockX = 0; blockX < VPConfig.veinSearchDiameter; blockX++)
+            for (int blockZ = 0; blockZ < VPConfig.veinSearchDiameter; blockZ++) {
+                final Block block = chunk.getBlock(blockX, levelY, blockZ);
+                if (block instanceof GT_Block_Ores_Abstract) {
+                    final TileEntity tileEntity = chunk.getTileEntityUnsafe(blockX, levelY, blockZ);
+                    if (tileEntity instanceof GT_TileEntity_Ores) {
+                        final short meta = ((GT_TileEntity_Ores) tileEntity).getMetaData();
+                        if (meta != 0 && meta < VP.gregTechSmallOreMinimumMeta) {
+                            foundOres.add(meta);
+                            foundOre = true;
+                        }
+                    }
+                }
+            }
+        return foundOre;
+    }
+
+    private static VPVeinType identifyVein(World world, int chunkX, int chunkZ, int foundY) {
+        final Chunk chunk = world.provider.worldObj.getChunkFromChunkCoords(chunkX, chunkZ);
+        final int minY = Math.max(0, foundY - VPConfig.veinIdentificationMaxUpDown);
+        final int maxY = Math.min(255, foundY + VPConfig.veinIdentificationMaxUpDown);
+
+        HashSet<Short> foundOres = new HashSet<>();
+
+        int oreLessLayers = 0;
+        for(int blockY=foundY;blockY<maxY;blockY++) {
+            if(!sampleYLevel(chunk, foundOres, foundY))
+                oreLessLayers++;
+            if(oreLessLayers >= 1 || foundOres.size() >= 4)
+                break;
+        }
+
+        oreLessLayers = 0;
+        for(int blockY=Math.max(foundY-1, 0);blockY>minY;blockY--) {
+            if(!sampleYLevel(chunk, foundOres, foundY))
+                oreLessLayers++;
+            if(oreLessLayers >= 1 || foundOres.size() >= 4)
+                break;
+        }
+
+        for(final VPVeinType veinType : VPVeinCaching.veinTypes)
+            if(veinType.matches(foundOres)) {
+                VP.info("Found matching vein: " + veinType.name);
+                return veinType;
+            }
+
+        final ArrayList<VPVeinType> possibleMatches = new ArrayList<>();
+        for(final VPVeinType veinType : VPVeinCaching.veinTypes)
+            if(veinType.partiallyMatches(foundOres)) {
+                VP.info("Found possibly matching vein: " + veinType.name);
+                possibleMatches.add(veinType);
+            }
+        if(possibleMatches.size() == 1) {
+            final VPVeinType veinType = possibleMatches.get(0);
+            VP.info("Found matching vein: " + veinType.name);
+            return veinType;
+        }
+
+        return null;
     }
 }

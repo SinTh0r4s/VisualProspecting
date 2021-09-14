@@ -28,4 +28,8 @@ public class VPVeinType {
     public boolean matches(HashSet<Short> foundOres) {
         return oresAsHashSet.equals(foundOres);
     }
+
+    public boolean partiallyMatches(HashSet<Short> foundOres) {
+        return oresAsHashSet.containsAll(foundOres);
+    }
 }
