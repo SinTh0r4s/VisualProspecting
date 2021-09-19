@@ -3,8 +3,8 @@ package com.sinthoras.visualprospecting.client;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPConfig;
 import com.sinthoras.visualprospecting.VPUtils;
-import com.sinthoras.visualprospecting.client.database.VPVeinCaching;
-import com.sinthoras.visualprospecting.client.database.VPVeinType;
+import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
+import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.common.blocks.GT_Block_Ores_Abstract;
@@ -17,7 +17,7 @@ import net.minecraft.world.chunk.Chunk;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-
+@Deprecated
 public class VPProspector {
     @SideOnly(Side.CLIENT)
     public static void prospectPotentialNewVein(World world, int blockX, int blockY, int blockZ, short oreMeta) {
@@ -38,7 +38,7 @@ public class VPProspector {
                 return;
             }
         }
-        if(VPVeinCaching.largeVeinOres.contains(oreMeta)) {
+        if(VPVeinTypeCaching.largeVeinOres.contains(oreMeta)) {
             // Check neighboring ore chunk centers for large veins
             final int oreChunkOffsetX = (chunkX % 3) - 1;
             final int oreChunkOffsetZ = (chunkZ % 3) - 1;
@@ -107,7 +107,6 @@ public class VPProspector {
                     if (tileEntity instanceof GT_TileEntity_Ores
                             && oreMeta == ((GT_TileEntity_Ores) tileEntity).mMetaData)
                         return true;
-
                 }
             }
         return false;
@@ -164,14 +163,14 @@ public class VPProspector {
                 break;
         }
 
-        for(final VPVeinType veinType : VPVeinCaching.veinTypes)
+        for(final VPVeinType veinType : VPVeinTypeCaching.veinTypes)
             if(veinType.matches(foundOres)) {
                 VP.info("Found matching vein: " + veinType.name);
                 return veinType;
             }
 
         final ArrayList<VPVeinType> possibleMatches = new ArrayList<>();
-        for(final VPVeinType veinType : VPVeinCaching.veinTypes)
+        for(final VPVeinType veinType : VPVeinTypeCaching.veinTypes)
             if(veinType.partiallyMatches(foundOres)) {
                 VP.info("Found possibly matching vein: " + veinType.name);
                 possibleMatches.add(veinType);
