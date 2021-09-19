@@ -1,9 +1,6 @@
 package com.sinthoras.visualprospecting.hooks;
 
-import com.sinthoras.visualprospecting.VP;
-
 import com.sinthoras.visualprospecting.client.VPProspectingCallback;
-import com.sinthoras.visualprospecting.client.database.VPVeinCaching;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -32,7 +29,6 @@ public class VPHooksClient extends VPHooksShared {
 	// postInit "Handle interaction with other mods, complete your setup based on this."
 	public void fmlLifeCycleEvent(FMLPostInitializationEvent event) {
 		super.fmlLifeCycleEvent(event);
-		GregTech_API.sAfterGTPostload.add(new VPVeinCaching());
 		GregTech_API.sAfterGTPostload.add(new VPProspectingCallback());
 	}
 	@Override

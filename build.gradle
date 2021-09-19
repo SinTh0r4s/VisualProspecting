@@ -83,6 +83,7 @@ repositories {
 }
 
 dependencies {
+    compile("com.github.SinTh0r4s:Enklume:dd607a6af7")
     compile("com.github.GTNewHorizons:GT5-Unofficial:visual-prospecting-interop-SNAPSHOT:dev") {
         setChanging(true)
     }

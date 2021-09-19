@@ -15,4 +15,19 @@ public class VPUtils {
     public static int coordChunkToBlock(int chunkCoord) {
         return chunkCoord < 0 ? -((-chunkCoord) << 4) : chunkCoord << 4;
     }
+
+    public static long chunkCoordsToKey(int chunkX, int chunkZ) {
+        return (((long)chunkX) << 32) | (chunkZ & 0xffffffffL);
+    }
+
+    public static int nonNegativeModulo(final int value, final int divisor) {
+        final int rest = value % divisor;
+        if(rest < 0)
+            return rest + divisor;
+        return rest;
+    }
+
+    public static int mapToCenterOreChunkCoord(final int chunkCoord) {
+        return chunkCoord - nonNegativeModulo(chunkCoord - 1, 3) + 1;
+    }
 }

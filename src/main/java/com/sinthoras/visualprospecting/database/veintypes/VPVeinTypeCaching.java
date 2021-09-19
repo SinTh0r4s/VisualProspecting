@@ -1,6 +1,5 @@
-package com.sinthoras.visualprospecting.client.database;
+package com.sinthoras.visualprospecting.database.veintypes;
 
-import com.sinthoras.visualprospecting.VP;
 import gregtech.common.GT_Worldgen_GT_Ore_Layer;
 
 import java.util.ArrayList;
@@ -8,9 +7,9 @@ import java.util.HashSet;
 import java.util.List;
 
 import static com.sinthoras.visualprospecting.VPUtils.isBartworksInstalled;
-import static com.sinthoras.visualprospecting.client.VPReflection.*;
+import static com.sinthoras.visualprospecting.database.veintypes.VPReflection.*;
 
-public class VPVeinCaching implements Runnable {
+public class VPVeinTypeCaching implements Runnable {
 
     public static List<VPVeinType> veinTypes;
     public static HashSet<Short> largeVeinOres;
@@ -22,6 +21,7 @@ public class VPVeinCaching implements Runnable {
     public void run() {
         veinTypes = new ArrayList<>();
         largeVeinOres = new HashSet<>();
+
         for(GT_Worldgen_GT_Ore_Layer vein : GT_Worldgen_GT_Ore_Layer.sList) {
             veinTypes.add(new VPVeinType(vein.mWorldGenName, vein.mPrimaryMeta, vein.mSecondaryMeta, vein.mBetweenMeta, vein.mSporadicMeta));
             if(vein.mSize > 16) {
@@ -51,7 +51,12 @@ public class VPVeinCaching implements Runnable {
         }
 
         for(VPVeinType veinType : veinTypes) {
-            VP.info(veinType.name + " " + veinType.primaryOreMeta + " " + veinType.secondaryOreMeta + " " + veinType.inBetweenOreMeta + " " + veinType.sporadicOreMeta);
+            if(veinType.name.equals("ore.mix.none"))
+                VPVeinType.NO_VEIN = veinType;
         }
+
+        /*for(VPVeinType veinType : veinTypes) {
+            VP.info(veinType.name + " " + veinType.primaryOreMeta + " " + veinType.secondaryOreMeta + " " + veinType.inBetweenOreMeta + " " + veinType.sporadicOreMeta);
+        }*/
     }
 }

@@ -8,6 +8,8 @@ public class VPConfig {
         public static final boolean enableProspecting = true;
         public static final int veinSearchDiameter = 8;
         public static final int veinIdentificationMaxUpDown = 10;
+        public static final int cacheGenerationLogUpdateMinTime = 5;
+        public static final boolean recacheVeins = false;
     }
 
     private static class Categories {
@@ -17,6 +19,8 @@ public class VPConfig {
     public static boolean enableProspecting;
     public static int veinSearchDiameter;
     public static int veinIdentificationMaxUpDown;
+    public static int cacheGenerationLogUpdateMinTime;
+    public static boolean recacheVeins;
 
     public static void syncronizeConfiguration(java.io.File configurationFile) {
         Configuration configuration = new Configuration(configurationFile);
@@ -35,5 +39,21 @@ public class VPConfig {
                 Defaults.veinIdentificationMaxUpDown, "What height will be looked up and down when " +
                         "prospecting is looking for all vein metas. This is a upper limit. Will terminate earlier if possible!");
         veinIdentificationMaxUpDown = veinIdentificationMaxUpDownProperty.getInt();
+
+        Property cacheGenerationLogUpdateMinTimeProperty = configuration.get(Categories.general, "cacheGenerationLogUpdateMinTime",
+                Defaults.cacheGenerationLogUpdateMinTime, "Minimum between log updates to show progress when" +
+                        " caching save files. This happens only ONCE!");
+        cacheGenerationLogUpdateMinTime = cacheGenerationLogUpdateMinTimeProperty.getInt();
+
+        Property recacheVeinsProperty = configuration.get(Categories.general, "recacheVeins", Defaults.recacheVeins,
+                "Redo GT ore vein caching if set to True. Will automatically be set back to False after caching is done.");
+        recacheVeins = recacheVeinsProperty.getBoolean();
+        if(recacheVeins) {
+            recacheVeinsProperty.set(false);
+        }
+
+        if(configuration.hasChanged()) {
+            configuration.save();
+        }
     }
 }

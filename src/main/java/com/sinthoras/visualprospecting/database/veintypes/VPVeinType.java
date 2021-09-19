@@ -1,4 +1,4 @@
-package com.sinthoras.visualprospecting.client.database;
+package com.sinthoras.visualprospecting.database.veintypes;
 
 import java.util.HashSet;
 
@@ -10,6 +10,9 @@ public class VPVeinType {
     public final short inBetweenOreMeta;
     public final short sporadicOreMeta;
     private final HashSet<Short> oresAsHashSet;
+
+    // Available after VisualProspecting post GT initialization
+    public static VPVeinType NO_VEIN;
 
     public VPVeinType(String name, short primaryOreMeta, short secondaryOreMeta, short inBetweenOreMeta, short sporadicOreMeta)
     {
@@ -30,6 +33,6 @@ public class VPVeinType {
     }
 
     public boolean partiallyMatches(HashSet<Short> foundOres) {
-        return oresAsHashSet.containsAll(foundOres);
+        return foundOres.containsAll(oresAsHashSet);
     }
 }
