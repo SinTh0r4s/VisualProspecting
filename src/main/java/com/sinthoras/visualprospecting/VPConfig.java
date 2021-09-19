@@ -41,12 +41,13 @@ public class VPConfig {
         veinIdentificationMaxUpDown = veinIdentificationMaxUpDownProperty.getInt();
 
         Property cacheGenerationLogUpdateMinTimeProperty = configuration.get(Categories.general, "cacheGenerationLogUpdateMinTime",
-                Defaults.cacheGenerationLogUpdateMinTime, "Minimum between log updates to show progress when" +
-                        " caching save files. This happens only ONCE!");
+                Defaults.cacheGenerationLogUpdateMinTime, "Minimum between log updates to show progress when " +
+                        "caching save files. This happens only ONCE!");
         cacheGenerationLogUpdateMinTime = cacheGenerationLogUpdateMinTimeProperty.getInt();
 
         Property recacheVeinsProperty = configuration.get(Categories.general, "recacheVeins", Defaults.recacheVeins,
-                "Redo GT ore vein caching if set to True. Will automatically be set back to False after caching is done.");
+                "Redo GT ore vein caching if set to True. Will automatically be set back to False the next " +
+                        "time the game is started.");
         recacheVeins = recacheVeinsProperty.getBoolean();
         if(recacheVeins) {
             recacheVeinsProperty.set(false);
