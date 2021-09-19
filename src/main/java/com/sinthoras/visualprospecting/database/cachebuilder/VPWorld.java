@@ -26,5 +26,6 @@ public class VPWorld {
             dimension.processMinecraftWorld(world);
             VPProgressTracker.dimensionProcessed();
         }
+        VP.info("Parsing complete! Thank you for your patience.");
     }
 }
