@@ -10,14 +10,14 @@ import io.xol.enklume.nbt.NBTCompound;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class VPDimension {
 
     public final int dimensionId;
-    private final HashMap<Long, List<VPVeinType>> chunksForSecondIdentificationPass = new HashMap<>();
+    private final HashMap<Long, HashSet<VPVeinType>> chunksForSecondIdentificationPass = new HashMap<>();
 
     public VPDimension(int dimensionId) {
         this.dimensionId = dimensionId;
@@ -45,7 +45,7 @@ public class VPDimension {
                             final VPChunk chunk = new VPChunk(chunkX, chunkZ);
                             chunk.processMinecraftChunk(root);
 
-                            List<VPVeinType> matchingVeins = new ArrayList<>();
+                            HashSet<VPVeinType> matchingVeins = new HashSet<>();
                             for(VPVeinType veinType : VPVeinTypeCaching.veinTypes) {
                                 if(veinType.partiallyMatches(chunk.getOres()))
                                     matchingVeins.add(veinType);
@@ -54,7 +54,7 @@ public class VPDimension {
                             if(matchingVeins.size() == 0)
                                 VPCacheWorld.putVeinType(dimensionId, chunkX, chunkZ, VPVeinType.NO_VEIN);
                             else if(matchingVeins.size() == 1)
-                                VPCacheWorld.putVeinType(dimensionId, chunkX, chunkZ, matchingVeins.get(0));
+                                VPCacheWorld.putVeinType(dimensionId, chunkX, chunkZ, matchingVeins.stream().findAny().get());
                             else {
                                 chunksForSecondIdentificationPass.put(VPUtils.chunkCoordsToKey(chunkX, chunkZ), matchingVeins);
                             }
@@ -68,8 +68,8 @@ public class VPDimension {
         for(long key : chunksForSecondIdentificationPass.keySet()) {
             final int chunkX = (int)(key >> 32);
             final int chunkZ = (int)key;
-            final List<VPVeinType> possibleVeins = chunksForSecondIdentificationPass.get(key);
             // TODO: identify or mark as NO_VEIN
+            final HashSet<VPVeinType> matchingVeins = chunksForSecondIdentificationPass.get(key);
         }
     }
 }
