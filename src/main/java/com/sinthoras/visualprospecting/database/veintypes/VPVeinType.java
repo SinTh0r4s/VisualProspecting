@@ -35,4 +35,9 @@ public class VPVeinType {
     public boolean partiallyMatches(HashSet<Short> foundOres) {
         return foundOres.containsAll(oresAsHashSet);
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
