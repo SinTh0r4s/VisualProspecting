@@ -7,6 +7,7 @@ import io.xol.enklume.MinecraftWorld;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.zip.DataFormatException;
 
 public class VPWorld {
 
@@ -16,7 +17,7 @@ public class VPWorld {
             world = new MinecraftWorld(worldDirectory);
     }
 
-    public void cacheVeins() throws IOException {
+    public void cacheVeins() throws IOException, DataFormatException {
         VP.info("Starting to parse world save to cache GT vein locations. This might take some time...");
         VPCacheWorld.reset();
         final List<Integer> dimensionIds = world.getDimensions();

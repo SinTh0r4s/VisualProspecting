@@ -2,7 +2,6 @@ package com.sinthoras.visualprospecting.hooks;
 
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPConfig;
-import com.sinthoras.visualprospecting.blocks.VPDemoBlock;
 import com.sinthoras.visualprospecting.database.VPCacheWorld;
 import com.sinthoras.visualprospecting.database.cachebuilder.VPWorld;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
@@ -15,12 +14,12 @@ import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.GregTech_API;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.zip.DataFormatException;
 
 
 public class VPHooksShared {
@@ -29,8 +28,6 @@ public class VPHooksShared {
 	// etc, and register them with the GameRegistry."
 	public void fmlLifeCycleEvent(FMLPreInitializationEvent event) 	{
 		VPConfig.syncronizeConfiguration(event.getSuggestedConfigurationFile());
-
-		GameRegistry.registerBlock(new VPDemoBlock(), VPDemoBlock.NAME);
 	}
 	
 	// load "Do your mod setup. Build whatever data structures you care about. Register recipes."
@@ -55,7 +52,8 @@ public class VPHooksShared {
 			try {
 				VPWorld world = new VPWorld(worldDirectory);
 				world.cacheVeins();
-			} catch (IOException e) {
+				int i = 0;
+			} catch (IOException | DataFormatException e) {
 				VP.info("Could not load world save files to build vein cache!");
 				e.printStackTrace();
 			}

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.zip.DataFormatException;
 
 public class VPDimension {
 
@@ -23,7 +24,7 @@ public class VPDimension {
         this.dimensionId = dimensionId;
     }
 
-    public void processMinecraftWorld(MinecraftWorld world) throws IOException {
+    public void processMinecraftWorld(MinecraftWorld world) throws IOException, DataFormatException {
         final List<File> regionFiles = world.getAllRegionFiles(dimensionId);
         VPProgressTracker.setNumberOfRegionFiles(regionFiles.size());
         for (File regionFile : regionFiles) {
