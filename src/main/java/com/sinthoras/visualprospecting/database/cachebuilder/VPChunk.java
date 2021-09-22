@@ -14,6 +14,7 @@ public class VPChunk {
         this.chunkZ = chunkZ;
     }
 
+    // Helpful read: https://minecraft.fandom.com/wiki/Chunk_format
     public void processMinecraftChunk(final NBTCompound chunkRoot) {
         for (final NBTNamed te : ((NBTList) chunkRoot.getTag("Level.TileEntities")).elements) {
             final NBTCompound tileEntity = (NBTCompound) te;
