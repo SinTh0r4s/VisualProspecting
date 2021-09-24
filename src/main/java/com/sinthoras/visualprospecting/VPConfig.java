@@ -22,8 +22,8 @@ public class VPConfig {
     public static int cacheGenerationLogUpdateMinTime;
     public static boolean recacheVeins;
 
-    public static void syncronizeConfiguration(java.io.File configurationFile) {
-        Configuration configuration = new Configuration(configurationFile);
+    public static void syncronizeConfiguration() {
+        Configuration configuration = new Configuration(VP.configFile);
         configuration.load();
 
         Property enableProspectingProperty = configuration.get(Categories.general, "enableProspecting",

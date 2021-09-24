@@ -5,9 +5,13 @@ import org.apache.logging.log4j.Logger;
 
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
+import java.io.File;
+
 public class VP {
 
     public static SimpleNetworkWrapper network;
+    public static File configFile;
+
     private static Logger LOG = LogManager.getLogger(VPTags.MODID);
     public static final int chunkWidth = 16;
     public static final int chunkHeight = 16;

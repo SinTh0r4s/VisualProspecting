@@ -27,7 +27,8 @@ public class VPHooksShared {
 	// preInit "Run before anything else. Read your config, create blocks, items, 
 	// etc, and register them with the GameRegistry."
 	public void fmlLifeCycleEvent(FMLPreInitializationEvent event) 	{
-		VPConfig.syncronizeConfiguration(event.getSuggestedConfigurationFile());
+		VP.configFile = event.getSuggestedConfigurationFile();
+		VPConfig.syncronizeConfiguration();
 	}
 	
 	// load "Do your mod setup. Build whatever data structures you care about. Register recipes."
@@ -52,7 +53,6 @@ public class VPHooksShared {
 			try {
 				VPWorld world = new VPWorld(worldDirectory);
 				world.cacheVeins();
-				int i = 0;
 			} catch (IOException | DataFormatException e) {
 				VP.info("Could not load world save files to build vein cache!");
 				e.printStackTrace();
@@ -65,7 +65,7 @@ public class VPHooksShared {
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerStoppingEvent event) {
-		
+		VPCacheWorld.saveVeinCache();
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerStoppedEvent event) {

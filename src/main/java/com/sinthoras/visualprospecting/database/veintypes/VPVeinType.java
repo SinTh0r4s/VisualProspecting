@@ -5,6 +5,7 @@ import java.util.HashSet;
 public class VPVeinType {
 
     public final String name;
+    public short veinId;
     public final short primaryOreMeta;
     public final short secondaryOreMeta;
     public final short inBetweenOreMeta;
@@ -12,7 +13,7 @@ public class VPVeinType {
     private final HashSet<Short> oresAsHashSet;
 
     // Available after VisualProspecting post GT initialization
-    public static VPVeinType NO_VEIN;
+    public final static VPVeinType NO_VEIN = new VPVeinType("ore.mix.none", (short)-1, (short)-1, (short)-1, (short)-1);
 
     public VPVeinType(String name, short primaryOreMeta, short secondaryOreMeta, short inBetweenOreMeta, short sporadicOreMeta)
     {

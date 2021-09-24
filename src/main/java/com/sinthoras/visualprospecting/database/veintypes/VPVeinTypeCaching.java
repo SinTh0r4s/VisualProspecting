@@ -1,16 +1,22 @@
 package com.sinthoras.visualprospecting.database.veintypes;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.VPTags;
+import com.sinthoras.visualprospecting.VPUtils;
 import gregtech.common.GT_Worldgen_GT_Ore_Layer;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.io.File;
+import java.util.*;
 
 import static com.sinthoras.visualprospecting.VPUtils.isBartworksInstalled;
 import static com.sinthoras.visualprospecting.database.veintypes.VPReflection.*;
 
 public class VPVeinTypeCaching implements Runnable {
 
+    private static BiMap<Short, VPVeinType> veinTypeLookupTable = HashBiMap.create();
+    private static Map<String, Short> veinTypeStorageInfo;
     public static List<VPVeinType> veinTypes;
     public static HashSet<Short> largeVeinOres;
 
@@ -21,8 +27,11 @@ public class VPVeinTypeCaching implements Runnable {
     public void run() {
         veinTypes = new ArrayList<>();
         largeVeinOres = new HashSet<>();
+        veinTypes.add(VPVeinType.NO_VEIN);
 
         for(GT_Worldgen_GT_Ore_Layer vein : GT_Worldgen_GT_Ore_Layer.sList) {
+            if(vein.mWorldGenName.equals("ore.mix.none"))
+                break;
             veinTypes.add(new VPVeinType(vein.mWorldGenName, vein.mPrimaryMeta, vein.mSecondaryMeta, vein.mBetweenMeta, vein.mSporadicMeta));
             if(vein.mSize > 16) {
                 // These veins can be larger then 3x3 chunks. For these ores we need to check multiple possible locations
@@ -50,13 +59,46 @@ public class VPVeinTypeCaching implements Runnable {
             }
         }
 
-        for(VPVeinType veinType : veinTypes) {
-            if(veinType.name.equals("ore.mix.none"))
-                VPVeinType.NO_VEIN = veinType;
-        }
+        // Assign veinTypeIds for efficient storage
+        loadVeinTypeStorageInfo();
 
-        /*for(VPVeinType veinType : veinTypes) {
-            VP.info(veinType.name + " " + veinType.primaryOreMeta + " " + veinType.secondaryOreMeta + " " + veinType.inBetweenOreMeta + " " + veinType.sporadicOreMeta);
-        }*/
+        final Optional<Short> maxVeinTypeIdOptional = veinTypeStorageInfo.values().stream().max(Short::compare);
+        short maxVeinTypeId = maxVeinTypeIdOptional.isPresent() ? maxVeinTypeIdOptional.get() : 0;
+
+        for(VPVeinType veintype : veinTypes) {
+            if(veinTypeStorageInfo.containsKey(veintype.name))
+                veintype.veinId = veinTypeStorageInfo.get(veintype.name);
+            else {
+                maxVeinTypeId++;
+                veintype.veinId = maxVeinTypeId;
+                veinTypeStorageInfo.put(veintype.name, veintype.veinId);
+            }
+            // Build LUT (id <-> object)
+            veinTypeLookupTable.put(veintype.veinId, veintype);
+        }
+        saveVeinTypeStorageInfo();
+    }
+
+    public static short getVeinTypeId(VPVeinType veinType) {
+        return veinTypeLookupTable.inverse().get(veinType);
+    }
+
+    public static VPVeinType getVeinType(short veinTypeId) {
+        if(veinTypeLookupTable.containsKey(veinTypeId))
+            return veinTypeLookupTable.get(veinTypeId);
+        else
+            return VPVeinType.NO_VEIN;
+    }
+
+    private static File getVeinTypeStorageInfoFile() {
+        return new File(VP.configFile.getParent() + "/" + VPTags.MODID + "_veintypes");
+    }
+
+    private static void loadVeinTypeStorageInfo() {
+        veinTypeStorageInfo = VPUtils.readFileToMap(getVeinTypeStorageInfoFile());
+    }
+
+    private static void saveVeinTypeStorageInfo() {
+        VPUtils.writeMapToFile(getVeinTypeStorageInfoFile(), veinTypeStorageInfo);
     }
 }
