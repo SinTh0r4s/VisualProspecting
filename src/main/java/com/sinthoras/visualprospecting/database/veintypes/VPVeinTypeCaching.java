@@ -32,31 +32,17 @@ public class VPVeinTypeCaching implements Runnable {
         for(GT_Worldgen_GT_Ore_Layer vein : GT_Worldgen_GT_Ore_Layer.sList) {
             if(vein.mWorldGenName.equals("ore.mix.none"))
                 break;
-            veinTypes.add(new VPVeinType(vein.mWorldGenName, vein.mPrimaryMeta, vein.mSecondaryMeta, vein.mBetweenMeta, vein.mSporadicMeta));
-            if(vein.mSize > 16) {
-                // These veins can be larger then 3x3 chunks. For these ores we need to check multiple possible locations
-                largeVeinOres.add(vein.mPrimaryMeta);
-                largeVeinOres.add(vein.mSecondaryMeta);
-                largeVeinOres.add(vein.mBetweenMeta);
-                largeVeinOres.add(vein.mSporadicMeta);
-            }
+            veinTypes.add(new VPVeinType(vein.mWorldGenName, vein.mSize, vein.mPrimaryMeta, vein.mSecondaryMeta, vein.mBetweenMeta, vein.mSporadicMeta));
         }
 
         if(isBartworksInstalled()) {
-            for(Object vein : getBWOreVeins()) {
+            for(Object vein : getBWOreVeins())
                 veinTypes.add(new VPVeinType(getBWOreVeinName(vein),
+                                                getBWOreVeinSize(vein),
                                                 getBWOreVeinPrimaryMeta(vein),
                                                 getBWOreVeinSecondaryMeta(vein),
                                                 getBWOreVeinInBetweenMeta(vein),
                                                 getBWOreVeinSporadicMeta(vein)));
-                if(getBWOreVeinSize(vein) > 16) {
-                    // These veins can be larger then 3x3 chunks. For these ores we need to check multiple possible locations
-                    largeVeinOres.add(getBWOreVeinPrimaryMeta(vein));
-                    largeVeinOres.add(getBWOreVeinSecondaryMeta(vein));
-                    largeVeinOres.add(getBWOreVeinInBetweenMeta(vein));
-                    largeVeinOres.add(getBWOreVeinSporadicMeta(vein));
-                }
-            }
         }
 
         // Assign veinTypeIds for efficient storage
@@ -65,16 +51,24 @@ public class VPVeinTypeCaching implements Runnable {
         final Optional<Short> maxVeinTypeIdOptional = veinTypeStorageInfo.values().stream().max(Short::compare);
         short maxVeinTypeId = maxVeinTypeIdOptional.isPresent() ? maxVeinTypeIdOptional.get() : 0;
 
-        for(VPVeinType veintype : veinTypes) {
-            if(veinTypeStorageInfo.containsKey(veintype.name))
-                veintype.veinId = veinTypeStorageInfo.get(veintype.name);
+        for(VPVeinType veinType : veinTypes) {
+            if(veinTypeStorageInfo.containsKey(veinType.name))
+                veinType.veinId = veinTypeStorageInfo.get(veinType.name);
             else {
                 maxVeinTypeId++;
-                veintype.veinId = maxVeinTypeId;
-                veinTypeStorageInfo.put(veintype.name, veintype.veinId);
+                veinType.veinId = maxVeinTypeId;
+                veinTypeStorageInfo.put(veinType.name, veinType.veinId);
             }
             // Build LUT (id <-> object)
-            veinTypeLookupTable.put(veintype.veinId, veintype);
+            veinTypeLookupTable.put(veinType.veinId, veinType);
+
+            // Build large vein LUT
+            if(veinType.canOverlapIntoNeighborOreChunk()) {
+                largeVeinOres.add(veinType.primaryOreMeta);
+                largeVeinOres.add(veinType.secondaryOreMeta);
+                largeVeinOres.add(veinType.inBetweenOreMeta);
+                largeVeinOres.add(veinType.sporadicOreMeta);
+            }
         }
         saveVeinTypeStorageInfo();
     }

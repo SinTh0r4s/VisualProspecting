@@ -6,6 +6,7 @@ public class VPVeinType {
 
     public final String name;
     public short veinId;
+    public final int size;
     public final short primaryOreMeta;
     public final short secondaryOreMeta;
     public final short inBetweenOreMeta;
@@ -13,11 +14,12 @@ public class VPVeinType {
     private final HashSet<Short> oresAsHashSet;
 
     // Available after VisualProspecting post GT initialization
-    public final static VPVeinType NO_VEIN = new VPVeinType("ore.mix.none", (short)-1, (short)-1, (short)-1, (short)-1);
+    public final static VPVeinType NO_VEIN = new VPVeinType("ore.mix.none", 0, (short)-1, (short)-1, (short)-1, (short)-1);
 
-    public VPVeinType(String name, short primaryOreMeta, short secondaryOreMeta, short inBetweenOreMeta, short sporadicOreMeta)
+    public VPVeinType(String name, int size, short primaryOreMeta, short secondaryOreMeta, short inBetweenOreMeta, short sporadicOreMeta)
     {
         this.name = name;
+        this.size = size;
         this.primaryOreMeta = primaryOreMeta;
         this.secondaryOreMeta = secondaryOreMeta;
         this.inBetweenOreMeta = inBetweenOreMeta;
@@ -40,5 +42,9 @@ public class VPVeinType {
     @Override
     public String toString() {
         return name;
+    }
+
+    public boolean canOverlapIntoNeighborOreChunk() {
+        return size > 24;
     }
 }
