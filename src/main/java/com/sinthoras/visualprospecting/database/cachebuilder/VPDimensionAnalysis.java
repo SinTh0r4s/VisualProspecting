@@ -1,5 +1,6 @@
 package com.sinthoras.visualprospecting.database.cachebuilder;
 
+import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPUtils;
 import com.sinthoras.visualprospecting.database.VPCacheWorld;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
@@ -15,18 +16,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.zip.DataFormatException;
 
-public class VPDimension {
+public class VPDimensionAnalysis {
 
     public final int dimensionId;
     private final HashMap<Long, HashSet<VPVeinType>> chunksForSecondIdentificationPass = new HashMap<>();
 
-    public VPDimension(int dimensionId) {
+    public VPDimensionAnalysis(int dimensionId) {
         this.dimensionId = dimensionId;
     }
 
     public void processMinecraftWorld(MinecraftWorld world) throws IOException, DataFormatException {
         final List<File> regionFiles = world.getAllRegionFiles(dimensionId);
-        VPProgressTracker.setNumberOfRegionFiles(regionFiles.size());
+        VPAnalysisProgressTracker.setNumberOfRegionFiles(regionFiles.size());
         for (File regionFile : regionFiles) {
             final String[] parts = regionFile.getName().split("\\.");
             final int regionChunkX = Integer.parseInt(parts[1]) << 5;
@@ -43,7 +44,7 @@ public class VPDimension {
 
                         // root == null occurs when a chunk is not yet generated
                         if (root != null) {
-                            final VPChunk chunk = new VPChunk(chunkX, chunkZ);
+                            final VPChunkAnalysis chunk = new VPChunkAnalysis(chunkX, chunkZ);
                             chunk.processMinecraftChunk(root);
 
                             HashSet<VPVeinType> matchingVeins = new HashSet<>();
@@ -62,15 +63,25 @@ public class VPDimension {
                         }
                     }
                 }
-            VPProgressTracker.regionFileProcessed();
+            region.close();
+            VPAnalysisProgressTracker.regionFileProcessed();
         }
 
-        // Second identification pass
+        // Second identification pass to resolve nearly all leftovers. See if one option is not used in any neighbors.
+        // If so it is picked. Otherwise the identification fails to NO_VEIN
         for(long key : chunksForSecondIdentificationPass.keySet()) {
             final int chunkX = (int)(key >> 32);
             final int chunkZ = (int)key;
-            // TODO: identify or mark as NO_VEIN
             final HashSet<VPVeinType> matchingVeins = chunksForSecondIdentificationPass.get(key);
+            for(int offsetX=-3;offsetX<4;offsetX+=3)
+                for(int offsetZ=-3;offsetZ<4;offsetZ+=3)
+                    if(offsetX != 0 && offsetZ != 0)
+                        matchingVeins.remove(VPCacheWorld.getVeinType(dimensionId, chunkX + offsetX, chunkZ + offsetZ));
+            if(matchingVeins.size() == 1)
+                VPCacheWorld.putVeinType(dimensionId, chunkX, chunkZ, matchingVeins.stream().findAny().get());
+            else
+                VPCacheWorld.putVeinType(dimensionId, chunkX, chunkZ, VPVeinType.NO_VEIN);
+            VP.info("Second pass: " + matchingVeins);
         }
     }
 }

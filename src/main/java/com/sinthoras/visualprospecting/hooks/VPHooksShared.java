@@ -3,7 +3,7 @@ package com.sinthoras.visualprospecting.hooks;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPConfig;
 import com.sinthoras.visualprospecting.database.VPCacheWorld;
-import com.sinthoras.visualprospecting.database.cachebuilder.VPWorld;
+import com.sinthoras.visualprospecting.database.cachebuilder.VPWorldAnalysis;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -51,7 +51,7 @@ public class VPHooksShared {
 		final File worldDirectory = event.getServer().getEntityWorld().getSaveHandler().getWorldDirectory();
 		if(VPCacheWorld.loadVeinCache(worldDirectory) == false || VPConfig.recacheVeins) {
 			try {
-				VPWorld world = new VPWorld(worldDirectory);
+				VPWorldAnalysis world = new VPWorldAnalysis(worldDirectory);
 				world.cacheVeins();
 			} catch (IOException | DataFormatException e) {
 				VP.info("Could not load world save files to build vein cache!");

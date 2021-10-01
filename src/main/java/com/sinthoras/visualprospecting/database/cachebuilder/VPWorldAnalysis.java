@@ -9,11 +9,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.zip.DataFormatException;
 
-public class VPWorld {
+public class VPWorldAnalysis {
 
     private final MinecraftWorld world;
 
-    public VPWorld(File worldDirectory) throws IOException {
+    public VPWorldAnalysis(File worldDirectory) throws IOException {
             world = new MinecraftWorld(worldDirectory);
     }
 
@@ -21,11 +21,11 @@ public class VPWorld {
         VP.info("Starting to parse world save to cache GT vein locations. This might take some time...");
         VPCacheWorld.reset();
         final List<Integer> dimensionIds = world.getDimensionIds();
-        VPProgressTracker.setNumberOfDimensions(dimensionIds.size());
+        VPAnalysisProgressTracker.setNumberOfDimensions(dimensionIds.size());
         for(int dimensionId : dimensionIds) {
-            final VPDimension dimension = new VPDimension(dimensionId);
+            final VPDimensionAnalysis dimension = new VPDimensionAnalysis(dimensionId);
             dimension.processMinecraftWorld(world);
-            VPProgressTracker.dimensionProcessed();
+            VPAnalysisProgressTracker.dimensionProcessed();
         }
         VP.info("Parsing complete! Thank you for your patience.");
     }

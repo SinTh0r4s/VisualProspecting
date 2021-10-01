@@ -3,7 +3,7 @@ package com.sinthoras.visualprospecting.database.cachebuilder;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPConfig;
 
-public class VPProgressTracker {
+public class VPAnalysisProgressTracker {
 
     private static int numberOfDimensions = 0;
     private static int dimensionsProcessed = 0;
@@ -12,7 +12,7 @@ public class VPProgressTracker {
     private static long lastLogUpdate = 0;
 
     public static void setNumberOfDimensions(int numberOfDimensions) {
-        VPProgressTracker.numberOfDimensions = numberOfDimensions;
+        VPAnalysisProgressTracker.numberOfDimensions = numberOfDimensions;
         dimensionsProcessed = 0;
         updateLog();
     }
@@ -23,7 +23,7 @@ public class VPProgressTracker {
     }
 
     public static void setNumberOfRegionFiles(int numberOfRegionFiles) {
-        VPProgressTracker.numberOfRegionFiles = numberOfRegionFiles;
+        VPAnalysisProgressTracker.numberOfRegionFiles = numberOfRegionFiles;
         regionFilesProcessed = 0;
         updateLog();
     }
