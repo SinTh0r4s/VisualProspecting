@@ -40,6 +40,7 @@ public class VPDimensionAnalysis {
 
                     // Only process ore chunks
                     if(chunkX == VPUtils.mapToCenterOreChunkCoord(chunkX) && chunkZ == VPUtils.mapToCenterOreChunkCoord(chunkZ)) {
+                        // Helpful read about 'root' structure: https://minecraft.fandom.com/wiki/Chunk_format
                         final NBTCompound root = region.getChunk(localChunkX, localChunkZ).getRootTag();
 
                         // root == null occurs when a chunk is not yet generated
