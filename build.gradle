@@ -80,6 +80,9 @@ repositories {
         name = "gt"
         url = "https://gregtech.overminddl1.com/"
     }
+    maven {
+        url "https://cursemaven.com"
+    }
 }
 
 dependencies {
@@ -87,6 +90,7 @@ dependencies {
     compile("com.github.GTNewHorizons:GT5-Unofficial:visual-prospecting-interop-SNAPSHOT:dev") {
         setChanging(true)
     }
+    compile("curse.maven:journeymap-32274:2367915")
 }
 
 jar {
