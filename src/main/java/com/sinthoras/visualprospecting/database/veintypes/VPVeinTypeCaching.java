@@ -15,7 +15,8 @@ import static com.sinthoras.visualprospecting.database.veintypes.VPReflection.*;
 
 public class VPVeinTypeCaching implements Runnable {
 
-    private static BiMap<Short, VPVeinType> veinTypeLookupTable = HashBiMap.create();
+    private static BiMap<Short, VPVeinType> veinTypeLookupTableForIds = HashBiMap.create();
+    private static Map<String, VPVeinType> veinTypeLookupTableForNames = new HashMap<>();
     private static Map<String, Short> veinTypeStorageInfo;
     public static List<VPVeinType> veinTypes;
     public static HashSet<Short> largeVeinOres;
@@ -60,7 +61,10 @@ public class VPVeinTypeCaching implements Runnable {
                 veinTypeStorageInfo.put(veinType.name, veinType.veinId);
             }
             // Build LUT (id <-> object)
-            veinTypeLookupTable.put(veinType.veinId, veinType);
+            veinTypeLookupTableForIds.put(veinType.veinId, veinType);
+
+            // Build LUT (name -> object)
+            veinTypeLookupTableForNames.put(veinType.name, veinType);
 
             // Build large vein LUT
             if(veinType.canOverlapIntoNeighborOreChunk()) {
@@ -74,14 +78,15 @@ public class VPVeinTypeCaching implements Runnable {
     }
 
     public static short getVeinTypeId(VPVeinType veinType) {
-        return veinTypeLookupTable.inverse().get(veinType);
+        return veinTypeLookupTableForIds.inverse().get(veinType);
     }
 
     public static VPVeinType getVeinType(short veinTypeId) {
-        if(veinTypeLookupTable.containsKey(veinTypeId))
-            return veinTypeLookupTable.get(veinTypeId);
-        else
-            return VPVeinType.NO_VEIN;
+        return veinTypeLookupTableForIds.getOrDefault(veinTypeId, VPVeinType.NO_VEIN);
+    }
+
+    public static VPVeinType getVeinType(String veinTypeName) {
+        return veinTypeLookupTableForNames.getOrDefault(veinTypeName, VPVeinType.NO_VEIN);
     }
 
     private static File getVeinTypeStorageInfoFile() {
