@@ -163,15 +163,9 @@ public class VPProspector {
                 break;
         }
 
-        for(final VPVeinType veinType : VPVeinTypeCaching.veinTypes)
-            if(veinType.matches(foundOres)) {
-                VP.info("Found matching vein: " + veinType.name);
-                return veinType;
-            }
-
         final ArrayList<VPVeinType> possibleMatches = new ArrayList<>();
         for(final VPVeinType veinType : VPVeinTypeCaching.veinTypes)
-            if(veinType.partiallyMatches(foundOres)) {
+            if(veinType.matches(foundOres)) {
                 VP.info("Found possibly matching vein: " + veinType.name);
                 possibleMatches.add(veinType);
             }

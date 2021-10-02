@@ -1,5 +1,6 @@
 package com.sinthoras.visualprospecting.hooks;
 
+import api.visualprospecting.VPOreGenCallbackHandler;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPConfig;
 import com.sinthoras.visualprospecting.database.VPCacheWorld;
@@ -15,6 +16,8 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import gregtech.api.GregTech_API;
+import gregtech.common.GT_Worldgenerator;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
@@ -40,6 +43,12 @@ public class VPHooksShared {
 	// postInit "Handle interaction with other mods, complete your setup based on this."
 	public void fmlLifeCycleEvent(FMLPostInitializationEvent event) {
 		GregTech_API.sAfterGTPostload.add(new VPVeinTypeCaching());
+		GregTech_API.sAfterGTPostload.add(() -> GT_Worldgenerator.registerOreGenCallback(new VPOreGenCallbackHandler() {
+			@Override
+			public void prospectPotentialNewVein(String oreMixName, World aWorld, int aX, int aZ) {
+				VPCacheWorld.putVeinType(aWorld.provider.dimensionId, aX, aZ, VPVeinTypeCaching.getVeinType(oreMixName));
+			}
+		}));
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerAboutToStartEvent event) {

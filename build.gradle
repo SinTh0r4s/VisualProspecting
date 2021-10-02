@@ -86,7 +86,7 @@ repositories {
 }
 
 dependencies {
-    compile("com.github.SinTh0r4s:Enklume:master-SNAPSHOT")
+    compile("com.github.Hugobros3:Enklume:master-SNAPSHOT")
     compile("com.github.GTNewHorizons:GT5-Unofficial:visual-prospecting-interop-SNAPSHOT:dev") {
         setChanging(true)
     }

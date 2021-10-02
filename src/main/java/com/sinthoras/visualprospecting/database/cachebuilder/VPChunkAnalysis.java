@@ -1,39 +1,41 @@
 package com.sinthoras.visualprospecting.database.cachebuilder;
 
+import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
+import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
 import io.xol.enklume.nbt.*;
 
 import java.util.HashSet;
 
+// A slim, but faster version to identify >90% of veins
 public class VPChunkAnalysis {
-    public final int chunkX;
-    public final int chunkZ;
     private final HashSet<Short> ores = new HashSet<>();
+    private final HashSet<VPVeinType> matchedVeins = new HashSet<>();
     private int minVeinBlockY = 256;
 
-    public VPChunkAnalysis(int chunkX, int chunkZ) {
-        this.chunkX = chunkX;
-        this.chunkZ = chunkZ;
-    }
-
-    // Helpful read: https://minecraft.fandom.com/wiki/Chunk_format
     public void processMinecraftChunk(final NBTCompound chunkRoot) {
-        for (final NBTNamed te : ((NBTList) chunkRoot.getTag("Level.TileEntities")).elements) {
-            final NBTCompound tileEntity = (NBTCompound) te;
-            final NBTString id = (NBTString) tileEntity.getTag("id");
-            final NBTShort meta = (NBTShort) tileEntity.getTag("m");
-            final NBTInt blockY = (NBTInt) tileEntity.getTag("y");
-            // Filter out small ores. They start from 16000+
-            if (id != null && id.data.equals("GT_TileEntity_Ores") && meta.data < 16000) {
-                final short metaData = (short)(meta.data % 1000); // Filter out block type
-                ores.add(metaData);
-                if(minVeinBlockY > blockY.data)
-                    minVeinBlockY = blockY.data;
+        for (final NBTNamed tileEntity : ((NBTList) chunkRoot.getTag("Level.TileEntities")).elements) {
+            final VPGregTechOre gtOre = new VPGregTechOre((NBTCompound) tileEntity);
+            if(gtOre.isValidGTOre) {
+                ores.add(gtOre.metaData);
+                if(minVeinBlockY > gtOre.blockY)
+                    minVeinBlockY = gtOre.blockY;
             }
         }
     }
 
-    public HashSet<Short> getOres() {
-        return ores;
+    public boolean matchesSingleVein() {
+        for(VPVeinType veinType : VPVeinTypeCaching.veinTypes) {
+            if(veinType.matches(ores))
+                matchedVeins.add(veinType);
+        }
+        return matchedVeins.size() <= 1;
+    }
+
+    // Result only valid if matchesSingleVein() returned true
+    public VPVeinType getMatchedVein() {
+        if(matchedVeins.isEmpty())
+            return VPVeinType.NO_VEIN;
+        return matchedVeins.stream().findAny().get();
     }
 
     public int getVeinBlockY() {
