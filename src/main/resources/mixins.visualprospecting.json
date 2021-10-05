@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.7.11",
+  "package": "com.sinthoras.visualprospecting.mixins",
+  "refmap": "mixins.visualprospecting.refmap.json",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "VPJourneyMapWorldIdMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
