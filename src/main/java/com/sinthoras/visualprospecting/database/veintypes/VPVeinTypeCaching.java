@@ -90,7 +90,9 @@ public class VPVeinTypeCaching implements Runnable {
     }
 
     private static File getVeinTypeStorageInfoFile() {
-        return new File(VP.configFile.getParent() + "/" + VPTags.MODID + "_veintypes");
+        final File directory = VPUtils.getSubDirectory(VPTags.VISUALPROSPECTING_DIR);
+        directory.mkdirs();
+        return new File(directory, "veintypesLUT");
     }
 
     private static void loadVeinTypeStorageInfo() {
