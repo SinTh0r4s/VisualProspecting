@@ -6,7 +6,8 @@
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "VPTestInjection"
+    "VPTestInjection",
+    "VPJourneymapClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1
