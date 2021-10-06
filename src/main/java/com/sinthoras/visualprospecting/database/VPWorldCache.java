@@ -8,13 +8,14 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 
 public class VPWorldCache {
-    private static HashMap<Integer, VPDimensionCache> dimensions = new HashMap<>();
-    private static boolean needsSaving = false;
-    private static File saveDirectory;
+    private HashMap<Integer, VPDimensionCache> dimensions = new HashMap<>();
+    private boolean needsSaving = false;
+    private File worldCacheDirectory;
 
-    public static boolean loadVeinCache(File worldDirectory) {
-        saveDirectory = VPUtils.getVPWorldStorageDirectory(worldDirectory);
-        final HashMap<Integer, ByteBuffer> dimensionBuffers = VPUtils.getDIMFiles(saveDirectory);
+    public boolean loadVeinCache(File directory) {
+        worldCacheDirectory = directory;
+        worldCacheDirectory.mkdirs();
+        final HashMap<Integer, ByteBuffer> dimensionBuffers = VPUtils.getDIMFiles(worldCacheDirectory);
         if(dimensionBuffers.size() == 0)
             return false;
 
@@ -26,23 +27,23 @@ public class VPWorldCache {
         return true;
     }
 
-    public static void saveVeinCache() {
+    public void saveVeinCache() {
         if(needsSaving) {
             for (VPDimensionCache dimension : dimensions.values()) {
                 final ByteBuffer byteBuffer = dimension.saveVeinCache();
                 if (byteBuffer != null)
-                    VPUtils.appendToFile(new File(saveDirectory.toPath() + "/DIM" + dimension.dimensionId), byteBuffer);
+                    VPUtils.appendToFile(new File(worldCacheDirectory.toPath() + "/DIM" + dimension.dimensionId), byteBuffer);
             }
             needsSaving = false;
         }
     }
 
-    public static void reset() {
+    public void reset() {
         dimensions = new HashMap<>();
         needsSaving = false;
     }
 
-    public static void putVeinType(int dimensionId, int chunkX, int chunkZ, final VPVeinType veinType) {
+    public void putVeinType(int dimensionId, int chunkX, int chunkZ, final VPVeinType veinType) {
         VPDimensionCache dimension = dimensions.get(dimensionId);
         if(dimension == null) {
             dimension = new VPDimensionCache(dimensionId);
@@ -51,7 +52,7 @@ public class VPWorldCache {
         needsSaving |= dimension.putVeinType(chunkX, chunkZ, veinType);
     }
 
-    public static VPVeinType getVeinType(int dimensionId, int chunkX, int chunkZ) {
+    public VPVeinType getVeinType(int dimensionId, int chunkX, int chunkZ) {
         VPDimensionCache dimension = dimensions.get(dimensionId);
         if(dimension == null)
             return VPVeinType.NO_VEIN;

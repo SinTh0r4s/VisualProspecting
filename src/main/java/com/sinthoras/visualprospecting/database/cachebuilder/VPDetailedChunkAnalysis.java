@@ -1,7 +1,7 @@
 package com.sinthoras.visualprospecting.database.cachebuilder;
 
+import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPUtils;
-import com.sinthoras.visualprospecting.database.VPWorldCache;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
 import io.xol.enklume.nbt.*;
@@ -36,14 +36,15 @@ public class VPDetailedChunkAnalysis {
     }
 
     public void cleanUpWithNeighbors(final HashMap<Long, Integer> veinChunkY) {
-        final VPVeinType[] neighbors = new VPVeinType[]{VPWorldCache.getVeinType(dimensionId, chunkX - 3, chunkZ + 3),
-                VPWorldCache.getVeinType(dimensionId, chunkX, chunkZ + 3),
-                VPWorldCache.getVeinType(dimensionId, chunkX + 3, chunkZ + 3),
-                VPWorldCache.getVeinType(dimensionId, chunkX + 3, chunkZ),
-                VPWorldCache.getVeinType(dimensionId, chunkX + 3, chunkZ - 3),
-                VPWorldCache.getVeinType(dimensionId, chunkX, chunkZ - 3),
-                VPWorldCache.getVeinType(dimensionId, chunkX - 3, chunkZ - 3),
-                VPWorldCache.getVeinType(dimensionId, chunkX - 3, chunkZ)
+        final VPVeinType[] neighbors = new VPVeinType[] {
+                VP.serverVeinCache.getVeinType(dimensionId, chunkX - 3, chunkZ + 3),
+                VP.serverVeinCache.getVeinType(dimensionId, chunkX, chunkZ + 3),
+                VP.serverVeinCache.getVeinType(dimensionId, chunkX + 3, chunkZ + 3),
+                VP.serverVeinCache.getVeinType(dimensionId, chunkX + 3, chunkZ),
+                VP.serverVeinCache.getVeinType(dimensionId, chunkX + 3, chunkZ - 3),
+                VP.serverVeinCache.getVeinType(dimensionId, chunkX, chunkZ - 3),
+                VP.serverVeinCache.getVeinType(dimensionId, chunkX - 3, chunkZ - 3),
+                VP.serverVeinCache.getVeinType(dimensionId, chunkX - 3, chunkZ)
         };
         final int[] neighborVeinBlockY = new int[] {
                 veinChunkY.getOrDefault(VPUtils.chunkCoordsToKey(chunkX, chunkZ + 3), 0),

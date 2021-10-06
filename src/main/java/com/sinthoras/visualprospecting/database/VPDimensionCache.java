@@ -10,8 +10,8 @@ import java.util.HashSet;
 
 public class VPDimensionCache {
 
-    private HashMap<Long, VPVeinType> oreChunks = new HashMap<>();
-    private HashSet<Long> changedOrNew = new HashSet<>();
+    private final HashMap<Long, VPVeinType> oreChunks = new HashMap<>();
+    private final HashSet<Long> changedOrNew = new HashSet<>();
     private boolean needsSaving = false;
     public final int dimensionId;
 
@@ -27,6 +27,8 @@ public class VPDimensionCache {
                 byteBuffer.putShort(VPVeinTypeCaching.getVeinTypeId(oreChunks.get(key)));
             }
             needsSaving = false;
+            changedOrNew.clear();
+            byteBuffer.flip();
             return byteBuffer;
         }
         return null;

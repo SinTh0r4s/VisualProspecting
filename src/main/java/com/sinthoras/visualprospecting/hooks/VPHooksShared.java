@@ -3,7 +3,6 @@ package com.sinthoras.visualprospecting.hooks;
 import api.visualprospecting.VPOreGenCallbackHandler;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPConfig;
-import com.sinthoras.visualprospecting.database.VPWorldCache;
 import com.sinthoras.visualprospecting.database.cachebuilder.VPWorldAnalysis;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -46,7 +45,7 @@ public class VPHooksShared {
 		GregTech_API.sAfterGTPostload.add(() -> GT_Worldgenerator.registerOreGenCallback(new VPOreGenCallbackHandler() {
 			@Override
 			public void prospectPotentialNewVein(String oreMixName, World aWorld, int aX, int aZ) {
-				VPWorldCache.putVeinType(aWorld.provider.dimensionId, aX, aZ, VPVeinTypeCaching.getVeinType(oreMixName));
+				VP.serverVeinCache.putVeinType(aWorld.provider.dimensionId, aX, aZ, VPVeinTypeCaching.getVeinType(oreMixName));
 			}
 		}));
 	}
@@ -58,10 +57,11 @@ public class VPHooksShared {
 	// register server commands in this event handler
 	public void fmlLifeCycleEvent(FMLServerStartingEvent event) {
 		final File worldDirectory = event.getServer().getEntityWorld().getSaveHandler().getWorldDirectory();
-		if(VPWorldCache.loadVeinCache(worldDirectory) == false || VPConfig.recacheVeins) {
+		if(VP.serverVeinCache.loadVeinCache(event.getServer().getEntityWorld()) == false || VPConfig.recacheVeins) {
 			try {
 				VPWorldAnalysis world = new VPWorldAnalysis(worldDirectory);
 				world.cacheVeins();
+				VP.serverVeinCache.saveVeinCache();
 			} catch (IOException | DataFormatException e) {
 				VP.info("Could not load world save files to build vein cache!");
 				e.printStackTrace();
@@ -74,7 +74,7 @@ public class VPHooksShared {
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerStoppingEvent event) {
-		VPWorldCache.saveVeinCache();
+		VP.serverVeinCache.saveVeinCache();
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerStoppedEvent event) {

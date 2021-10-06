@@ -1,7 +1,6 @@
 package com.sinthoras.visualprospecting.database.cachebuilder;
 
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.database.VPWorldCache;
 import io.xol.enklume.MinecraftWorld;
 
 import java.io.File;
@@ -19,7 +18,7 @@ public class VPWorldAnalysis {
 
     public void cacheVeins() throws IOException, DataFormatException {
         VP.info("Starting to parse world save to cache GT vein locations. This might take some time...");
-        VPWorldCache.reset();
+        VP.serverVeinCache.reset();
         final List<Integer> dimensionIds = world.getDimensionIds();
         VPAnalysisProgressTracker.setNumberOfDimensions(dimensionIds.size());
         for(int dimensionId : dimensionIds) {

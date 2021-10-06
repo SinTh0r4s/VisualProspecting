@@ -1,5 +1,7 @@
 package com.sinthoras.visualprospecting;
 
+import com.sinthoras.visualprospecting.database.VPClientCache;
+import com.sinthoras.visualprospecting.database.VPServerCache;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,6 +13,9 @@ public class VP {
 
     public static SimpleNetworkWrapper network;
     public static File configFile;
+
+    public static VPServerCache serverVeinCache = new VPServerCache();
+    public static VPClientCache clientVeinCache = new VPClientCache();
 
     private static Logger LOG = LogManager.getLogger(VPTags.MODID);
     public static final int chunkWidth = 16;

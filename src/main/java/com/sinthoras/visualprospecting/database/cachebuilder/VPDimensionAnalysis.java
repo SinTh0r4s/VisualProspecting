@@ -1,7 +1,7 @@
 package com.sinthoras.visualprospecting.database.cachebuilder;
 
+import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPUtils;
-import com.sinthoras.visualprospecting.database.VPWorldCache;
 import io.xol.enklume.MinecraftRegion;
 import io.xol.enklume.MinecraftWorld;
 import io.xol.enklume.nbt.NBTCompound;
@@ -46,7 +46,7 @@ public class VPDimensionAnalysis {
                             chunk.processMinecraftChunk(root);
 
                             if(chunk.matchesSingleVein()) {
-                                VPWorldCache.putVeinType(dimensionId, chunkX, chunkZ, chunk.getMatchedVein());
+                                VP.serverVeinCache.putVeinType(dimensionId, chunkX, chunkZ, chunk.getMatchedVein());
                                 veinBlockY.put(VPUtils.chunkCoordsToKey(chunkX, chunkZ), chunk.getVeinBlockY());
                             }
                             else {
@@ -64,7 +64,7 @@ public class VPDimensionAnalysis {
         for(long key : chunksForSecondIdentificationPass.keySet()) {
             final VPDetailedChunkAnalysis chunk = chunksForSecondIdentificationPass.get(key);
             chunk.cleanUpWithNeighbors(veinBlockY);
-            VPWorldCache.putVeinType(dimensionId, chunk.chunkX, chunk.chunkZ, chunk.getMatchedVein());
+            VP.serverVeinCache.putVeinType(dimensionId, chunk.chunkX, chunk.chunkZ, chunk.getMatchedVein());
         }
     }
 }

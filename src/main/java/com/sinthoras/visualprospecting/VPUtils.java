@@ -3,6 +3,7 @@ package com.sinthoras.visualprospecting;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import cpw.mods.fml.common.Loader;
+import journeymap.client.io.FileHandler;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -43,10 +44,8 @@ public class VPUtils {
         return chunkCoord - nonNegativeModulo(chunkCoord - 1, 3) + 1;
     }
 
-    public static File getVPWorldStorageDirectory(File worldDirectory) {
-        final File visualprospectingDirectory = new File(worldDirectory.toPath() + "/visualprospecting");
-        visualprospectingDirectory.mkdirs();
-        return visualprospectingDirectory;
+    public static File getSubDirectory(final String subdirectory) {
+        return new File(FileHandler.MinecraftDirectory, subdirectory);
     }
 
     public static ByteBuffer readFileToBuffer(File file) {
@@ -123,7 +122,7 @@ public class VPUtils {
     public static HashMap<Integer, ByteBuffer> getDIMFiles(File directory) {
         try {
             final List<Integer> dimensionIds = Files.walk(directory.toPath(), 1)
-                    .filter(Files::isDirectory)
+                    .filter(Files::isRegularFile)
                     .filter(path -> path.getFileName().toString().startsWith("DIM"))
                     .map(dimensionFolder -> Integer.parseInt(dimensionFolder.getFileName().toString().substring(3)))
                     .collect(Collectors.toList());
