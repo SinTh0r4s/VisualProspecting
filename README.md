@@ -1,17 +1,61 @@
-# VisualProspecting (under development)
+# JourneyMap Add-On: VisualProspecting (under development, API subject to change!)
 ### by SinTh0r4s
 
-This mod is purely for player convenience. It tracks all found GT Ore Veins and visualizes them integrated on a JourneyMap overlay.
+This mod is intended for player convenience, but may also be used as API, since it provides the location of all GT ore veins in a cache. VisualProspecting tracks all GT Ore Veins a player has found and visualizes them in JourneyMap.
 
-It tracks all ores that a player interacted with. Wether by right or left click. It also integrates prospecting data from _GT Advanced Prospector_.
+VisualProspecting tracks all ores that a player interacted with, by right or by left click. It also integrates prospecting data from _GT Advanced Prospector_.
 
-It also adds a craftable _Prospectors Log_ that allows to share all prospected GT Ore Veins of a player to be shared/synchronized to whoever will read the book.
+Further, it adds a craftable _Prospectors Log_ that allows sharing prospected locations between players.
 
-This mod is taylored to _GregTech: New Horizons 2_, but feel free to use it however you like. The power of MIT is yours ;)
+This mod is tailored to _GregTech: New Horizons 2_, but feel free to use it however you like. However, you almost certainly are required to adapt the code. The power of MIT is yours ;)
 
-### Modules
 
- - [x] World parsing to scan for ore veins
- - [ ] Match found ores to ore veins
- - [x] Persistent server ore vein cache (FileIO)
- - [x] 
+### Add Visual Prospecting as API
+
+You would have a great idea for a new prospecting feature? You may use VPs database as a starting point to save yourself a ton of work. Just add these following changes to your ```build.gradle``` and you are ready to develop.
+
+Add jitpack to your repositories:
+```
+repositories {
+    maven {
+        url = "https://jitpack.io"
+    }
+}
+```
+
+Add Visual Prospecting in your dependencies:
+```
+dependencies {
+    compile("com.github.SinTh0r4s:VisualProspecting:master-SNAPSHOT")
+}
+```
+
+GregTech, JourneyMap and their respective dependencies will be loaded automatically. You are ready to start now.
+
+
+### Usage as API
+
+You need to determine whether your code is executed on the logical client or logical server. Dependent on your answer you need to use the according database: The client database only knows about ore veins the player has already prospected, while the server database will know about all veins. You may add or request the ore vein for a chunk:
+```
+VP.serverVeinCache.putVeinType(int dimensionId, int chunkX, int chunkZ, VPVeinType veinType);
+VP.serverVeinCache.getVeinType(int dimensionId, int chunkX, int chunkZ);
+
+VP.clientVeinCache.putVeinType(int dimensionId, int chunkX, int chunkZ, VPVeinType veinType);
+VP.clientVeinCache.getVeinType(int dimensionId, int chunkX, int chunkZ);
+```
+
+Please keep in mind that chunk coordinates are block coordinates divided by 16! When in doubt you may fall back on:
+```
+int chunkX = VPUtils.coordBlockToChunk(blockX);
+```
+```
+// blockZ is the lowest block coordinate in a chunk. If you want 
+// to iterate over all blocks in that particular chunk you need
+// to add [0, ... 15] to it
+int blockZ = VPUtils.coordChunkToBlock(chunkZ);
+```
+
+Whenever you detect a new ore vein you need to add custom network payloads and transfer the information to the client yourself. Please do your best to disallow a client from querying the complete server database as it would lead to potential abuse. So, please check if the player is allowed to prospect a dimension and location.
+
+Thank you and happy coding,\
+SinTh0r4s
