@@ -8,14 +8,14 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class VPCacheDimension {
+public class VPDimensionCache {
 
     private HashMap<Long, VPVeinType> oreChunks = new HashMap<>();
     private HashSet<Long> changedOrNew = new HashSet<>();
     private boolean needsSaving = false;
     public final int dimensionId;
 
-    public VPCacheDimension(int dimensionId) {
+    public VPDimensionCache(int dimensionId) {
         this.dimensionId = dimensionId;
     }
 

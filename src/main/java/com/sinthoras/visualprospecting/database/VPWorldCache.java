@@ -7,8 +7,8 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 
-public class VPCacheWorld {
-    private static HashMap<Integer, VPCacheDimension> dimensions = new HashMap<>();
+public class VPWorldCache {
+    private static HashMap<Integer, VPDimensionCache> dimensions = new HashMap<>();
     private static boolean needsSaving = false;
     private static File saveDirectory;
 
@@ -19,7 +19,7 @@ public class VPCacheWorld {
             return false;
 
         for(int dimensionId : dimensionBuffers.keySet()) {
-            final VPCacheDimension dimension = new VPCacheDimension(dimensionId);
+            final VPDimensionCache dimension = new VPDimensionCache(dimensionId);
             dimension.loadVeinCache(dimensionBuffers.get(dimensionId));
             dimensions.put(dimensionId, dimension);
         }
@@ -28,7 +28,7 @@ public class VPCacheWorld {
 
     public static void saveVeinCache() {
         if(needsSaving) {
-            for (VPCacheDimension dimension : dimensions.values()) {
+            for (VPDimensionCache dimension : dimensions.values()) {
                 final ByteBuffer byteBuffer = dimension.saveVeinCache();
                 if (byteBuffer != null)
                     VPUtils.appendToFile(new File(saveDirectory.toPath() + "/DIM" + dimension.dimensionId), byteBuffer);
@@ -43,16 +43,16 @@ public class VPCacheWorld {
     }
 
     public static void putVeinType(int dimensionId, int chunkX, int chunkZ, final VPVeinType veinType) {
-        VPCacheDimension dimension = dimensions.get(dimensionId);
+        VPDimensionCache dimension = dimensions.get(dimensionId);
         if(dimension == null) {
-            dimension = new VPCacheDimension(dimensionId);
+            dimension = new VPDimensionCache(dimensionId);
             dimensions.put(dimensionId, dimension);
         }
         needsSaving |= dimension.putVeinType(chunkX, chunkZ, veinType);
     }
 
     public static VPVeinType getVeinType(int dimensionId, int chunkX, int chunkZ) {
-        VPCacheDimension dimension = dimensions.get(dimensionId);
+        VPDimensionCache dimension = dimensions.get(dimensionId);
         if(dimension == null)
             return VPVeinType.NO_VEIN;
         return dimension.getVeinType(chunkX, chunkZ);

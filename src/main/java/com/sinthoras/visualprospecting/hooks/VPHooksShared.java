@@ -3,7 +3,7 @@ package com.sinthoras.visualprospecting.hooks;
 import api.visualprospecting.VPOreGenCallbackHandler;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPConfig;
-import com.sinthoras.visualprospecting.database.VPCacheWorld;
+import com.sinthoras.visualprospecting.database.VPWorldCache;
 import com.sinthoras.visualprospecting.database.cachebuilder.VPWorldAnalysis;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -46,7 +46,7 @@ public class VPHooksShared {
 		GregTech_API.sAfterGTPostload.add(() -> GT_Worldgenerator.registerOreGenCallback(new VPOreGenCallbackHandler() {
 			@Override
 			public void prospectPotentialNewVein(String oreMixName, World aWorld, int aX, int aZ) {
-				VPCacheWorld.putVeinType(aWorld.provider.dimensionId, aX, aZ, VPVeinTypeCaching.getVeinType(oreMixName));
+				VPWorldCache.putVeinType(aWorld.provider.dimensionId, aX, aZ, VPVeinTypeCaching.getVeinType(oreMixName));
 			}
 		}));
 	}
@@ -58,7 +58,7 @@ public class VPHooksShared {
 	// register server commands in this event handler
 	public void fmlLifeCycleEvent(FMLServerStartingEvent event) {
 		final File worldDirectory = event.getServer().getEntityWorld().getSaveHandler().getWorldDirectory();
-		if(VPCacheWorld.loadVeinCache(worldDirectory) == false || VPConfig.recacheVeins) {
+		if(VPWorldCache.loadVeinCache(worldDirectory) == false || VPConfig.recacheVeins) {
 			try {
 				VPWorldAnalysis world = new VPWorldAnalysis(worldDirectory);
 				world.cacheVeins();
@@ -74,7 +74,7 @@ public class VPHooksShared {
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerStoppingEvent event) {
-		VPCacheWorld.saveVeinCache();
+		VPWorldCache.saveVeinCache();
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerStoppedEvent event) {
