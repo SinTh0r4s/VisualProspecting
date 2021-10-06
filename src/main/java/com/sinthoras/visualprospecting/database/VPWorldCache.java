@@ -20,7 +20,7 @@ public class VPWorldCache {
             return false;
 
         for(int dimensionId : dimensionBuffers.keySet()) {
-            final VPDimensionCache dimension = new VPDimensionCache(dimensionId);
+            final VPDimensionCache dimension = dimensions.containsKey(dimensionId) ? dimensions.get(dimensionId) : new VPDimensionCache(dimensionId);
             dimension.loadVeinCache(dimensionBuffers.get(dimensionId));
             dimensions.put(dimensionId, dimension);
         }
