@@ -3,6 +3,8 @@ package com.sinthoras.visualprospecting;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
+import java.io.File;
+
 public class VPConfig {
     private static class Defaults {
         public static final boolean enableProspecting = true;
@@ -22,8 +24,8 @@ public class VPConfig {
     public static int cacheGenerationLogUpdateMinTime;
     public static boolean recacheVeins;
 
-    public static void syncronizeConfiguration() {
-        Configuration configuration = new Configuration(VP.configFile);
+    public static void syncronizeConfiguration(File configFile) {
+        Configuration configuration = new Configuration(configFile);
         configuration.load();
 
         Property enableProspectingProperty = configuration.get(Categories.general, "enableProspecting",

@@ -7,12 +7,9 @@ import org.apache.logging.log4j.Logger;
 
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
-import java.io.File;
-
 public class VP {
 
     public static SimpleNetworkWrapper network;
-    public static File configFile;
 
     public static VPServerCache serverVeinCache = new VPServerCache();
     public static VPClientCache clientVeinCache = new VPClientCache();

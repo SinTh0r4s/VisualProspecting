@@ -29,8 +29,7 @@ public class VPHooksShared {
 	// preInit "Run before anything else. Read your config, create blocks, items, 
 	// etc, and register them with the GameRegistry."
 	public void fmlLifeCycleEvent(FMLPreInitializationEvent event) 	{
-		VP.configFile = event.getSuggestedConfigurationFile();
-		VPConfig.syncronizeConfiguration();
+		VPConfig.syncronizeConfiguration(event.getSuggestedConfigurationFile());
 	}
 	
 	// load "Do your mod setup. Build whatever data structures you care about. Register recipes."
