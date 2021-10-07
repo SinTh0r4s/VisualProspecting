@@ -12,6 +12,7 @@ public class VPConfig {
         public static final int veinIdentificationMaxUpDown = 10;
         public static final int cacheGenerationLogUpdateMinTime = 5;
         public static final boolean recacheVeins = false;
+        public static final int minDelayBetweenVeinRequests = 2000;
     }
 
     private static class Categories {
@@ -23,6 +24,7 @@ public class VPConfig {
     public static int veinIdentificationMaxUpDown;
     public static int cacheGenerationLogUpdateMinTime;
     public static boolean recacheVeins;
+    public static int minDelayBetweenVeinRequests;
 
     public static void syncronizeConfiguration(File configFile) {
         Configuration configuration = new Configuration(configFile);
@@ -46,6 +48,11 @@ public class VPConfig {
                 Defaults.cacheGenerationLogUpdateMinTime, "Minimum between log updates to show progress when " +
                         "caching save files. This happens only ONCE!");
         cacheGenerationLogUpdateMinTime = cacheGenerationLogUpdateMinTimeProperty.getInt();
+
+        Property minDelayBetweenVeinRequestsProperty = configuration.get(Categories.general, "minDelayBetweenVeinRequests",
+                Defaults.minDelayBetweenVeinRequests, "Anti spam mechanic: What is the minimum delay (in milliseconds)" +
+                        " a player is allowed to request ore vein information.");
+        minDelayBetweenVeinRequests = minDelayBetweenVeinRequestsProperty.getInt();
 
         Property recacheVeinsProperty = configuration.get(Categories.general, "recacheVeins", Defaults.recacheVeins,
                 "Redo GT ore vein caching if set to True. Will automatically be set back to False the next " +

@@ -49,7 +49,11 @@ public class VPWorldCache {
             dimension = new VPDimensionCache(dimensionId);
             dimensions.put(dimensionId, dimension);
         }
-        needsSaving |= dimension.putVeinType(chunkX, chunkZ, veinType);
+        final boolean updatedDimensionCache = dimension.putVeinType(chunkX, chunkZ, veinType);
+        needsSaving |= updatedDimensionCache;
+        if(updatedDimensionCache) {
+            onNewVein(veinType);
+        }
     }
 
     public VPVeinType getVeinType(int dimensionId, int chunkX, int chunkZ) {
@@ -57,5 +61,9 @@ public class VPWorldCache {
         if(dimension == null)
             return VPVeinType.NO_VEIN;
         return dimension.getVeinType(chunkX, chunkZ);
+    }
+
+    protected void onNewVein(VPVeinType veinType) {
+
     }
 }

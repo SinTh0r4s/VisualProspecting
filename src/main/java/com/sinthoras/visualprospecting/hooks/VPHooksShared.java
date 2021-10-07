@@ -3,8 +3,11 @@ package com.sinthoras.visualprospecting.hooks;
 import api.visualprospecting.VPOreGenCallbackHandler;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPConfig;
+import com.sinthoras.visualprospecting.VPTags;
 import com.sinthoras.visualprospecting.database.cachebuilder.VPWorldAnalysis;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
+import com.sinthoras.visualprospecting.network.VPProspectingAnswer;
+import com.sinthoras.visualprospecting.network.VPProspectingRequest;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -14,6 +17,8 @@ import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.Side;
 import gregtech.api.GregTech_API;
 import gregtech.common.GT_Worldgenerator;
 import net.minecraft.world.World;
@@ -30,6 +35,11 @@ public class VPHooksShared {
 	// etc, and register them with the GameRegistry."
 	public void fmlLifeCycleEvent(FMLPreInitializationEvent event) 	{
 		VPConfig.syncronizeConfiguration(event.getSuggestedConfigurationFile());
+
+		VP.network = NetworkRegistry.INSTANCE.newSimpleChannel(VPTags.MODID);
+		int networkId = 0;
+		VP.network.registerMessage(VPProspectingRequest.Handler.class, VPProspectingRequest.class, networkId++, Side.SERVER);
+		VP.network.registerMessage(VPProspectingAnswer.Handler.class, VPProspectingAnswer.class, networkId++, Side.CLIENT);
 	}
 	
 	// load "Do your mod setup. Build whatever data structures you care about. Register recipes."

@@ -45,6 +45,13 @@ public class VPVeinType {
         return size > 24;
     }
 
+    public boolean containsOre(short oreMetaData) {
+        return primaryOreMeta == oreMetaData
+                || secondaryOreMeta == oreMetaData
+                || inBetweenOreMeta == oreMetaData
+                || sporadicOreMeta == oreMetaData;
+    }
+
     public HashSet<Short> getOresAtLayer(int layerBlockY) {
         final HashSet<Short> result = new HashSet<>();
         switch(layerBlockY) {
