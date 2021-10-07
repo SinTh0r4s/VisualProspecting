@@ -10,6 +10,7 @@ import java.util.*;
 
 // Slower, but more sophisticated approach to identify overlapping veins
 public class VPDetailedChunkAnalysis {
+
     private final int dimensionId;
     public final int chunkX;
     public final int chunkZ;

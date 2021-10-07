@@ -8,6 +8,7 @@ import java.util.HashSet;
 
 // A slim, but faster version to identify >90% of veins
 public class VPChunkAnalysis {
+
     private final HashSet<Short> ores = new HashSet<>();
     private final HashSet<VPVeinType> matchedVeins = new HashSet<>();
     private int minVeinBlockY = 256;

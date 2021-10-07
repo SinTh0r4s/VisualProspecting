@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 
 public class VPWorldCache {
+
     private HashMap<Integer, VPDimensionCache> dimensions = new HashMap<>();
     private boolean needsSaving = false;
     private File worldCacheDirectory;

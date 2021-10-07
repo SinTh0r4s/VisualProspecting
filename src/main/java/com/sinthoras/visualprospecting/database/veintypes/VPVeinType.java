@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class VPVeinType {
+
     public static final int veinHeight = 9;
 
     public final String name;

@@ -6,7 +6,9 @@ import net.minecraftforge.common.config.Property;
 import java.io.File;
 
 public class VPConfig {
+
     private static class Defaults {
+
         public static final boolean enableProspecting = true;
         public static final int veinSearchDiameter = 8;
         public static final int veinIdentificationMaxUpDown = 10;

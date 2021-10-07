@@ -6,6 +6,7 @@ import io.xol.enklume.nbt.NBTShort;
 import io.xol.enklume.nbt.NBTString;
 
 public class VPGregTechOre {
+
     public final boolean isValidGTOre;
     public final short metaData;
     public final int blockY;

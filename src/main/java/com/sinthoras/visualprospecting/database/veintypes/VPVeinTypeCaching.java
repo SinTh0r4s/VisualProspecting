@@ -2,7 +2,6 @@ package com.sinthoras.visualprospecting.database.veintypes;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPTags;
 import com.sinthoras.visualprospecting.VPUtils;
 import gregtech.common.GT_Worldgen_GT_Ore_Layer;
