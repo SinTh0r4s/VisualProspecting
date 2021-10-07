@@ -6,7 +6,7 @@ import com.sinthoras.visualprospecting.VPConfig;
 import com.sinthoras.visualprospecting.VPTags;
 import com.sinthoras.visualprospecting.database.cachebuilder.VPWorldAnalysis;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
-import com.sinthoras.visualprospecting.network.VPProspectingAnswer;
+import com.sinthoras.visualprospecting.network.VPProspectingNotification;
 import com.sinthoras.visualprospecting.network.VPProspectingRequest;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -39,7 +39,7 @@ public class VPHooksShared {
 		VP.network = NetworkRegistry.INSTANCE.newSimpleChannel(VPTags.MODID);
 		int networkId = 0;
 		VP.network.registerMessage(VPProspectingRequest.Handler.class, VPProspectingRequest.class, networkId++, Side.SERVER);
-		VP.network.registerMessage(VPProspectingAnswer.Handler.class, VPProspectingAnswer.class, networkId++, Side.CLIENT);
+		VP.network.registerMessage(VPProspectingNotification.Handler.class, VPProspectingNotification.class, networkId++, Side.CLIENT);
 	}
 	
 	// load "Do your mod setup. Build whatever data structures you care about. Register recipes."

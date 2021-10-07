@@ -96,7 +96,7 @@ public class VPProspectingRequest implements IMessage {
                             // Prioritise center vein
                             final VPVeinType centerVein = VP.serverVeinCache.getVeinType(message.dimensionId, chunkX, chunkZ);
                             if(centerVein.containsOre(metaData)) {
-                                return new VPProspectingAnswer(message.dimensionId, chunkX, chunkZ, centerVein.name);
+                                return new VPProspectingNotification(message.dimensionId, chunkX, chunkZ, centerVein.name);
                             }
 
                             // Check if neighboring veins could fit
@@ -111,7 +111,7 @@ public class VPProspectingRequest implements IMessage {
                                         final VPVeinType neighborVein = VP.serverVeinCache.getVeinType(message.dimensionId, neighborChunkX, neighborChunkZ);
                                         final int maxDistance = ((neighborVein.blockSize + 16) >> 4) + 1;  // Equals to: ceil(blockSize / 16.0) + 1
                                         if(neighborVein.containsOre(message.foundOreMetaData) && distanceBlocks <= maxDistance) {
-                                            return new VPProspectingAnswer(message.dimensionId, neighborChunkX, neighborChunkZ, neighborVein.name);
+                                            return new VPProspectingNotification(message.dimensionId, neighborChunkX, neighborChunkZ, neighborVein.name);
                                         }
                                     }
                         }

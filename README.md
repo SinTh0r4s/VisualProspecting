@@ -55,7 +55,9 @@ int chunkX = VPUtils.coordBlockToChunk(blockX);
 int blockZ = VPUtils.coordChunkToBlock(chunkZ);
 ```
 
-Whenever you detect a new ore vein you need to add custom network payloads and transfer the information to the client yourself. Please do your best to disallow a client from querying the complete server database as it would lead to potential abuse. So, please check if the player is allowed to prospect a dimension and location.
+Whenever you detect a new ore vein you need to add custom network payloads and request the information from the logical server yourself. Please do your best to disallow a logical client from querying the complete server database as it would lead to potential abuse. So, please check if the player is allowed to prospect a dimension and location.
+
+If you simply want to notify a logical client from the logical server you may send a ``VPProspectingNotification`` to the logical client. It will be handled from the client.
 
 Thank you and happy coding,\
 SinTh0r4s
