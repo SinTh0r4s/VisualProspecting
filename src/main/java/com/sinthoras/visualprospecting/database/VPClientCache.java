@@ -34,8 +34,7 @@ public class VPClientCache extends VPWorldCache{
     }
 
     protected void onNewVein(VPVeinType veinType) {
-        final String veinName = veinType.name.substring(8, 9).toUpperCase() + veinType.name.substring(9);
-        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentTranslation("visualprospecting.vein.prospected", veinName));
+        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentTranslation("visualprospecting.vein.prospected", veinType.getNameReadable()));
 
         final String oreNames = veinType.getOreMaterials().stream().map(material -> material.mLocalizedName).collect(Collectors.joining(", "));
         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentTranslation("visualprospecting.vein.contents", oreNames));

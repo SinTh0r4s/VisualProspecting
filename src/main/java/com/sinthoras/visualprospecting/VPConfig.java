@@ -15,6 +15,7 @@ public class VPConfig {
         public static final int cacheGenerationLogUpdateMinTime = 5;
         public static final boolean recacheVeins = false;
         public static final int minDelayBetweenVeinRequests = 2000;
+        public static final int minZoomLevel = 1;
     }
 
     private static class Categories {
@@ -27,6 +28,7 @@ public class VPConfig {
     public static int cacheGenerationLogUpdateMinTime;
     public static boolean recacheVeins;
     public static int minDelayBetweenVeinRequests;
+    public static int minZoomLevel;
 
     public static void syncronizeConfiguration(File configFile) {
         Configuration configuration = new Configuration(configFile);
@@ -55,6 +57,10 @@ public class VPConfig {
                 Defaults.minDelayBetweenVeinRequests, "Anti spam mechanic: What is the minimum delay (in milliseconds)" +
                         " a player is allowed to request ore vein information.");
         minDelayBetweenVeinRequests = minDelayBetweenVeinRequestsProperty.getInt();
+
+        Property minZoomLevelProperty = configuration.get(Categories.general, "minZoomLevel", Defaults.minZoomLevel,
+                "Sets the minimum zoom level at which ore veins are displayed. Zoom starts at 0 and increments linearly.");
+        minZoomLevel = minZoomLevelProperty.getInt();
 
         Property recacheVeinsProperty = configuration.get(Categories.general, "recacheVeins", Defaults.recacheVeins,
                 "Redo GT ore vein caching if set to True. Will automatically be set back to False the next " +

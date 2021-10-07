@@ -62,6 +62,10 @@ public class VPVeinType {
         return oresAsHashSet.stream().map(metaData -> GregTech_API.sGeneratedMaterials[metaData]).collect(Collectors.toList());
     }
 
+    public String getNameReadable() {
+        return name.substring(8, 9).toUpperCase() + name.substring(9);
+    }
+
     public HashSet<Short> getOresAtLayer(int layerBlockY) {
         final HashSet<Short> result = new HashSet<>();
         switch(layerBlockY) {
