@@ -12,9 +12,11 @@ import journeymap.common.Journeymap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
 import java.io.File;
+import java.util.stream.Collectors;
 
 public class VPClientCache extends VPWorldCache{
 
@@ -26,13 +28,17 @@ public class VPClientCache extends VPWorldCache{
         }
 
         final String suffix = minecraft.isSingleplayer() ? "" : worldId != null ? "_" + worldId : "";
-        final File gamemodeFilder = new File(FileHandler.MinecraftDirectory, minecraft.isSingleplayer() ? VPTags.CLIENT_SP_DIR : VPTags.CLIENT_MP_DIR);
-        final File worldCacheDirectory = new File(gamemodeFilder, WorldData.getWorldName(minecraft, false) + suffix);
+        final File gameModeFolder = new File(FileHandler.MinecraftDirectory, minecraft.isSingleplayer() ? VPTags.CLIENT_SP_DIR : VPTags.CLIENT_MP_DIR);
+        final File worldCacheDirectory = new File(gameModeFolder, WorldData.getWorldName(minecraft, false) + suffix);
         return super.loadVeinCache(worldCacheDirectory);
     }
 
     protected void onNewVein(VPVeinType veinType) {
-        Minecraft.getMinecraft().thePlayer.sendChatMessage(veinType.name);
+        final String veinName = veinType.name.substring(8, 9).toUpperCase() + veinType.name.substring(9);
+        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentTranslation("visualprospecting.vein.prospected", veinName));
+
+        final String oreNames = veinType.getOreMaterials().stream().map(material -> material.mLocalizedName).collect(Collectors.joining(", "));
+        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentTranslation("visualprospecting.vein.contents", oreNames));
     }
 
     public void onOreInteracted(World world, int blockX, int blockY, int blockZ, EntityPlayer entityPlayer) {

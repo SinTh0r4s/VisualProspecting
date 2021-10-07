@@ -1,7 +1,12 @@
 package com.sinthoras.visualprospecting.database.veintypes;
 
+import gregtech.api.GregTech_API;
+import gregtech.api.enums.Materials;
+
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class VPVeinType {
 
@@ -51,6 +56,10 @@ public class VPVeinType {
                 || secondaryOreMeta == oreMetaData
                 || inBetweenOreMeta == oreMetaData
                 || sporadicOreMeta == oreMetaData;
+    }
+
+    public List<Materials> getOreMaterials() {
+        return oresAsHashSet.stream().map(metaData -> GregTech_API.sGeneratedMaterials[metaData]).collect(Collectors.toList());
     }
 
     public HashSet<Short> getOresAtLayer(int layerBlockY) {
