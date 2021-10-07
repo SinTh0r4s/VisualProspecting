@@ -3,6 +3,7 @@ package com.sinthoras.visualprospecting.network;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPConfig;
 import com.sinthoras.visualprospecting.VPUtils;
+import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -71,6 +72,7 @@ public class VPProspectingRequest implements IMessage {
 
         @Override
         public IMessage onMessage(VPProspectingRequest message, MessageContext ctx) {
+            // Check if request is valid/not tempered with
             final UUID uuid = ctx.getServerHandler().playerEntity.getUniqueID();
             final long lastRequest = lastRequestPerPlayer.containsKey(uuid) ? lastRequestPerPlayer.get(uuid) : 0;
             final long timestamp = System.currentTimeMillis();
@@ -90,9 +92,28 @@ public class VPProspectingRequest implements IMessage {
                         final short metaData = ((GT_TileEntity_Ores) tileEntity).mMetaData;
                         if(metaData <= 16000 && (metaData % 1000) == message.foundOreMetaData) {
                             lastRequestPerPlayer.put(uuid, timestamp);
-                            final String oreVeinName = VP.serverVeinCache.getVeinType(message.dimensionId, chunkX, chunkZ).name;
-                            // TODO: check neighboring ore chunks if ore is not in directly corresponding ore chunk
-                            return new VPProspectingAnswer(message.dimensionId, chunkX, chunkZ, oreVeinName);
+
+                            // Prioritise center vein
+                            final VPVeinType centerVein = VP.serverVeinCache.getVeinType(message.dimensionId, chunkX, chunkZ);
+                            if(centerVein.containsOre(metaData)) {
+                                return new VPProspectingAnswer(message.dimensionId, chunkX, chunkZ, centerVein.name);
+                            }
+
+                            // Check if neighboring veins could fit
+                            final int centerChunkX = VPUtils.mapToCenterOreChunkCoord(chunkX);
+                            final int centerChunkZ = VPUtils.mapToCenterOreChunkCoord(chunkZ);
+                            for(int offsetChunkX = -3;offsetChunkX <=3;offsetChunkX+=3)
+                                for(int offsetChunkZ = -3;offsetChunkZ <=3;offsetChunkZ+=3)
+                                    if(offsetChunkX != 0 || offsetChunkZ != 0) {
+                                        final int neighborChunkX = centerChunkX + offsetChunkX;
+                                        final int neighborChunkZ = centerChunkZ + offsetChunkZ;
+                                        final int distanceBlocks = Math.max(Math.abs(neighborChunkX - chunkX), Math.abs(neighborChunkZ - chunkZ));
+                                        final VPVeinType neighborVein = VP.serverVeinCache.getVeinType(message.dimensionId, neighborChunkX, neighborChunkZ);
+                                        final int maxDistance = ((neighborVein.blockSize + 16) >> 4) + 1;  // Equals to: ceil(blockSize / 16.0) + 1
+                                        if(neighborVein.containsOre(message.foundOreMetaData) && distanceBlocks <= maxDistance) {
+                                            return new VPProspectingAnswer(message.dimensionId, neighborChunkX, neighborChunkZ, neighborVein.name);
+                                        }
+                                    }
                         }
                     }
                 }

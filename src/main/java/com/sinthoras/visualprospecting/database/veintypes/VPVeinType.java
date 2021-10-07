@@ -14,7 +14,7 @@ public class VPVeinType {
 
     public final String name;
     public short veinId;
-    public final int size;
+    public final int blockSize;
     public final short primaryOreMeta;
     public final short secondaryOreMeta;
     public final short inBetweenOreMeta;
@@ -24,10 +24,10 @@ public class VPVeinType {
     // Available after VisualProspecting post GT initialization
     public final static VPVeinType NO_VEIN = new VPVeinType("ore.mix.none", 0, (short)-1, (short)-1, (short)-1, (short)-1);
 
-    public VPVeinType(String name, int size, short primaryOreMeta, short secondaryOreMeta, short inBetweenOreMeta, short sporadicOreMeta)
+    public VPVeinType(String name, int blockSize, short primaryOreMeta, short secondaryOreMeta, short inBetweenOreMeta, short sporadicOreMeta)
     {
         this.name = name;
-        this.size = size;
+        this.blockSize = blockSize;
         this.primaryOreMeta = primaryOreMeta;
         this.secondaryOreMeta = secondaryOreMeta;
         this.inBetweenOreMeta = inBetweenOreMeta;
@@ -48,7 +48,7 @@ public class VPVeinType {
     }
 
     public boolean canOverlapIntoNeighborOreChunk() {
-        return size > 24;
+        return blockSize > 24;
     }
 
     public boolean containsOre(short oreMetaData) {
