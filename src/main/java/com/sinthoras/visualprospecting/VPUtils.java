@@ -2,8 +2,9 @@ package com.sinthoras.visualprospecting;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sinthoras.visualprospecting.hooks.VPHooksClient;
 import cpw.mods.fml.common.Loader;
-import journeymap.client.io.FileHandler;
+import net.minecraft.client.Minecraft;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -44,8 +45,17 @@ public class VPUtils {
         return chunkCoord - nonNegativeModulo(chunkCoord - 1, 3) + 1;
     }
 
+    public static File getMinecraftDirectory() {
+        if(VPMod.proxy instanceof VPHooksClient) {
+            return Minecraft.getMinecraft().mcDataDir;
+        }
+        else {
+            return new File(".");
+        }
+    }
+
     public static File getSubDirectory(final String subdirectory) {
-        return new File(FileHandler.MinecraftDirectory, subdirectory);
+        return new File(getMinecraftDirectory(), subdirectory);
     }
 
     public static ByteBuffer readFileToBuffer(File file) {
