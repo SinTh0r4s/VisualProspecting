@@ -55,6 +55,6 @@ public class VPDimensionCache {
 
     public VPVeinType getVeinType(int chunkX, int chunkZ) {
         final long key = VPUtils.chunkCoordsToKey(VPUtils.mapToCenterOreChunkCoord(chunkX), VPUtils.mapToCenterOreChunkCoord(chunkZ));
-        return oreChunks.get(key);
+        return oreChunks.getOrDefault(key, VPVeinType.NO_VEIN);
     }
 }
