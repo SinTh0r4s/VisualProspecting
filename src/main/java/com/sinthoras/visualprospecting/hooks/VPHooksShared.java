@@ -48,6 +48,7 @@ public class VPHooksShared {
 	// load "Do your mod setup. Build whatever data structures you care about. Register recipes."
 	public void fmlLifeCycleEvent(FMLInitializationEvent event) {
 		FMLCommonHandler.instance().bus().register(new VPHooksFML());
+		MinecraftForge.EVENT_BUS.register(new VPHooksEventBus());
 	}
 	
 	// postInit "Handle interaction with other mods, complete your setup based on this."
