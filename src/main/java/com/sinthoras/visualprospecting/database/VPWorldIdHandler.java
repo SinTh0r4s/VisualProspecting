@@ -45,7 +45,7 @@ public class VPWorldIdHandler extends WorldSavedData {
         compound.setString(VPTags.worldId, worldId);
     }
 
-    public String getWorldId() {
-        return worldId;
+    public static String getWorldId() {
+        return instance.worldId;
     }
 }

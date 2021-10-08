@@ -22,10 +22,10 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import gregtech.api.GregTech_API;
 import gregtech.common.GT_Worldgenerator;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.zip.DataFormatException;
 
@@ -65,11 +65,11 @@ public class VPHooksShared {
 
 	// register server commands in this event handler
 	public void fmlLifeCycleEvent(FMLServerStartingEvent event) {
-		VPWorldIdHandler.load(event.getServer().worldServers[0]);
-		final File worldDirectory = event.getServer().getEntityWorld().getSaveHandler().getWorldDirectory();
-		if(VP.serverVeinCache.loadVeinCache(event.getServer().getEntityWorld()) == false || VPConfig.recacheVeins) {
+		final MinecraftServer minecraftServer = event.getServer();
+		VPWorldIdHandler.load(minecraftServer.worldServers[0]);
+		if(VP.serverVeinCache.loadVeinCache(VPWorldIdHandler.getWorldId()) == false || VPConfig.recacheVeins) {
 			try {
-				VPWorldAnalysis world = new VPWorldAnalysis(worldDirectory);
+				VPWorldAnalysis world = new VPWorldAnalysis(minecraftServer.getEntityWorld().getSaveHandler().getWorldDirectory());
 				world.cacheVeins();
 				VP.serverVeinCache.saveVeinCache();
 			} catch (IOException | DataFormatException e) {

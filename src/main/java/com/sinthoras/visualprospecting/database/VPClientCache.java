@@ -5,7 +5,6 @@ import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
 import com.sinthoras.visualprospecting.network.VPProspectingRequest;
 import gregtech.common.blocks.GT_TileEntity_Ores;
 import journeymap.client.JourneymapClient;
-import journeymap.client.data.WorldData;
 import journeymap.common.Journeymap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,17 +17,8 @@ import java.util.stream.Collectors;
 
 public class VPClientCache extends VPWorldCache{
 
-    public boolean loadVeinCache(String worldId) {
-        final Minecraft minecraft = Minecraft.getMinecraft();
-
-        if (worldId != null) {
-            worldId = worldId.replaceAll("\\W+", "~");
-        }
-
-        final String suffix = minecraft.isSingleplayer() ? "" : worldId != null ? "_" + worldId : "";
-        final File gameModeFolder = new File(VPUtils.getMinecraftDirectory(), minecraft.isSingleplayer() ? VPTags.CLIENT_SP_DIR : VPTags.CLIENT_MP_DIR);
-        final File worldCacheDirectory = new File(gameModeFolder, WorldData.getWorldName(minecraft, false) + suffix);
-        return super.loadVeinCache(worldCacheDirectory);
+    protected File getStorageDirectory() {
+        return VPUtils.getSubDirectory(VPTags.CLIENT_DIR);
     }
 
     protected void onNewVein(VPVeinType veinType) {

@@ -7,14 +7,16 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 
-public class VPWorldCache {
+public abstract class VPWorldCache {
 
     private HashMap<Integer, VPDimensionCache> dimensions = new HashMap<>();
     private boolean needsSaving = false;
     private File worldCacheDirectory;
 
-    public boolean loadVeinCache(File directory) {
-        worldCacheDirectory = directory;
+    protected abstract File getStorageDirectory();
+
+    public boolean loadVeinCache(String worldId) {
+        worldCacheDirectory = new File(getStorageDirectory(), worldId);
         worldCacheDirectory.mkdirs();
         final HashMap<Integer, ByteBuffer> dimensionBuffers = VPUtils.getDIMFiles(worldCacheDirectory);
         if(dimensionBuffers.size() == 0)
