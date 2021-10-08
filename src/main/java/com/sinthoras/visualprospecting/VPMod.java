@@ -17,7 +17,7 @@ public class VPMod {
     // preInit "Run before anything else. Read your config, create blocks, items,
     // etc, and register them with the GameRegistry."
     public void fmlLifeCycleEvent(FMLPreInitializationEvent event) {
-        VP.debug("Registered sided proxy for: " + (proxy instanceof VPHooksClient ? "Client" : "Dedicated server"));
+        VP.debug("Registered sided proxy for: " + (VPUtils.isLogicalClient() ? "Client" : "Dedicated server"));
         VP.debug("preInit()"+event.getModMetadata().name);
         proxy.fmlLifeCycleEvent(event);
     }

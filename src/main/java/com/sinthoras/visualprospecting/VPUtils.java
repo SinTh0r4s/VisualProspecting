@@ -45,8 +45,12 @@ public class VPUtils {
         return chunkCoord - nonNegativeModulo(chunkCoord - 1, 3) + 1;
     }
 
+    public static boolean isLogicalClient() {
+        return VPMod.proxy instanceof VPHooksClient;
+    }
+
     public static File getMinecraftDirectory() {
-        if(VPMod.proxy instanceof VPHooksClient) {
+        if(isLogicalClient()) {
             return Minecraft.getMinecraft().mcDataDir;
         }
         else {
