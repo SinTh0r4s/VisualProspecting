@@ -1,6 +1,6 @@
-package com.sinthoras.visualprospecting.mixins;
+package com.sinthoras.visualprospecting.mixins.journeymap;
 
-import com.sinthoras.visualprospecting.gui.VPMapState;
+import com.sinthoras.visualprospecting.gui.journeymap.VPMapState;
 import journeymap.client.log.StatTimer;
 import journeymap.client.ui.fullscreen.Fullscreen;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,4 +1,4 @@
-package com.sinthoras.visualprospecting.gui;
+package com.sinthoras.visualprospecting.gui.journeymap;
 
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPUtils;
@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sinthoras.visualprospecting.gui.VPReflection.getJourneyMapGridRenderer;
+import static com.sinthoras.visualprospecting.gui.journeymap.VPReflection.getJourneyMapGridRenderer;
 
 public class VPMapState {
     private static final List<VPOreVeinDrawStep> drawSteps = new ArrayList<>();

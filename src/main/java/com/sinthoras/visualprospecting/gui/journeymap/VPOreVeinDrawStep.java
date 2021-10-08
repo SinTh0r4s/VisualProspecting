@@ -1,4 +1,4 @@
-package com.sinthoras.visualprospecting.gui;
+package com.sinthoras.visualprospecting.gui.journeymap;
 
 import com.sinthoras.visualprospecting.VPConfig;
 import com.sinthoras.visualprospecting.VPUtils;

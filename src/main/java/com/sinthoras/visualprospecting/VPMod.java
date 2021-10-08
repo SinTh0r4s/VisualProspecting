@@ -1,6 +1,5 @@
 package com.sinthoras.visualprospecting;
 
-import com.sinthoras.visualprospecting.hooks.VPHooksClient;
 import com.sinthoras.visualprospecting.hooks.VPHooksShared;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;

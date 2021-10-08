@@ -1,4 +1,4 @@
-package com.sinthoras.visualprospecting.gui;
+package com.sinthoras.visualprospecting.gui.journeymap;
 
 import journeymap.client.render.map.GridRenderer;
 import journeymap.client.ui.fullscreen.Fullscreen;

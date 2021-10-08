@@ -4,8 +4,6 @@ import com.sinthoras.visualprospecting.*;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
 import com.sinthoras.visualprospecting.network.VPProspectingRequest;
 import gregtech.common.blocks.GT_TileEntity_Ores;
-import journeymap.client.JourneymapClient;
-import journeymap.common.Journeymap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -30,7 +28,6 @@ public class VPClientCache extends VPWorldCache{
 
     public void onOreInteracted(World world, int blockX, int blockY, int blockZ, EntityPlayer entityPlayer) {
         if(VPConfig.enableProspecting
-                && ((JourneymapClient) Journeymap.proxy).isMapping()
                 && Minecraft.getMinecraft().thePlayer == entityPlayer) {
             final TileEntity tTileEntity = world.getTileEntity(blockX, blockY, blockZ);
             if (tTileEntity instanceof GT_TileEntity_Ores) {

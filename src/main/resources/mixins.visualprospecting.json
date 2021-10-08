@@ -6,9 +6,6 @@
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "VPFullscreenMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+    "journeymap.VPFullscreenMixin"
+  ]
 }
