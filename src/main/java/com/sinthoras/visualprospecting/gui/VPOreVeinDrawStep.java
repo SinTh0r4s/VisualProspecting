@@ -1,6 +1,5 @@
 package com.sinthoras.visualprospecting.gui;
 
-import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPConfig;
 import com.sinthoras.visualprospecting.VPUtils;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
