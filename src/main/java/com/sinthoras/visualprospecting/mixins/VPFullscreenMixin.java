@@ -1,6 +1,6 @@
 package com.sinthoras.visualprospecting.mixins;
 
-import com.sinthoras.visualprospecting.gui.VPOreVeinDrawStep;
+import com.sinthoras.visualprospecting.gui.VPMapState;
 import journeymap.client.log.StatTimer;
 import journeymap.client.ui.fullscreen.Fullscreen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +18,7 @@ public class VPFullscreenMixin {
             remap = false,
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     public void onBeforeDrawWaypoints(CallbackInfo callbackInfo, boolean refreshReady, StatTimer timer, int xOffset, int yOffset, float drawScale) {
-        VPOreVeinDrawStep.onDraw(xOffset, yOffset, drawScale, getMapFontScale(), 0.0D);
+        VPMapState.onDraw(xOffset, yOffset, drawScale, getMapFontScale(), 0.0D);
     }
 
     @Shadow(remap = false)

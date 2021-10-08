@@ -20,10 +20,6 @@ import net.minecraft.util.IIcon;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.sinthoras.visualprospecting.gui.VPReflection.getJourneyMapGridRenderer;
 
 public class VPOreVeinDrawStep implements DrawStep {
 
@@ -56,33 +52,6 @@ public class VPOreVeinDrawStep implements DrawStep {
             final IIcon oreIcon = aMaterial.mIconSet.mTextures[OrePrefixes.ore.mTextureIndex].getIcon();
             drawQuad(oreIcon, pixel.getX() - textureSizeHalf + xOffset, pixel.getY() - textureSizeHalf + yOffset, textureSize, textureSize, 0.0, color, 255, true, GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, false);
         }
-    }
-
-    public static void onDraw(double xOffset, double yOffset, float drawScale, double fontScale, double rotation) {
-        final GridRenderer gridRenderer = getJourneyMapGridRenderer();
-        assert(gridRenderer != null);
-
-        final Minecraft minecraft = Minecraft.getMinecraft();
-        final int centerBlockX = (int) Math.round(gridRenderer.getCenterBlockX());
-        final int centerBlockZ = (int) Math.round(gridRenderer.getCenterBlockZ());
-        final int radiusBlockX = minecraft.displayWidth >> (1 + gridRenderer.getZoom());
-        final int radiusBlockZ = minecraft.displayHeight >> (1 + gridRenderer.getZoom());
-        final int minChunkX = VPUtils.mapToCenterOreChunkCoord(VPUtils.coordBlockToChunk(centerBlockX - radiusBlockX));
-        final int minChunkZ = VPUtils.mapToCenterOreChunkCoord(VPUtils.coordBlockToChunk(centerBlockZ - radiusBlockZ));
-        final int maxChunkX = VPUtils.mapToCenterOreChunkCoord(VPUtils.coordBlockToChunk(centerBlockX + radiusBlockX));
-        final int maxChunkZ = VPUtils.mapToCenterOreChunkCoord(VPUtils.coordBlockToChunk(centerBlockZ + radiusBlockZ));
-
-        List<VPOreVeinDrawStep> drawSteps = new ArrayList<>();
-        for(int chunkX = minChunkX;chunkX <= maxChunkX; chunkX+=3)
-            for(int chunkZ = minChunkZ;chunkZ <= maxChunkZ; chunkZ+=3) {
-                final VPVeinType veinType = VP.clientVeinCache.getVeinType(minecraft.thePlayer.dimension, chunkX, chunkZ);
-                if(veinType != VPVeinType.NO_VEIN) {
-                    drawSteps.add(new VPOreVeinDrawStep(veinType, chunkX, chunkZ));
-                }
-            }
-
-        // TODO: cache list and only rebuild if JourneyMap asks for it
-        gridRenderer.draw(drawSteps, xOffset, yOffset, drawScale, fontScale, rotation);
     }
 
     public static void drawQuad(IIcon icon, double x, double y, double width, double height, double rotation, Integer color, float alpha, boolean blend, int glBlendSfactor, int glBlendDFactor, boolean clampTexture) {
