@@ -9,6 +9,7 @@ import com.sinthoras.visualprospecting.database.cachebuilder.VPWorldAnalysis;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
 import com.sinthoras.visualprospecting.network.VPProspectingNotification;
 import com.sinthoras.visualprospecting.network.VPProspectingRequest;
+import com.sinthoras.visualprospecting.network.VPWorldId;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -41,11 +42,12 @@ public class VPHooksShared {
 		int networkId = 0;
 		VP.network.registerMessage(VPProspectingRequest.Handler.class, VPProspectingRequest.class, networkId++, Side.SERVER);
 		VP.network.registerMessage(VPProspectingNotification.Handler.class, VPProspectingNotification.class, networkId++, Side.CLIENT);
+		VP.network.registerMessage(VPWorldId.Handler.class, VPWorldId.class, networkId++, Side.CLIENT);
 	}
 	
 	// load "Do your mod setup. Build whatever data structures you care about. Register recipes."
 	public void fmlLifeCycleEvent(FMLInitializationEvent event) {
-
+		FMLCommonHandler.instance().bus().register(new VPHooksFML());
 	}
 	
 	// postInit "Handle interaction with other mods, complete your setup based on this."
