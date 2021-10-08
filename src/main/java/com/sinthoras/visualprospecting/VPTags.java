@@ -10,4 +10,5 @@ public class VPTags {
     public static final String CLIENT_SP_DIR = VISUALPROSPECTING_DIR + "client\\sp\\";
     public static final String CLIENT_MP_DIR = VISUALPROSPECTING_DIR + "client\\mp\\";
     public static final String SERVER_DIR = VISUALPROSPECTING_DIR + "server\\";
+    public static final String worldId = "wId";
 }

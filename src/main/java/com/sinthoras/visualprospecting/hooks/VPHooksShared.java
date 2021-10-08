@@ -4,6 +4,7 @@ import api.visualprospecting.VPOreGenCallbackHandler;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPConfig;
 import com.sinthoras.visualprospecting.VPTags;
+import com.sinthoras.visualprospecting.database.VPWorldIdHandler;
 import com.sinthoras.visualprospecting.database.cachebuilder.VPWorldAnalysis;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
 import com.sinthoras.visualprospecting.network.VPProspectingNotification;
@@ -64,6 +65,7 @@ public class VPHooksShared {
 
 	// register server commands in this event handler
 	public void fmlLifeCycleEvent(FMLServerStartingEvent event) {
+		VPWorldIdHandler.load(event.getServer().worldServers[0]);
 		final File worldDirectory = event.getServer().getEntityWorld().getSaveHandler().getWorldDirectory();
 		if(VP.serverVeinCache.loadVeinCache(event.getServer().getEntityWorld()) == false || VPConfig.recacheVeins) {
 			try {
