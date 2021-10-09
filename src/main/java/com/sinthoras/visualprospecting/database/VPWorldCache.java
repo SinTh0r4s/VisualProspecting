@@ -22,8 +22,9 @@ public abstract class VPWorldCache {
         if(dimensionBuffers.isEmpty())
             return false;
 
+        dimensions.clear();
         for(int dimensionId : dimensionBuffers.keySet()) {
-            final VPDimensionCache dimension = dimensions.containsKey(dimensionId) ? dimensions.get(dimensionId) : new VPDimensionCache(dimensionId);
+            final VPDimensionCache dimension = new VPDimensionCache(dimensionId);
             dimension.loadVeinCache(dimensionBuffers.get(dimensionId));
             dimensions.put(dimensionId, dimension);
         }
