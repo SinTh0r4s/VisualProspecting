@@ -9,16 +9,16 @@ import net.minecraft.client.Minecraft;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sinthoras.visualprospecting.gui.journeymap.VPReflection.getJourneyMapGridRenderer;
-
 public class VPMapState {
-    private static final List<VPOreVeinDrawStep> drawSteps = new ArrayList<>();
-    private static int oldMinChunkX = 0;
-    private static int oldMaxChunkX = 0;
-    private static int oldMinChunkZ = 0;
-    private static int oldMaxChunkZ = 0;
+    private final List<VPOreVeinDrawStep> drawSteps = new ArrayList<>();
+    private int oldMinChunkX = 0;
+    private int oldMaxChunkX = 0;
+    private int oldMinChunkZ = 0;
+    private int oldMaxChunkZ = 0;
 
-    public static List<VPOreVeinDrawStep> getOreVeinDrawSteps(final GridRenderer gridRenderer) {
+    public boolean drawOreVeins = true;
+
+    public List<VPOreVeinDrawStep> getOreVeinDrawSteps(final GridRenderer gridRenderer) {
         final Minecraft minecraft = Minecraft.getMinecraft();
         final int centerBlockX = (int) Math.round(gridRenderer.getCenterBlockX());
         final int centerBlockZ = (int) Math.round(gridRenderer.getCenterBlockZ());
@@ -44,12 +44,5 @@ public class VPMapState {
                 }
         }
         return drawSteps;
-    }
-
-    public static void onDraw(double xOffset, double yOffset, float drawScale, double fontScale, double rotation) {
-        final GridRenderer gridRenderer = getJourneyMapGridRenderer();
-        assert (gridRenderer != null);
-
-        gridRenderer.draw(getOreVeinDrawSteps(gridRenderer), xOffset, yOffset, drawScale, fontScale, rotation);
     }
 }
