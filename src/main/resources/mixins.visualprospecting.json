@@ -8,6 +8,7 @@
   "mixins": [
     "journeymap.FullscreenMixin",
     "GT_MetaTileEntity_ScannerMixin",
+    "GT_MetaTileEntity_AdvSeismicProspectorMixin",
     "ItemEditableBookMixin"
   ]
 }
