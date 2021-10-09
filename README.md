@@ -7,7 +7,7 @@ VisualProspecting tracks all ores that a player interacted with, by right or by 
 
 Further, it adds a craftable _Prospectors Log_ that allows sharing prospected locations between players.
 
-This mod is tailored to _GregTech: New Horizons 2_, but feel free to use it however you like. However, you almost certainly are required to adapt the code. The power of MIT is yours ;)
+This mod is tailored to _GregTech: New Horizons 2_, but feel free to use it however you like. Even though this mod is build against the custom GT5U from GT:NH, it should still work fine with other GT5U versions.
 
 
 ### Add Visual Prospecting as API
@@ -40,10 +40,10 @@ You need to determine whether your code is executed on the logical client or log
 VP.serverVeinCache.putVeinType(int dimensionId, int chunkX, int chunkZ, VPVeinType veinType);
 VP.serverVeinCache.getVeinType(int dimensionId, int chunkX, int chunkZ);
 
-VP.clientVeinCache.putVeinType(int dimensionId, int chunkX, int chunkZ, VPVeinType veinType);
+VP.clientVeinCache.putVeinType(int dimensionId, List<VPServerCache.VPProspectionResult> prospectionResults);
 VP.clientVeinCache.getVeinType(int dimensionId, int chunkX, int chunkZ);
 ```
-
+You may also use more sophisticated methods to prospect whole areas at once. Take a look at ``VPServerCache``.
 Please keep in mind that chunk coordinates are block coordinates divided by 16! When in doubt you may fall back on:
 ```
 int chunkX = VPUtils.coordBlockToChunk(blockX);
@@ -61,3 +61,7 @@ If you simply want to notify a logical client from the logical server you may se
 
 Thank you and happy coding,\
 SinTh0r4s
+
+### Warnings
+
+If you look closely, you will find a block of warnings regarding Mixins: ``Injection warning: LVT in gregtech/common/GT_Worldgenerator$WorldGenContainer::worldGenFindVein(II)V has incompatible[...]``. These can be safely ignored.
