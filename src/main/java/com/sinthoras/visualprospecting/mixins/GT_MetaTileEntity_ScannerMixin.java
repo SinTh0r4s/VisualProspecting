@@ -3,7 +3,6 @@ package com.sinthoras.visualprospecting.mixins;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPTags;
 import com.sinthoras.visualprospecting.database.VPServerCache;
-import gregtech.api.interfaces.ITexture;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.tileentities.machines.basic.GT_MetaTileEntity_Scanner;
@@ -23,8 +22,8 @@ import static gregtech.api.util.GT_Utility.ItemNBT.setNBT;
 @Mixin(GT_MetaTileEntity_Scanner.class)
 public abstract class GT_MetaTileEntity_ScannerMixin extends GT_MetaTileEntity_BasicMachine {
 
-    public GT_MetaTileEntity_ScannerMixin(int aID, String aName, String aNameRegional, int aTier, int aAmperage, String aDescription, int aInputSlotCount, int aOutputSlotCount, String aGUIName, String aNEIName, ITexture... aOverlays) {
-        super(aID, aName, aNameRegional, aTier, aAmperage, aDescription, aInputSlotCount, aOutputSlotCount, aGUIName, aNEIName, aOverlays);
+    public GT_MetaTileEntity_ScannerMixin() {
+        super(0, "", "", 0, 0, "", 0, 0, "", "", null);
     }
 
     @Inject(method = "checkRecipe",
