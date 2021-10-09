@@ -10,6 +10,7 @@ import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
 import com.sinthoras.visualprospecting.network.VPProspectingNotification;
 import com.sinthoras.visualprospecting.network.VPProspectingRequest;
 import com.sinthoras.visualprospecting.network.VPWorldId;
+import com.sinthoras.visualprospecting.tileentities.VPAdvancedSeismicProspector;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -49,6 +50,11 @@ public class VPHooksShared {
 	public void fmlLifeCycleEvent(FMLInitializationEvent event) {
 		FMLCommonHandler.instance().bus().register(new VPHooksFML());
 		MinecraftForge.EVENT_BUS.register(new VPHooksEventBus());
+
+		VP.advancedSeismicProspectorLV = new VPAdvancedSeismicProspector(VPConfig.blockIdOffset, "basicmachine.seismicprospector.07", "Advanced Seismic Prospector LV", 1, 4*16, 2);
+		VP.advancedSeismicProspectorMV = new VPAdvancedSeismicProspector(VPConfig.blockIdOffset + 1, "basicmachine.seismicprospector.06", "Advanced Seismic Prospector MV", 2, 7*16, 2);
+		VP.advancedSeismicProspectorHV = new VPAdvancedSeismicProspector(VPConfig.blockIdOffset + 2, "basicmachine.seismicprospector.05", "Advanced Seismic Prospector HV", 3, 10*16, 2);
+		VP.advancedSeismicProspectorEV = new VPAdvancedSeismicProspector(VPConfig.blockIdOffset + 3, "basicmachine.seismicprospector.04", "Advanced Seismic Prospector EV", 4, 13*16, 2);
 	}
 	
 	// postInit "Handle interaction with other mods, complete your setup based on this."

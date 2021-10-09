@@ -6,6 +6,8 @@
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "journeymap.FullscreenMixin"
+    "journeymap.FullscreenMixin",
+    "GT_MetaTileEntity_ScannerMixin",
+    "ItemEditableBookMixin"
   ]
 }

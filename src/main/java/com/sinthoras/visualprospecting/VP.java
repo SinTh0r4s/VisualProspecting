@@ -2,6 +2,7 @@ package com.sinthoras.visualprospecting;
 
 import com.sinthoras.visualprospecting.database.VPClientCache;
 import com.sinthoras.visualprospecting.database.VPServerCache;
+import com.sinthoras.visualprospecting.tileentities.VPAdvancedSeismicProspector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,6 +14,11 @@ public class VP {
 
     public static VPServerCache serverVeinCache = new VPServerCache();
     public static VPClientCache clientVeinCache = new VPClientCache();
+
+    public static VPAdvancedSeismicProspector advancedSeismicProspectorLV;
+    public static VPAdvancedSeismicProspector advancedSeismicProspectorMV;
+    public static VPAdvancedSeismicProspector advancedSeismicProspectorHV;
+    public static VPAdvancedSeismicProspector advancedSeismicProspectorEV;
 
     private static Logger LOG = LogManager.getLogger(VPTags.MODID);
     public static final int gregTechSmallOreMinimumMeta = 16000;
