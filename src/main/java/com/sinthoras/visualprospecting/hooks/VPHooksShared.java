@@ -52,12 +52,6 @@ public class VPHooksShared {
 	// postInit "Handle interaction with other mods, complete your setup based on this."
 	public void fmlLifeCycleEvent(FMLPostInitializationEvent event) {
 		GregTech_API.sAfterGTPostload.add(new VPVeinTypeCaching());
-		GregTech_API.sAfterGTPostload.add(() -> GT_Worldgenerator.registerOreGenCallback(new VPOreGenCallbackHandler() {
-			@Override
-			public void prospectPotentialNewVein(String oreMixName, World aWorld, int aX, int aZ) {
-				VP.serverVeinCache.putVeinType(aWorld.provider.dimensionId, aX, aZ, VPVeinTypeCaching.getVeinType(oreMixName));
-			}
-		}));
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerAboutToStartEvent event) {

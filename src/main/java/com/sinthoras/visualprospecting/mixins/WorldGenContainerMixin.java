@@ -1,6 +1,8 @@
 package com.sinthoras.visualprospecting.mixins;
 
 import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
+import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
 import gregtech.api.objects.XSTR;
 import gregtech.common.GT_Worldgen_GT_Ore_Layer;
 import gregtech.common.GT_Worldgenerator;
@@ -36,7 +38,7 @@ public class WorldGenContainerMixin {
             require = 1,
             locals = LocalCapture.CAPTURE_FAILSOFT)
     private void onOreVeinPlacedFailedA(int oreseedX, int oreseedZ, CallbackInfo callbackInfo, long oreveinSeed, XSTR oreveinRNG, int oreveinPercentageRoll, int noOrePlacedCount, String tDimensionName) {
-        VP.info("Failed at " + mX + "/" + mZ + "    " + "A");
+        VP.serverVeinCache.putVeinType(mWorld.provider.dimensionId, mX, mZ, VPVeinType.NO_VEIN);
     }
 
     @Inject(method = "worldGenFindVein",
@@ -45,7 +47,7 @@ public class WorldGenContainerMixin {
             require = 1,
             locals = LocalCapture.CAPTURE_FAILSOFT)
     private void onOreVeinPlacedFailedB(int oreseedX, int oreseedZ, CallbackInfo ci, long oreveinSeed, XSTR oreveinRNG, int oreveinPercentageRoll, int noOrePlacedCount, String tDimensionName, int placementAttempts, boolean oreveinFound, int i) {
-        VP.info("Failed at " + mX + "/" + mZ + "    " + "B");
+        VP.serverVeinCache.putVeinType(mWorld.provider.dimensionId, mX, mZ, VPVeinType.NO_VEIN);
     }
 
     @Inject(method = "worldGenFindVein",
@@ -54,7 +56,7 @@ public class WorldGenContainerMixin {
             require = 2,
             locals = LocalCapture.CAPTURE_FAILSOFT)
     private void onOreVeinPlacedSuccess(int oreseedX, int oreseedZ, CallbackInfo callbackInfo, long oreveinSeed, XSTR oreveinRNG, int oreveinPercentageRoll, int noOrePlacedCount, String tDimensionName, int placementAttempts, boolean oreveinFound, int i, int tRandomWeight, Iterator var13, GT_Worldgen_GT_Ore_Layer tWorldGen, int placementResult) {
-        VP.info("Generated at " + mX + "/" + mZ + "    " + tWorldGen.mWorldGenName);
+        VP.serverVeinCache.putVeinType(mWorld.provider.dimensionId, mX, mZ, VPVeinTypeCaching.getVeinType(tWorldGen.mWorldGenName));
     }
 
 }
