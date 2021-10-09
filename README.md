@@ -1,7 +1,7 @@
-# JourneyMap Add-On: VisualProspecting (under development, API subject to change!)
+# GregTech5U Add-On: VisualProspecting (under development, API subject to change!)
 ### by SinTh0r4s
 
-This mod is intended for player convenience, but may also be used as API, since it provides the location of all GT ore veins in a cache. VisualProspecting tracks all GT Ore Veins a player has found and visualizes them in JourneyMap.
+This mod is intended for player convenience, but may also be used as API, since it provides the location of all GT ore veins in a cache. VisualProspecting tracks all GT Ore Veins a player has found and visualizes them in JourneyMap (if installed).
 
 VisualProspecting tracks all ores that a player interacted with, by right or by left click. It also integrates prospecting data from _GT Advanced Prospector_.
 
