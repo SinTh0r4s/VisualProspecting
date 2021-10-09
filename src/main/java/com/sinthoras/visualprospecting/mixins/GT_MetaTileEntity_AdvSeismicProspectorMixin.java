@@ -36,6 +36,7 @@ public abstract class GT_MetaTileEntity_AdvSeismicProspectorMixin extends GT_Met
 
     /**
      * @author SinTh0r4s
+     * @reason Redirect game mechanics onto VP database
      */
     @Overwrite(remap = false)
     @Override
