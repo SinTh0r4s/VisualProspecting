@@ -8,6 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
 import java.io.File;
@@ -20,10 +22,16 @@ public class VPClientCache extends VPWorldCache{
     }
 
     protected void onNewVein(VPVeinType veinType) {
-        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentTranslation("visualprospecting.vein.prospected", veinType.getNameReadable()));
+        final IChatComponent veinNotification = new ChatComponentTranslation("visualprospecting.vein.prospected", veinType.getNameReadable());
+        veinNotification.getChatStyle().setItalic(true);
+        veinNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        Minecraft.getMinecraft().thePlayer.addChatMessage(veinNotification);
 
         final String oreNames = veinType.getOreMaterials().stream().map(material -> material.mLocalizedName).collect(Collectors.joining(", "));
-        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentTranslation("visualprospecting.vein.contents", oreNames));
+        final IChatComponent oresNotification = new ChatComponentTranslation("visualprospecting.vein.contents", oreNames);
+        oresNotification.getChatStyle().setItalic(true);
+        oresNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        Minecraft.getMinecraft().thePlayer.addChatMessage(oresNotification);
     }
 
     public void onOreInteracted(World world, int blockX, int blockY, int blockZ, EntityPlayer entityPlayer) {
@@ -32,14 +40,14 @@ public class VPClientCache extends VPWorldCache{
             final TileEntity tTileEntity = world.getTileEntity(blockX, blockY, blockZ);
             if (tTileEntity instanceof GT_TileEntity_Ores) {
                 final short oreMetaData = ((GT_TileEntity_Ores) tTileEntity).mMetaData;
-                if (oreMetaData < VP.gregTechSmallOreMinimumMeta
+                if (VPUtils.isSmallOreId(oreMetaData) == false
                         && oreMetaData != 0) {
                     final int chunkX = VPUtils.coordBlockToChunk(blockX);
                     final int chunkZ = VPUtils.coordBlockToChunk(blockZ);
                     final VPVeinType veinType = getVeinType(entityPlayer.dimension, chunkX, chunkZ);
-                    if(veinType.containsOre((short)(oreMetaData % 1000)) == false
-                            && VPProspectingRequest.canSendRequest()) {
-                        VP.network.sendToServer(new VPProspectingRequest(entityPlayer.dimension, blockX, blockY, blockZ, (short)(oreMetaData % 1000)));
+                    final short materialId = VPUtils.oreIdToMaterialId(oreMetaData);
+                    if(veinType.containsOre(materialId) == false && VPProspectingRequest.canSendRequest()) {
+                        VP.network.sendToServer(new VPProspectingRequest(entityPlayer.dimension, blockX, blockY, blockZ, materialId));
                     }
                 }
             }

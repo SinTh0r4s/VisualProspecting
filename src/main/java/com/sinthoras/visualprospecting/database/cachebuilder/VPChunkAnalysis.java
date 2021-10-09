@@ -1,5 +1,6 @@
 package com.sinthoras.visualprospecting.database.cachebuilder;
 
+import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
 import io.xol.enklume.nbt.*;
@@ -11,7 +12,7 @@ public class VPChunkAnalysis {
 
     private final HashSet<Short> ores = new HashSet<>();
     private final HashSet<VPVeinType> matchedVeins = new HashSet<>();
-    private int minVeinBlockY = 256;
+    private int minVeinBlockY = VP.minecraftWorldHeight;
 
     public void processMinecraftChunk(final NBTCompound chunkRoot) {
         for (final NBTNamed tileEntity : ((NBTList) chunkRoot.getTag("Level.TileEntities")).elements) {

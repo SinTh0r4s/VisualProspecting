@@ -45,6 +45,14 @@ public class VPUtils {
         return chunkCoord - nonNegativeModulo(chunkCoord - 1, 3) + 1;
     }
 
+    public static boolean isSmallOreId(short metaData) {
+        return metaData >= VP.gregTechSmallOreMinimumMeta;
+    }
+
+    public static short oreIdToMaterialId(short metaData) {
+        return (short)(metaData % 1000);
+    }
+
     public static boolean isLogicalClient() {
         return VPMod.proxy instanceof VPHooksClient;
     }

@@ -1,5 +1,6 @@
 package com.sinthoras.visualprospecting.database.veintypes;
 
+import com.sinthoras.visualprospecting.VPTags;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 
@@ -22,7 +23,7 @@ public class VPVeinType {
     private final HashSet<Short> oresAsHashSet;
 
     // Available after VisualProspecting post GT initialization
-    public final static VPVeinType NO_VEIN = new VPVeinType("ore.mix.none", 0, (short)-1, (short)-1, (short)-1, (short)-1);
+    public final static VPVeinType NO_VEIN = new VPVeinType(VPTags.ORE_MIX_NONE_NAME, 0, (short)-1, (short)-1, (short)-1, (short)-1);
 
     public VPVeinType(String name, int blockSize, short primaryOreMeta, short secondaryOreMeta, short inBetweenOreMeta, short sporadicOreMeta)
     {

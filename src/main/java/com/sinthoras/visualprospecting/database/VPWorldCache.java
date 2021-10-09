@@ -19,7 +19,7 @@ public abstract class VPWorldCache {
         worldCacheDirectory = new File(getStorageDirectory(), worldId);
         worldCacheDirectory.mkdirs();
         final HashMap<Integer, ByteBuffer> dimensionBuffers = VPUtils.getDIMFiles(worldCacheDirectory);
-        if(dimensionBuffers.size() == 0)
+        if(dimensionBuffers.isEmpty())
             return false;
 
         for(int dimensionId : dimensionBuffers.keySet()) {

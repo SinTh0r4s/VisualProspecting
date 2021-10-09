@@ -30,8 +30,8 @@ public class VPDimensionAnalysis {
             final int regionChunkX = Integer.parseInt(parts[1]) << 5;
             final int regionChunkZ = Integer.parseInt(parts[2]) << 5;
             final MinecraftRegion region = new MinecraftRegion(regionFile);
-            for (int localChunkX = 0; localChunkX < 32; localChunkX++)
-                for (int localChunkZ = 0; localChunkZ < 32; localChunkZ++) {
+            for (int localChunkX = 0; localChunkX < VP.chunksPerRegionFileX; localChunkX++)
+                for (int localChunkZ = 0; localChunkZ < VP.chunksPerRegionFileZ; localChunkZ++) {
                     final int chunkX = regionChunkX + localChunkX;
                     final int chunkZ = regionChunkZ + localChunkZ;
 

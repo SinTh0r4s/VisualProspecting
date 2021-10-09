@@ -21,7 +21,7 @@ public class VPDimensionCache {
 
     public ByteBuffer saveVeinCache() {
         if(needsSaving) {
-            final ByteBuffer byteBuffer = ByteBuffer.allocate(changedOrNew.size() * 10);
+            final ByteBuffer byteBuffer = ByteBuffer.allocate(changedOrNew.size() * (Long.BYTES + Short.BYTES));
             for (long key : changedOrNew) {
                 byteBuffer.putLong(key);
                 byteBuffer.putShort(VPVeinTypeCaching.getVeinTypeId(oreChunks.get(key)));
@@ -35,7 +35,7 @@ public class VPDimensionCache {
     }
 
     public void loadVeinCache(ByteBuffer byteBuffer) {
-        while(byteBuffer.remaining() >= 10) {
+        while(byteBuffer.remaining() >= Long.BYTES + Short.BYTES) {
             final long key = byteBuffer.getLong();
             final VPVeinType veinType = VPVeinTypeCaching.getVeinType(byteBuffer.getShort());
             oreChunks.put(key, veinType);

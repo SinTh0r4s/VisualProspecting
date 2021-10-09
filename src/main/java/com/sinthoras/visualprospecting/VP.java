@@ -15,10 +15,10 @@ public class VP {
     public static VPClientCache clientVeinCache = new VPClientCache();
 
     private static Logger LOG = LogManager.getLogger(VPTags.MODID);
-    public static final int chunkWidth = 16;
-    public static final int chunkHeight = 16;
-    public static final int chunkDepth = 16;
     public static final int gregTechSmallOreMinimumMeta = 16000;
+    public static final int minecraftWorldHeight = 256;
+    public static final int chunksPerRegionFileX = 32;
+    public static final int chunksPerRegionFileZ = 32;
 
 
     public static void debug(String message) {

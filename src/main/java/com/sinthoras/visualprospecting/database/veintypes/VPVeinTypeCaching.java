@@ -30,7 +30,7 @@ public class VPVeinTypeCaching implements Runnable {
         veinTypes.add(VPVeinType.NO_VEIN);
 
         for(GT_Worldgen_GT_Ore_Layer vein : GT_Worldgen_GT_Ore_Layer.sList) {
-            if(vein.mWorldGenName.equals("ore.mix.none"))
+            if(vein.mWorldGenName.equals(VPTags.ORE_MIX_NONE_NAME))
                 break;
             veinTypes.add(new VPVeinType(vein.mWorldGenName, vein.mSize, vein.mPrimaryMeta, vein.mSecondaryMeta, vein.mBetweenMeta, vein.mSporadicMeta));
         }

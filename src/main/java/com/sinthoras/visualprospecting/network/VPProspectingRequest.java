@@ -17,6 +17,9 @@ import net.minecraft.world.World;
 import java.util.HashMap;
 import java.util.UUID;
 
+import static com.sinthoras.visualprospecting.VPUtils.isSmallOreId;
+import static com.sinthoras.visualprospecting.VPUtils.oreIdToMaterialId;
+
 public class VPProspectingRequest implements IMessage {
 
     public static long timestampLastRequest = 0;
@@ -90,12 +93,12 @@ public class VPProspectingRequest implements IMessage {
                     final TileEntity tileEntity = world.getTileEntity(message.blockX, message.blockY, message.blockZ);
                     if (tileEntity instanceof GT_TileEntity_Ores) {
                         final short metaData = ((GT_TileEntity_Ores) tileEntity).mMetaData;
-                        if(metaData <= 16000 && (metaData % 1000) == message.foundOreMetaData) {
+                        if(isSmallOreId(metaData) == false && oreIdToMaterialId(metaData) == message.foundOreMetaData) {
                             lastRequestPerPlayer.put(uuid, timestamp);
 
                             // Prioritise center vein
                             final VPVeinType centerVein = VP.serverVeinCache.getVeinType(message.dimensionId, chunkX, chunkZ);
-                            if(centerVein.containsOre(metaData)) {
+                            if(centerVein.containsOre(message.foundOreMetaData)) {
                                 return new VPProspectingNotification(message.dimensionId, chunkX, chunkZ, centerVein.name);
                             }
 

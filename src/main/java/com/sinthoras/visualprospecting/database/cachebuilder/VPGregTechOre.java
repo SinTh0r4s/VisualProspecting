@@ -5,6 +5,9 @@ import io.xol.enklume.nbt.NBTInt;
 import io.xol.enklume.nbt.NBTShort;
 import io.xol.enklume.nbt.NBTString;
 
+import static com.sinthoras.visualprospecting.VPUtils.isSmallOreId;
+import static com.sinthoras.visualprospecting.VPUtils.oreIdToMaterialId;
+
 public class VPGregTechOre {
 
     public final boolean isValidGTOre;
@@ -17,9 +20,8 @@ public class VPGregTechOre {
         final NBTInt tagBlockY = (NBTInt) tileEntity.getTag("y");
 
         if (tagId != null && tagId.getText().equals("GT_TileEntity_Ores") && tagBlockY != null
-                // Filter out small ores. They start from 16000+
-                && tagMeta != null && tagMeta.data < 16000) {
-            metaData = (short)(tagMeta.data % 1000); // Filter out stone variants
+                && tagMeta != null && isSmallOreId(tagMeta.data) == false) {
+            metaData = oreIdToMaterialId(tagMeta.data);
             isValidGTOre = true;
             blockY = tagBlockY.data;
         }

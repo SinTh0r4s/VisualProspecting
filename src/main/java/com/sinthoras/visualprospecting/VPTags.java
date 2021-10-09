@@ -10,4 +10,5 @@ public class VPTags {
     public static final String CLIENT_DIR = VISUALPROSPECTING_DIR + "client\\";
     public static final String SERVER_DIR = VISUALPROSPECTING_DIR + "server\\";
     public static final String worldId = "wId";
+    public static final String ORE_MIX_NONE_NAME = "ore.mix.none";
 }
