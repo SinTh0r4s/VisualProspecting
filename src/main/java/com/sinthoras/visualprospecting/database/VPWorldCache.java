@@ -12,10 +12,14 @@ public abstract class VPWorldCache {
     private HashMap<Integer, VPDimensionCache> dimensions = new HashMap<>();
     private boolean needsSaving = false;
     private File worldCacheDirectory;
+    private String worldId = "";
 
     protected abstract File getStorageDirectory();
 
     public boolean loadVeinCache(String worldId) {
+        if(this.worldId.equals(worldId))
+            return true;
+        this.worldId = worldId;
         worldCacheDirectory = new File(getStorageDirectory(), worldId);
         worldCacheDirectory.mkdirs();
         final HashMap<Integer, ByteBuffer> dimensionBuffers = VPUtils.getDIMFiles(worldCacheDirectory);

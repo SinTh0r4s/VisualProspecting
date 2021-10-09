@@ -9,9 +9,8 @@ import com.sinthoras.visualprospecting.database.cachebuilder.VPWorldAnalysis;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
 import com.sinthoras.visualprospecting.network.VPProspectingNotification;
 import com.sinthoras.visualprospecting.network.VPProspectingRequest;
-import com.sinthoras.visualprospecting.network.VPWorldId;
+import com.sinthoras.visualprospecting.network.VPWorldIdNotification;
 import com.sinthoras.visualprospecting.tileentities.VPAdvancedSeismicProspector;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -43,12 +42,11 @@ public class VPHooksShared {
 		int networkId = 0;
 		VP.network.registerMessage(VPProspectingRequest.Handler.class, VPProspectingRequest.class, networkId++, Side.SERVER);
 		VP.network.registerMessage(VPProspectingNotification.Handler.class, VPProspectingNotification.class, networkId++, Side.CLIENT);
-		VP.network.registerMessage(VPWorldId.Handler.class, VPWorldId.class, networkId++, Side.CLIENT);
+		VP.network.registerMessage(VPWorldIdNotification.Handler.class, VPWorldIdNotification.class, networkId++, Side.CLIENT);
 	}
 	
 	// load "Do your mod setup. Build whatever data structures you care about. Register recipes."
 	public void fmlLifeCycleEvent(FMLInitializationEvent event) {
-		FMLCommonHandler.instance().bus().register(new VPHooksFML());
 		MinecraftForge.EVENT_BUS.register(new VPHooksEventBus());
 
 		VP.advancedSeismicProspectorLV = new VPAdvancedSeismicProspector(VPConfig.blockIdOffset, "basicmachine.seismicprospector.07", "Advanced Seismic Prospector LV", 1, 4*16, 2);

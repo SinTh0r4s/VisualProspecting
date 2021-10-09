@@ -28,10 +28,6 @@ public class VPWorldIdHandler extends WorldSavedData {
             instance.worldId = world.func_73046_m().getFolderName() + "_" + UUID.randomUUID();
             world.mapStorage.setData(VPTags.MODID, instance);
             instance.markDirty();
-            VP.info("Generated WorldId: " + instance.worldId);
-        }
-        else {
-            VP.info("Loaded WorldId: " + instance.worldId);
         }
     }
 

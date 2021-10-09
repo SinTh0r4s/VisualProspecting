@@ -1,8 +1,6 @@
 package com.sinthoras.visualprospecting.tileentities;
 
-import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPTags;
-import com.sinthoras.visualprospecting.database.VPServerCache;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
 import gregtech.api.interfaces.ITexture;
@@ -17,8 +15,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 
 import java.util.List;
 
