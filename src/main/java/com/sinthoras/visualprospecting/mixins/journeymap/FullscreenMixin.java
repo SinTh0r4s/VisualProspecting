@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import static com.sinthoras.visualprospecting.gui.journeymap.VPReflection.getJourneyMapGridRenderer;
 
 @Mixin(Fullscreen.class)
-public class VPFullscreenMixin {
+public class FullscreenMixin {
 
     private VPMapState vpMapState = new VPMapState();
     private ThemeButton buttonOreVeins;
