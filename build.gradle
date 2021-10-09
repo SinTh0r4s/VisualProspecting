@@ -104,7 +104,7 @@ dependencies {
     compile "com.github.GTNewHorizons:SpongeMixins:1.3.3:dev"
 
     compile("com.github.Hugobros3:Enklume:master-SNAPSHOT")
-    compile("com.github.GTNewHorizons:GT5-Unofficial:visual-prospecting-interop-SNAPSHOT:dev") {
+    compile("com.github.GTNewHorizons:GT5-Unofficial:experimental-SNAPSHOT:dev") {
         setChanging(true)
     }
     compile("curse.maven:journeymap-32274:2367915")

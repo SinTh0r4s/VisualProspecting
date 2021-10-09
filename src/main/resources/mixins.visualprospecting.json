@@ -9,6 +9,7 @@
     "journeymap.FullscreenMixin",
     "GT_MetaTileEntity_ScannerMixin",
     "GT_MetaTileEntity_AdvSeismicProspectorMixin",
+    "GT_Block_Ores_AbstractMixin",
     "WorldGenContainerMixin",
     "ItemEditableBookMixin"
   ]

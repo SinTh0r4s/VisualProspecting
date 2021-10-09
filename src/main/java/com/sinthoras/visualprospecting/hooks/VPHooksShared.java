@@ -1,6 +1,5 @@
 package com.sinthoras.visualprospecting.hooks;
 
-import api.visualprospecting.VPOreGenCallbackHandler;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPConfig;
 import com.sinthoras.visualprospecting.VPTags;
@@ -21,9 +20,7 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import gregtech.api.GregTech_API;
-import gregtech.common.GT_Worldgenerator;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.IOException;
