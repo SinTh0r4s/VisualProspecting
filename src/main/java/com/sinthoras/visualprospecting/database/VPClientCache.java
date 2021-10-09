@@ -23,7 +23,7 @@ public class VPClientCache extends VPWorldCache{
     }
 
     private void notifyNewVein(VPServerCache.VPProspectionResult prospectionResult) {
-        final String location = "(" + prospectionResult.blockX + "," + prospectionResult.blockZ + ")";
+        final String location = "(" + prospectionResult.getBlockX() + "," + prospectionResult.getBlockZ() + ")";
         final IChatComponent veinNotification = new ChatComponentTranslation("visualprospecting.vein.prospected", prospectionResult.veinType.getNameReadable(), location);
         veinNotification.getChatStyle().setItalic(true);
         veinNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
@@ -39,14 +39,14 @@ public class VPClientCache extends VPWorldCache{
     public void putVeinTypes(int dimensionId, List<VPServerCache.VPProspectionResult> prospectionResults) {
         if(prospectionResults.size() == 1) {
             final VPServerCache.VPProspectionResult prospectionResult = prospectionResults.get(0);
-            if(putVeinType(dimensionId, VPUtils.coordBlockToChunk(prospectionResult.blockX), VPUtils.coordBlockToChunk(prospectionResult.blockZ), prospectionResult.veinType)) {
+            if(putVeinType(dimensionId, prospectionResult.chunkX, prospectionResult.chunkZ, prospectionResult.veinType)) {
                 notifyNewVein(prospectionResult);
             }
         }
         else if(prospectionResults.size() > 1) {
             int newVeins = 0;
             for(VPServerCache.VPProspectionResult prospectionResult : prospectionResults) {
-                if(putVeinType(dimensionId, VPUtils.coordBlockToChunk(prospectionResult.blockX), VPUtils.coordBlockToChunk(prospectionResult.blockZ), prospectionResult.veinType)) {
+                if(putVeinType(dimensionId, prospectionResult.chunkX, prospectionResult.chunkZ, prospectionResult.veinType)) {
                     newVeins++;
                 }
             }

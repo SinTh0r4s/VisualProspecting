@@ -10,14 +10,22 @@ import java.util.List;
 
 public class VPServerCache extends VPWorldCache{
     public static class VPProspectionResult {
-        public final int blockX;
-        public final int blockZ;
+        public final int chunkX;
+        public final int chunkZ;
         public final VPVeinType veinType;
 
         public VPProspectionResult(int chunkX, int chunkZ, VPVeinType veinType) {
-            blockX = VPUtils.coordChunkToBlock(chunkX) + 8;
-            blockZ = VPUtils.coordChunkToBlock(chunkZ) + 8;
+            this.chunkX = chunkX;
+            this.chunkZ = chunkZ;
             this.veinType = veinType;
+        }
+
+        public int getBlockX() {
+            return VPUtils.coordChunkToBlock(chunkX) + 8;
+        }
+
+        public int getBlockZ() {
+            return VPUtils.coordChunkToBlock(chunkZ) + 8;
         }
     }
 

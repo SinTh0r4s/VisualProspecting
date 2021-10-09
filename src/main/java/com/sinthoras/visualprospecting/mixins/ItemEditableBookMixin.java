@@ -24,7 +24,7 @@ public class ItemEditableBookMixin {
 
     @Inject(method = "onItemRightClick", at = @At("HEAD"), remap = false, require = 1, locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = false)
     private void onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer, CallbackInfoReturnable<ItemStack> callbackInfoReturnable) {
-        if(world.isRemote) {
+        if(world.isRemote == false) {
             final NBTTagCompound compound = itemStack.getTagCompound();
             if(compound.hasKey(VPTags.VISUALPROSPECTING_FLAG)) {
                 final int dimensionId = compound.getInteger(VPTags.PROSPECTION_DIMENSION_ID);

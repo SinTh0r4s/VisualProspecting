@@ -64,7 +64,7 @@ public abstract class GT_MetaTileEntity_ScannerMixin extends GT_MetaTileEntity_B
                         final int veinId = pageNumber * pageSize + i;
                         if(veinId < foundOreVeins.size()) {
                             final VPServerCache.VPProspectionResult oreVein = foundOreVeins.get(veinId);
-                            pageString.append(oreVein.blockX).append(",").append(oreVein.blockZ).append(" - ").append(oreVein.veinType.getNameReadable() + " Vein").append("\n");
+                            pageString.append(oreVein.getBlockX()).append(",").append(oreVein.getBlockZ()).append(" - ").append(oreVein.veinType.getNameReadable() + " Vein").append("\n");
                         }
                     }
                     String pageCounter = numberOfPages > 1 ? String.format(" %d/%d", pageNumber + 1, numberOfPages) : "";

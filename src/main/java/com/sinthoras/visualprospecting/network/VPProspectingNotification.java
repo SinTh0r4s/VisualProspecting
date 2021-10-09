@@ -1,7 +1,6 @@
 package com.sinthoras.visualprospecting.network;
 
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.VPUtils;
 import com.sinthoras.visualprospecting.database.VPServerCache;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -45,8 +44,8 @@ public class VPProspectingNotification implements IMessage {
         buf.writeInt(dimensionId);
         buf.writeInt(prospectingResults.size());
         for(VPServerCache.VPProspectionResult prospectionResult : prospectingResults) {
-            buf.writeInt(prospectionResult.blockX);
-            buf.writeInt(prospectionResult.blockZ);
+            buf.writeInt(prospectionResult.chunkX);
+            buf.writeInt(prospectionResult.chunkZ);
             ByteBufUtils.writeUTF8String(buf, prospectionResult.veinType.name);
         }
     }
