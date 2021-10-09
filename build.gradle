@@ -149,17 +149,19 @@ afterEvaluate {
 }
 
 runClient {
-    def playerUserName = System.env.PLAYER_USER_NAME
-    if (playerUserName == null)  {
-        playerUserName = "Player-default"
-    }
-
     args "--tweakClass", "org.spongepowered.asm.launch.MixinTweaker",
             // Having mixin in the same jar as normal mode makes FML ignore it.
             // It should be fine in production, however I suppose it's not properly read here.
             // The only option which worked for me was adding it as a mod explicitly via next argument:
-            "--mods=../build/libs/$modId-${project.minecraft.version}-${modVersion}.jar",
-            "--username", playerUserName
+            "--mods=../build/libs/$modId-${project.minecraft.version}-${modVersion}.jar"
+}
+
+runServer {
+    args "--tweakClass", "org.spongepowered.asm.launch.MixinTweaker",
+            // Having mixin in the same jar as normal mode makes FML ignore it.
+            // It should be fine in production, however I suppose it's not properly read here.
+            // The only option which worked for me was adding it as a mod explicitly via next argument:
+            "--mods=../build/libs/$modId-${project.minecraft.version}-${modVersion}.jar"
 }
 
 
