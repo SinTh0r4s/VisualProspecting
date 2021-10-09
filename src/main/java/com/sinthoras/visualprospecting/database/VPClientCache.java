@@ -13,6 +13,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
 import java.io.File;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class VPClientCache extends VPWorldCache{
@@ -21,17 +22,41 @@ public class VPClientCache extends VPWorldCache{
         return VPUtils.getSubDirectory(VPTags.CLIENT_DIR);
     }
 
-    protected void onNewVein(VPVeinType veinType) {
-        final IChatComponent veinNotification = new ChatComponentTranslation("visualprospecting.vein.prospected", veinType.getNameReadable());
+    private void notifyNewVein(VPServerCache.VPProspectionResult prospectionResult) {
+        final String location = "(" + prospectionResult.blockX + "," + prospectionResult.blockZ + ")";
+        final IChatComponent veinNotification = new ChatComponentTranslation("visualprospecting.vein.prospected", prospectionResult.veinType.getNameReadable(), location);
         veinNotification.getChatStyle().setItalic(true);
         veinNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
         Minecraft.getMinecraft().thePlayer.addChatMessage(veinNotification);
 
-        final String oreNames = veinType.getOreMaterials().stream().map(material -> material.mLocalizedName).collect(Collectors.joining(", "));
+        final String oreNames = prospectionResult.veinType.getOreMaterials().stream().map(material -> material.mLocalizedName).collect(Collectors.joining(", "));
         final IChatComponent oresNotification = new ChatComponentTranslation("visualprospecting.vein.contents", oreNames);
         oresNotification.getChatStyle().setItalic(true);
         oresNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
         Minecraft.getMinecraft().thePlayer.addChatMessage(oresNotification);
+    }
+
+    public void putVeinTypes(int dimensionId, List<VPServerCache.VPProspectionResult> prospectionResults) {
+        if(prospectionResults.size() == 1) {
+            final VPServerCache.VPProspectionResult prospectionResult = prospectionResults.get(0);
+            if(putVeinType(dimensionId, VPUtils.coordBlockToChunk(prospectionResult.blockX), VPUtils.coordBlockToChunk(prospectionResult.blockZ), prospectionResult.veinType)) {
+                notifyNewVein(prospectionResult);
+            }
+        }
+        else if(prospectionResults.size() > 1) {
+            int newVeins = 0;
+            for(VPServerCache.VPProspectionResult prospectionResult : prospectionResults) {
+                if(putVeinType(dimensionId, VPUtils.coordBlockToChunk(prospectionResult.blockX), VPUtils.coordBlockToChunk(prospectionResult.blockZ), prospectionResult.veinType)) {
+                    newVeins++;
+                }
+            }
+            if(newVeins > 0) {
+                final IChatComponent veinNotification = new ChatComponentTranslation("visualprospecting.veins.prospected", newVeins);
+                veinNotification.getChatStyle().setItalic(true);
+                veinNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
+                Minecraft.getMinecraft().thePlayer.addChatMessage(veinNotification);
+            }
+        }
     }
 
     public void onOreInteracted(World world, int blockX, int blockY, int blockZ, EntityPlayer entityPlayer) {

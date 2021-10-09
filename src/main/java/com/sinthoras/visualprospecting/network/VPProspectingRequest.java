@@ -3,6 +3,7 @@ package com.sinthoras.visualprospecting.network;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPConfig;
 import com.sinthoras.visualprospecting.VPUtils;
+import com.sinthoras.visualprospecting.database.VPServerCache;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -14,8 +15,7 @@ import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 import static com.sinthoras.visualprospecting.VPUtils.isSmallOreId;
 import static com.sinthoras.visualprospecting.VPUtils.oreIdToMaterialId;
@@ -99,7 +99,7 @@ public class VPProspectingRequest implements IMessage {
                             // Prioritise center vein
                             final VPVeinType centerVein = VP.serverVeinCache.getVeinType(message.dimensionId, chunkX, chunkZ);
                             if(centerVein.containsOre(message.foundOreMetaData)) {
-                                return new VPProspectingNotification(message.dimensionId, chunkX, chunkZ, centerVein.name);
+                                return new VPProspectingNotification(message.dimensionId, Collections.singletonList(new VPServerCache.VPProspectionResult(chunkX, chunkZ, centerVein)));
                             }
 
                             // Check if neighboring veins could fit
@@ -114,7 +114,7 @@ public class VPProspectingRequest implements IMessage {
                                         final VPVeinType neighborVein = VP.serverVeinCache.getVeinType(message.dimensionId, neighborChunkX, neighborChunkZ);
                                         final int maxDistance = ((neighborVein.blockSize + 16) >> 4) + 1;  // Equals to: ceil(blockSize / 16.0) + 1
                                         if(neighborVein.containsOre(message.foundOreMetaData) && distanceBlocks <= maxDistance) {
-                                            return new VPProspectingNotification(message.dimensionId, neighborChunkX, neighborChunkZ, neighborVein.name);
+                                            return new VPProspectingNotification(message.dimensionId, Collections.singletonList(new VPServerCache.VPProspectionResult(neighborChunkX, neighborChunkZ, neighborVein)));
                                         }
                                     }
                         }
