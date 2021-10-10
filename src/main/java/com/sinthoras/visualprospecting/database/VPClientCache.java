@@ -5,6 +5,7 @@ import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
 import com.sinthoras.visualprospecting.network.VPProspectingRequest;
 import gregtech.common.blocks.GT_TileEntity_Ores;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
@@ -19,7 +20,8 @@ import java.util.stream.Collectors;
 public class VPClientCache extends VPWorldCache{
 
     protected File getStorageDirectory() {
-        return VPUtils.getSubDirectory(VPTags.CLIENT_DIR);
+        final EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        return new File(VPUtils.getSubDirectory(VPTags.CLIENT_DIR), player.getDisplayName() + "_" + player.getPersistentID().toString());
     }
 
     private void notifyNewVein(VPServerCache.VPProspectionResult prospectionResult) {
