@@ -48,7 +48,7 @@ public class VPDimensionCache {
 
     public ByteBuffer saveOilFields() {
         if(oilFieldsNeedsSaving) {
-            final ByteBuffer byteBuffer = ByteBuffer.allocate(changedOrNewOilFields.size() * (Long.BYTES + Integer.BYTES * 10));
+            final ByteBuffer byteBuffer = ByteBuffer.allocate(changedOrNewOilFields.size() * (Long.BYTES + Integer.BYTES * (1 + VP.oilFieldSizeChunkX * VP.oilFieldSizeChunkZ)));
             for (long key : changedOrNewOilFields) {
                 byteBuffer.putLong(key);
                 final VPOilField oilField = oilFields.get(key);
@@ -75,7 +75,7 @@ public class VPDimensionCache {
             }
         }
         if(oilFieldsBuffer != null) {
-            while (oilFieldsBuffer.remaining() >= Long.BYTES + Integer.BYTES * 10) {
+            while (oilFieldsBuffer.remaining() >= Long.BYTES + Integer.BYTES * (1 + VP.oilFieldSizeChunkX * VP.oilFieldSizeChunkZ)) {
                 final long key = oilFieldsBuffer.getLong();
                 final Fluid oil = FluidRegistry.getFluid(oilFieldsBuffer.getInt());
                 final int[][] chunks = new int[VP.oilFieldSizeChunkX][VP.oilFieldSizeChunkZ];
