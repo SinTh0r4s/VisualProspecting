@@ -20,5 +20,6 @@ public class VPTags {
     public static final String PROSPECTION_BLOCK_X = "prospection_block_x";
     public static final String PROSPECTION_BLOCK_Y = "prospection_block_y";
     public static final String PROSPECTION_BLOCK_Z = "prospection_block_z";
-    public static final String PROSPECTION_RADIUS = "prospection_radius";
+    public static final String PROSPECTION_ORE_RADIUS = "prospection_ore_radius";
+    public static final String PROSPECTION_OILS = "prospection_oils";
 }

@@ -59,11 +59,11 @@ public class VPHooksShared {
 	public void fmlLifeCycleEvent(FMLServerStartingEvent event) {
 		final MinecraftServer minecraftServer = event.getServer();
 		VPWorldIdHandler.load(minecraftServer.worldServers[0]);
-		if(VP.serverVeinCache.loadVeinCache(VPWorldIdHandler.getWorldId()) == false || VPConfig.recacheVeins) {
+		if(VP.serverCache.loadVeinCache(VPWorldIdHandler.getWorldId()) == false || VPConfig.recacheVeins) {
 			try {
 				VPWorldAnalysis world = new VPWorldAnalysis(minecraftServer.getEntityWorld().getSaveHandler().getWorldDirectory());
 				world.cacheVeins();
-				VP.serverVeinCache.saveVeinCache();
+				VP.serverCache.saveVeinCache();
 			} catch (IOException | DataFormatException e) {
 				VP.info("Could not load world save files to build vein cache!");
 				e.printStackTrace();
@@ -76,7 +76,7 @@ public class VPHooksShared {
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerStoppingEvent event) {
-		VP.serverVeinCache.saveVeinCache();
+		VP.serverCache.saveVeinCache();
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerStoppedEvent event) {

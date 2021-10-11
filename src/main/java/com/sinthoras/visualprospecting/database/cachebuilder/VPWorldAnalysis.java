@@ -18,7 +18,7 @@ public class VPWorldAnalysis {
 
     public void cacheVeins() throws IOException, DataFormatException {
         VP.info("Starting to parse world save to cache GT vein locations. This might take some time...");
-        VP.serverVeinCache.reset();
+        VP.serverCache.reset();
         final List<Integer> dimensionIds = world.getDimensionIds();
         VPAnalysisProgressTracker.setNumberOfDimensions(dimensionIds.size());
         for(int dimensionId : dimensionIds) {

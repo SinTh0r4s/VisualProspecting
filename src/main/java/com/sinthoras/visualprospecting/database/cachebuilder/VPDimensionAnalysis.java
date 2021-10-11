@@ -46,7 +46,7 @@ public class VPDimensionAnalysis {
                             chunk.processMinecraftChunk(root);
 
                             if(chunk.matchesSingleVein()) {
-                                VP.serverVeinCache.putOreVein(dimensionId, chunkX, chunkZ, chunk.getMatchedVein());
+                                VP.serverCache.putOreVein(dimensionId, chunkX, chunkZ, chunk.getMatchedVein());
                                 veinBlockY.put(VPUtils.chunkCoordsToKey(chunkX, chunkZ), chunk.getVeinBlockY());
                             }
                             else {
@@ -64,7 +64,7 @@ public class VPDimensionAnalysis {
         for(long key : chunksForSecondIdentificationPass.keySet()) {
             final VPDetailedChunkAnalysis chunk = chunksForSecondIdentificationPass.get(key);
             chunk.cleanUpWithNeighbors(veinBlockY);
-            VP.serverVeinCache.putOreVein(dimensionId, chunk.chunkX, chunk.chunkZ, chunk.getMatchedVein());
+            VP.serverCache.putOreVein(dimensionId, chunk.chunkX, chunk.chunkZ, chunk.getMatchedVein());
         }
     }
 }

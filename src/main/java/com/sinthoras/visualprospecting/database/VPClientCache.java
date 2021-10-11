@@ -24,14 +24,14 @@ public class VPClientCache extends VPWorldCache {
         return new File(VPUtils.getSubDirectory(VPTags.CLIENT_DIR), player.getDisplayName() + "_" + player.getPersistentID().toString());
     }
 
-    private void notifyNewOreVein(VPOreVeinPosition prospectionResult) {
-        final String location = "(" + prospectionResult.getBlockX() + "," + prospectionResult.getBlockZ() + ")";
-        final IChatComponent veinNotification = new ChatComponentTranslation("visualprospecting.vein.prospected", prospectionResult.veinType.getNameReadable(), location);
+    private void notifyNewOreVein(VPOreVeinPosition oreVeinPosition) {
+        final String location = "(" + oreVeinPosition.getBlockX() + "," + oreVeinPosition.getBlockZ() + ")";
+        final IChatComponent veinNotification = new ChatComponentTranslation("visualprospecting.vein.prospected", oreVeinPosition.veinType.getNameReadable(), location);
         veinNotification.getChatStyle().setItalic(true);
         veinNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
         Minecraft.getMinecraft().thePlayer.addChatMessage(veinNotification);
 
-        final String oreNames = prospectionResult.veinType.getOreMaterials().stream().map(material -> material.mLocalizedName).collect(Collectors.joining(", "));
+        final String oreNames = oreVeinPosition.veinType.getOreMaterials().stream().map(material -> material.mLocalizedName).collect(Collectors.joining(", "));
         final IChatComponent oresNotification = new ChatComponentTranslation("visualprospecting.vein.contents", oreNames);
         oresNotification.getChatStyle().setItalic(true);
         oresNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
@@ -40,9 +40,9 @@ public class VPClientCache extends VPWorldCache {
 
     public void putOreVeins(int dimensionId, List<VPOreVeinPosition> oreVeinPositions) {
         if(oreVeinPositions.size() == 1) {
-            final VPOreVeinPosition vpOreVeinPosition = oreVeinPositions.get(0);
-            if(putOreVein(dimensionId, vpOreVeinPosition.chunkX, vpOreVeinPosition.chunkZ, vpOreVeinPosition.veinType) != VPDimensionCache.UpdateResult.AlreadyKnown) {
-                notifyNewOreVein(vpOreVeinPosition);
+            final VPOreVeinPosition oreVeinPosition = oreVeinPositions.get(0);
+            if(putOreVein(dimensionId, oreVeinPosition.chunkX, oreVeinPosition.chunkZ, oreVeinPosition.veinType) != VPDimensionCache.UpdateResult.AlreadyKnown) {
+                notifyNewOreVein(oreVeinPosition);
             }
         }
         else if(oreVeinPositions.size() > 1) {

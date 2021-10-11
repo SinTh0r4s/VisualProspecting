@@ -11,8 +11,8 @@ public class VP {
 
     public static SimpleNetworkWrapper network;
 
-    public static VPServerCache serverVeinCache = new VPServerCache();
-    public static VPClientCache clientVeinCache = new VPClientCache();
+    public static VPServerCache serverCache = new VPServerCache();
+    public static VPClientCache clientCache = new VPClientCache();
 
     private static Logger LOG = LogManager.getLogger(VPTags.MODID);
     public static final int gregTechSmallOreMinimumMeta = 16000;
@@ -21,6 +21,7 @@ public class VP {
     public static final int chunksPerRegionFileZ = 32;
     public static final int oilFieldSizeChunkX = 8;
     public static final int oilFieldSizeChunkZ = 8;
+    public static final int oilChunkProspectingRange = 1;
 
 
     public static void debug(String message) {

@@ -97,9 +97,9 @@ public class VPProspectingRequest implements IMessage {
                             lastRequestPerPlayer.put(uuid, timestamp);
 
                             // Prioritise center vein
-                            final VPVeinType centerVein = VP.serverVeinCache.getOreVein(message.dimensionId, chunkX, chunkZ);
+                            final VPVeinType centerVein = VP.serverCache.getOreVein(message.dimensionId, chunkX, chunkZ);
                             if(centerVein.containsOre(message.foundOreMetaData)) {
-                                return new VPProspectingNotification(message.dimensionId, Collections.singletonList(new VPOreVeinPosition(chunkX, chunkZ, centerVein)));
+                                return new VPProspectingNotification(message.dimensionId, new VPOreVeinPosition(chunkX, chunkZ, centerVein));
                             }
 
                             // Check if neighboring veins could fit
@@ -111,10 +111,10 @@ public class VPProspectingRequest implements IMessage {
                                         final int neighborChunkX = centerChunkX + offsetChunkX;
                                         final int neighborChunkZ = centerChunkZ + offsetChunkZ;
                                         final int distanceBlocks = Math.max(Math.abs(neighborChunkX - chunkX), Math.abs(neighborChunkZ - chunkZ));
-                                        final VPVeinType neighborVein = VP.serverVeinCache.getOreVein(message.dimensionId, neighborChunkX, neighborChunkZ);
+                                        final VPVeinType neighborVein = VP.serverCache.getOreVein(message.dimensionId, neighborChunkX, neighborChunkZ);
                                         final int maxDistance = ((neighborVein.blockSize + 16) >> 4) + 1;  // Equals to: ceil(blockSize / 16.0) + 1
                                         if(neighborVein.containsOre(message.foundOreMetaData) && distanceBlocks <= maxDistance) {
-                                            return new VPProspectingNotification(message.dimensionId, Collections.singletonList(new VPOreVeinPosition(neighborChunkX, neighborChunkZ, neighborVein)));
+                                            return new VPProspectingNotification(message.dimensionId, new VPOreVeinPosition(neighborChunkX, neighborChunkZ, neighborVein));
                                         }
                                     }
                         }

@@ -15,13 +15,13 @@ public class VPHooksEventBus {
     @SubscribeEvent
     public void onEvent(WorldEvent.Unload event) {
         if(VPUtils.isLogicalClient()) {
-            VP.clientVeinCache.saveVeinCache();
+            VP.clientCache.saveVeinCache();
         }
     }
 
     @SubscribeEvent
     public void onEvent(WorldEvent.Save event) {
-        VP.serverVeinCache.saveVeinCache();
+        VP.serverCache.saveVeinCache();
     }
 
     @SubscribeEvent
@@ -30,7 +30,7 @@ public class VPHooksEventBus {
             if (event.entity instanceof EntityPlayerMP) {
                 VP.network.sendTo(new VPWorldIdNotification(VPWorldIdHandler.getWorldId()), (EntityPlayerMP) event.entity);
             } else if (event.entity instanceof EntityPlayer) {
-                VP.clientVeinCache.loadVeinCache(VPWorldIdHandler.getWorldId());
+                VP.clientCache.loadVeinCache(VPWorldIdHandler.getWorldId());
             }
         }
     }

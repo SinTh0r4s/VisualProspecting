@@ -33,7 +33,7 @@ public class VPWorldIdNotification implements IMessage {
 
         @Override
         public IMessage onMessage(VPWorldIdNotification message, MessageContext ctx) {
-            VP.clientVeinCache.loadVeinCache(message.worldId);
+            VP.clientCache.loadVeinCache(message.worldId);
             return null;
         }
     }

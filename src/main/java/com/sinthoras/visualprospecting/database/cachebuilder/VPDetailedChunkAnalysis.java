@@ -38,14 +38,14 @@ public class VPDetailedChunkAnalysis {
 
     public void cleanUpWithNeighbors(final HashMap<Long, Integer> veinChunkY) {
         final VPVeinType[] neighbors = new VPVeinType[] {
-                VP.serverVeinCache.getOreVein(dimensionId, chunkX - 3, chunkZ + 3),
-                VP.serverVeinCache.getOreVein(dimensionId, chunkX, chunkZ + 3),
-                VP.serverVeinCache.getOreVein(dimensionId, chunkX + 3, chunkZ + 3),
-                VP.serverVeinCache.getOreVein(dimensionId, chunkX + 3, chunkZ),
-                VP.serverVeinCache.getOreVein(dimensionId, chunkX + 3, chunkZ - 3),
-                VP.serverVeinCache.getOreVein(dimensionId, chunkX, chunkZ - 3),
-                VP.serverVeinCache.getOreVein(dimensionId, chunkX - 3, chunkZ - 3),
-                VP.serverVeinCache.getOreVein(dimensionId, chunkX - 3, chunkZ)
+                VP.serverCache.getOreVein(dimensionId, chunkX - 3, chunkZ + 3),
+                VP.serverCache.getOreVein(dimensionId, chunkX, chunkZ + 3),
+                VP.serverCache.getOreVein(dimensionId, chunkX + 3, chunkZ + 3),
+                VP.serverCache.getOreVein(dimensionId, chunkX + 3, chunkZ),
+                VP.serverCache.getOreVein(dimensionId, chunkX + 3, chunkZ - 3),
+                VP.serverCache.getOreVein(dimensionId, chunkX, chunkZ - 3),
+                VP.serverCache.getOreVein(dimensionId, chunkX - 3, chunkZ - 3),
+                VP.serverCache.getOreVein(dimensionId, chunkX - 3, chunkZ)
         };
         final int[] neighborVeinBlockY = new int[] {
                 veinChunkY.getOrDefault(VPUtils.chunkCoordsToKey(chunkX, chunkZ + 3), 0),
