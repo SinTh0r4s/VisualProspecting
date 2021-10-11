@@ -24,7 +24,7 @@ public class VPClientOreCache extends VPWorldOreCache {
         return new File(VPUtils.getSubDirectory(VPTags.CLIENT_DIR), player.getDisplayName() + "_" + player.getPersistentID().toString());
     }
 
-    private void notifyNewVein(VPServerOreCache.VPProspectionResult prospectionResult) {
+    private void notifyNewVein(VPProspectionResult prospectionResult) {
         final String location = "(" + prospectionResult.getBlockX() + "," + prospectionResult.getBlockZ() + ")";
         final IChatComponent veinNotification = new ChatComponentTranslation("visualprospecting.vein.prospected", prospectionResult.veinType.getNameReadable(), location);
         veinNotification.getChatStyle().setItalic(true);
@@ -38,16 +38,16 @@ public class VPClientOreCache extends VPWorldOreCache {
         Minecraft.getMinecraft().thePlayer.addChatMessage(oresNotification);
     }
 
-    public void putVeinTypes(int dimensionId, List<VPServerOreCache.VPProspectionResult> prospectionResults) {
+    public void putVeinTypes(int dimensionId, List<VPProspectionResult> prospectionResults) {
         if(prospectionResults.size() == 1) {
-            final VPServerOreCache.VPProspectionResult prospectionResult = prospectionResults.get(0);
+            final VPProspectionResult prospectionResult = prospectionResults.get(0);
             if(putVeinType(dimensionId, prospectionResult.chunkX, prospectionResult.chunkZ, prospectionResult.veinType)) {
                 notifyNewVein(prospectionResult);
             }
         }
         else if(prospectionResults.size() > 1) {
             int newVeins = 0;
-            for(VPServerOreCache.VPProspectionResult prospectionResult : prospectionResults) {
+            for(VPProspectionResult prospectionResult : prospectionResults) {
                 if(putVeinType(dimensionId, prospectionResult.chunkX, prospectionResult.chunkZ, prospectionResult.veinType)) {
                     newVeins++;
                 }

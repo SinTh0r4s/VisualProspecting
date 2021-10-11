@@ -9,25 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VPServerOreCache extends VPWorldOreCache {
-    public static class VPProspectionResult {
-        public final int chunkX;
-        public final int chunkZ;
-        public final VPVeinType veinType;
-
-        public VPProspectionResult(int chunkX, int chunkZ, VPVeinType veinType) {
-            this.chunkX = chunkX;
-            this.chunkZ = chunkZ;
-            this.veinType = veinType;
-        }
-
-        public int getBlockX() {
-            return VPUtils.coordChunkToBlock(chunkX) + 8;
-        }
-
-        public int getBlockZ() {
-            return VPUtils.coordChunkToBlock(chunkZ) + 8;
-        }
-    }
 
     protected File getStorageDirectory() {
         return VPUtils.getSubDirectory(VPTags.SERVER_DIR);
