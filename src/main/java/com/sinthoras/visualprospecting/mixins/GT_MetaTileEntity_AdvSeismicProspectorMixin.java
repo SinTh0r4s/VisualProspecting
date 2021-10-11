@@ -73,7 +73,8 @@ public abstract class GT_MetaTileEntity_AdvSeismicProspectorMixin extends GT_Met
                 this.ready = true;
                 this.mMaxProgresstime = (aPlayer.capabilities.isCreativeMode ? 20 : 800);
 
-            } else if (ready && mMaxProgresstime == 0
+            }
+            else if (ready && mMaxProgresstime == 0
                     && aStack != null && aStack.stackSize == 1
                     && aStack.getItem() == ItemList.Tool_DataStick.getItem()) {
                 this.ready = false;

@@ -53,10 +53,11 @@ public class VPDimensionCache {
                 byteBuffer.putLong(key);
                 final VPOilField oilField = oilFields.get(key);
                 byteBuffer.putInt(oilField.oil.getID());
-                for(int offsetChunkX = 0; offsetChunkX< VP.oilFieldSizeChunkX; offsetChunkX++)
-                    for(int offsetChunkZ = 0; offsetChunkZ< VP.oilFieldSizeChunkZ; offsetChunkZ++) {
+                for(int offsetChunkX = 0; offsetChunkX < VP.oilFieldSizeChunkX; offsetChunkX++) {
+                    for (int offsetChunkZ = 0; offsetChunkZ < VP.oilFieldSizeChunkZ; offsetChunkZ++) {
                         byteBuffer.putInt(oilField.chunks[offsetChunkX][offsetChunkZ]);
                     }
+                }
             }
             oilFieldsNeedsSaving = false;
             changedOrNewOilFields.clear();
@@ -79,10 +80,11 @@ public class VPDimensionCache {
                 final long key = oilFieldsBuffer.getLong();
                 final Fluid oil = FluidRegistry.getFluid(oilFieldsBuffer.getInt());
                 final int[][] chunks = new int[VP.oilFieldSizeChunkX][VP.oilFieldSizeChunkZ];
-                for(int offsetChunkX = 0; offsetChunkX< VP.oilFieldSizeChunkX; offsetChunkX++)
-                    for(int offsetChunkZ = 0; offsetChunkZ< VP.oilFieldSizeChunkZ; offsetChunkZ++) {
+                for(int offsetChunkX = 0; offsetChunkX < VP.oilFieldSizeChunkX; offsetChunkX++) {
+                    for (int offsetChunkZ = 0; offsetChunkZ < VP.oilFieldSizeChunkZ; offsetChunkZ++) {
                         chunks[offsetChunkX][offsetChunkZ] = oilFieldsBuffer.getInt();
                     }
+                }
                 oilFields.put(key, new VPOilField(oil, chunks));
             }
         }

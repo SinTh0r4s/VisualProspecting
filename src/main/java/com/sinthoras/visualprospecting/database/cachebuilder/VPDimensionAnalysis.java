@@ -30,13 +30,13 @@ public class VPDimensionAnalysis {
             final int regionChunkX = Integer.parseInt(parts[1]) << 5;
             final int regionChunkZ = Integer.parseInt(parts[2]) << 5;
             final MinecraftRegion region = new MinecraftRegion(regionFile);
-            for (int localChunkX = 0; localChunkX < VP.chunksPerRegionFileX; localChunkX++)
+            for (int localChunkX = 0; localChunkX < VP.chunksPerRegionFileX; localChunkX++) {
                 for (int localChunkZ = 0; localChunkZ < VP.chunksPerRegionFileZ; localChunkZ++) {
                     final int chunkX = regionChunkX + localChunkX;
                     final int chunkZ = regionChunkZ + localChunkZ;
 
                     // Only process ore chunks
-                    if(chunkX == VPUtils.mapToCenterOreChunkCoord(chunkX) && chunkZ == VPUtils.mapToCenterOreChunkCoord(chunkZ)) {
+                    if (chunkX == VPUtils.mapToCenterOreChunkCoord(chunkX) && chunkZ == VPUtils.mapToCenterOreChunkCoord(chunkZ)) {
                         // Helpful read about 'root' structure: https://minecraft.fandom.com/wiki/Chunk_format
                         final NBTCompound root = region.getChunk(localChunkX, localChunkZ).getRootTag();
 
@@ -45,11 +45,10 @@ public class VPDimensionAnalysis {
                             final VPChunkAnalysis chunk = new VPChunkAnalysis();
                             chunk.processMinecraftChunk(root);
 
-                            if(chunk.matchesSingleVein()) {
+                            if (chunk.matchesSingleVein()) {
                                 VP.serverCache.putOreVein(dimensionId, chunkX, chunkZ, chunk.getMatchedVein());
                                 veinBlockY.put(VPUtils.chunkCoordsToKey(chunkX, chunkZ), chunk.getVeinBlockY());
-                            }
-                            else {
+                            } else {
                                 final VPDetailedChunkAnalysis detailedChunk = new VPDetailedChunkAnalysis(dimensionId, chunkX, chunkZ);
                                 detailedChunk.processMinecraftChunk(root);
                                 chunksForSecondIdentificationPass.put(VPUtils.chunkCoordsToKey(chunkX, chunkZ), detailedChunk);
@@ -57,6 +56,7 @@ public class VPDimensionAnalysis {
                         }
                     }
                 }
+            }
             region.close();
             VPAnalysisProgressTracker.regionFileProcessed();
         }

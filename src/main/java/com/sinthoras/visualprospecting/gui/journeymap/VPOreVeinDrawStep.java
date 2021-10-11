@@ -70,7 +70,8 @@ public class VPOreVeinDrawStep implements DrawStep {
             if (blend && color != null) {
                 float[] c = RGB.floats(color);
                 renderHelper.glColor4f(c[0], c[1], c[2], alpha);
-            } else {
+            }
+            else {
                 renderHelper.glColor4f(1.0F, 1.0F, 1.0F, alpha);
             }
 
@@ -99,7 +100,8 @@ public class VPOreVeinDrawStep implements DrawStep {
                     renderHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
                 }
             }
-        } finally {
+        }
+        finally {
             GL11.glPopMatrix();
         }
 

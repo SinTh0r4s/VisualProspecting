@@ -59,7 +59,7 @@ public class VPProspectingNotification implements IMessage {
             final int chunkZ = buf.readInt();
             final Fluid oil = FluidRegistry.getFluid(buf.readInt());
             final int[][] chunks = new int[VP.oilFieldSizeChunkX][VP.oilFieldSizeChunkZ];
-            for(int offsetChunkX = 0; offsetChunkX< VP.oilFieldSizeChunkX; offsetChunkX++)
+            for(int offsetChunkX = 0; offsetChunkX < VP.oilFieldSizeChunkX; offsetChunkX++)
                 for(int offsetChunkZ = 0; offsetChunkZ< VP.oilFieldSizeChunkZ; offsetChunkZ++) {
                     chunks[offsetChunkX][offsetChunkZ] = buf.readInt();
                 }
@@ -81,10 +81,11 @@ public class VPProspectingNotification implements IMessage {
             buf.writeInt(oilFieldPosition.chunkX);
             buf.writeInt(oilFieldPosition.chunkZ);
             buf.writeInt(oilFieldPosition.oilField.oil.getID());
-            for(int offsetChunkX = 0; offsetChunkX< VP.oilFieldSizeChunkX; offsetChunkX++)
-                for(int offsetChunkZ = 0; offsetChunkZ< VP.oilFieldSizeChunkZ; offsetChunkZ++) {
+            for(int offsetChunkX = 0; offsetChunkX < VP.oilFieldSizeChunkX; offsetChunkX++) {
+                for (int offsetChunkZ = 0; offsetChunkZ < VP.oilFieldSizeChunkZ; offsetChunkZ++) {
                     buf.writeInt(oilFieldPosition.oilField.chunks[offsetChunkX][offsetChunkZ]);
                 }
+            }
         }
     }
 

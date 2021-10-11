@@ -27,10 +27,12 @@ public class VPDetailedChunkAnalysis {
         for (final NBTNamed tileEntity : ((NBTList) chunkRoot.getTag("Level.TileEntities")).elements) {
             final VPGregTechOre gtOre = new VPGregTechOre((NBTCompound) tileEntity);
             if(gtOre.isValidGTOre) {
-                if(oresPerY[gtOre.blockY] == null)
+                if(oresPerY[gtOre.blockY] == null) {
                     oresPerY[gtOre.blockY] = new HashMap<>();
-                if(oresPerY[gtOre.blockY].containsKey(gtOre.metaData) == false)
+                }
+                if(oresPerY[gtOre.blockY].containsKey(gtOre.metaData) == false) {
                     oresPerY[gtOre.blockY].put(gtOre.metaData, 0);
+                }
                 oresPerY[gtOre.blockY].put(gtOre.metaData, oresPerY[gtOre.blockY].get(gtOre.metaData) + 1);
             }
         }
@@ -66,11 +68,14 @@ public class VPDetailedChunkAnalysis {
                 final int veinBlockY = neighborVeinBlockY[neighborId];
                 for (int layerBlockY = 0;layerBlockY<VPVeinType.veinHeight;layerBlockY++) {
                     final int blockY = veinBlockY + layerBlockY;
-                    if(blockY > 255)
+                    if(blockY > 255) {
                         break;
-                    if(oresPerY[blockY] != null)
-                        for(short metaData : neighbor.getOresAtLayer(layerBlockY))
+                    }
+                    if(oresPerY[blockY] != null) {
+                        for (short metaData : neighbor.getOresAtLayer(layerBlockY)) {
                             oresPerY[blockY].remove(metaData);
+                        }
+                    }
                 }
             }
         }
@@ -80,23 +85,28 @@ public class VPDetailedChunkAnalysis {
         final HashSet<VPVeinType> matchedVeins = new HashSet<>();
 
         final HashMap<Short, Integer> allOres = new HashMap<>();
-        for(HashMap<Short, Integer> oreLevel : oresPerY)
-            if(oreLevel != null)
+        for(HashMap<Short, Integer> oreLevel : oresPerY) {
+            if (oreLevel != null) {
                 oreLevel.forEach((metaData, numberOfBlocks) -> allOres.merge(metaData, numberOfBlocks, Integer::sum));
+            }
+        }
 
         final Optional<Short> dominantOre = allOres.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .map(Map.Entry::getKey).findFirst();
         if(dominantOre.isPresent()) {
             for(VPVeinType veinType : VPVeinTypeCaching.veinTypes) {
-                if(veinType.matchesWithSpecificPrimaryOrSecondary(allOres.keySet(), dominantOre.get()))
+                if(veinType.matchesWithSpecificPrimaryOrSecondary(allOres.keySet(), dominantOre.get())) {
                     matchedVeins.add(veinType);
+                }
             }
         }
 
-        if(matchedVeins.size() == 1)
+        if(matchedVeins.size() == 1) {
             return matchedVeins.stream().findAny().get();
-        else
+        }
+        else {
             return VPVeinType.NO_VEIN;
+        }
     }
 }

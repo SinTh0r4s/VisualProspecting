@@ -29,7 +29,8 @@ public class VPHooksEventBus {
         if(event.world.isRemote == false) {
             if (event.entity instanceof EntityPlayerMP) {
                 VP.network.sendTo(new VPWorldIdNotification(VPWorldIdHandler.getWorldId()), (EntityPlayerMP) event.entity);
-            } else if (event.entity instanceof EntityPlayer) {
+            }
+            else if (event.entity instanceof EntityPlayer) {
                 VP.clientCache.loadVeinCache(VPWorldIdHandler.getWorldId());
             }
         }

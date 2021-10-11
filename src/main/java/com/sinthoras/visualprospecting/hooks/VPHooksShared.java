@@ -70,7 +70,8 @@ public class VPHooksShared {
 				VPWorldAnalysis world = new VPWorldAnalysis(minecraftServer.getEntityWorld().getSaveHandler().getWorldDirectory());
 				world.cacheVeins();
 				VP.serverCache.saveVeinCache();
-			} catch (IOException | DataFormatException e) {
+			}
+			catch (IOException | DataFormatException e) {
 				VP.info("Could not load world save files to build vein cache!");
 				e.printStackTrace();
 			}

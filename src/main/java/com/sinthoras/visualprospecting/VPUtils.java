@@ -10,10 +10,8 @@ import gregtech.api.objects.GT_UO_Fluid;
 import gregtech.api.objects.XSTR;
 import gregtech.common.GT_UndergroundOil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -51,8 +49,9 @@ public class VPUtils {
 
     public static int nonNegativeModulo(final int value, final int divisor) {
         final int rest = value % divisor;
-        if(rest < 0)
+        if(rest < 0) {
             return rest + divisor;
+        }
         return rest;
     }
 
@@ -90,8 +89,9 @@ public class VPUtils {
     }
 
     public static ByteBuffer readFileToBuffer(File file) {
-        if(file.exists() == false)
+        if(file.exists() == false) {
             return null;
+        }
         try
         {
             final FileInputStream inputStream = new FileInputStream(file);
@@ -106,23 +106,24 @@ public class VPUtils {
 
             return buffer;
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             e.printStackTrace();
             return null;
         }
     }
 
     public static Map<String, Short> readFileToMap(File file) {
-        if(file.exists() == false)
+        if(file.exists() == false) {
             return new HashMap<>();
+        }
         try {
             final Gson gson = new Gson();
             final Reader reader = Files.newBufferedReader(file.toPath());
             final Map<String, Short> map = gson.fromJson(reader, new TypeToken<Map<String, Short>>() { }.getType());
             reader.close();
             return map;
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
             return new HashMap<>();
         }
@@ -130,21 +131,24 @@ public class VPUtils {
 
     public static void writeMapToFile(File file, Map<String, Short> map) {
         try {
-            if(file.exists())
+            if(file.exists()) {
                 file.delete();
+            }
             final Gson gson = new Gson();
             final Writer writer = Files.newBufferedWriter(file.toPath(), StandardOpenOption.CREATE_NEW);
             gson.toJson(map, new TypeToken<Map<String, Short>>() { }.getType(), writer);
             writer.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void appendToFile(File file, ByteBuffer byteBuffer) {
         try {
-            if(file.exists() == false)
+            if(file.exists() == false) {
                 file.createNewFile();
+            }
             final FileOutputStream outputStream = new FileOutputStream(file, true);
             final FileChannel outputChannel = outputStream.getChannel();
 
@@ -152,7 +156,8 @@ public class VPUtils {
 
             outputChannel.close();
             outputStream.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -167,12 +172,14 @@ public class VPUtils {
             final HashMap<Integer, ByteBuffer> dimensionFiles = new HashMap<>();
             for (int dimensionId : dimensionIds) {
                 ByteBuffer buffer = readFileToBuffer(new File(directory.toPath() + "/DIM" + dimensionId));
-                if (buffer != null)
+                if (buffer != null) {
                     dimensionFiles.put(dimensionId, buffer);
+                }
             }
             return dimensionFiles;
 
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
             return new HashMap<>();
         }
@@ -210,10 +217,12 @@ public class VPUtils {
             tInts[GTOIL] = 0;
             chunkData.put(chunkCoordinate, tInts);//update hash map
             return null;
-        } else {
+        }
+        else {
             if (tInts[GTOILFLUID] == uoFluid.getFluid().getID()) {//if stored fluid matches uoFluid
                 fluidInChunk = new FluidStack(uoFluid.getFluid(), tInts[GTOIL]);
-            } else {
+            }
+            else {
                 fluidInChunk = new FluidStack(uoFluid.getFluid(), uoFluid.getRandomAmount(tRandom));
                 fluidInChunk.amount = (int) ((float) fluidInChunk.amount * (0.75f + (XSTR_INSTANCE.nextFloat() / 2f)));//Randomly change amounts by +/- 25%
             }
@@ -224,7 +233,8 @@ public class VPUtils {
         if (fluidInChunk.amount <= GT_UndergroundOil.DIVIDER) {
             fluidInChunk.amount = 0;//return informative stack
             tInts[GTOIL] = 0;//so in next access it will stop way above
-        } else {
+        }
+        else {
             fluidInChunk.amount = fluidInChunk.amount / GT_UndergroundOil.DIVIDER;//give moderate extraction speed
         }
 

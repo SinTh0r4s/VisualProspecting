@@ -13,7 +13,8 @@ public class VPReflection {
         try {
             gridRenderer = Fullscreen.class.getDeclaredField("gridRenderer");
             gridRenderer.setAccessible(true);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -21,7 +22,8 @@ public class VPReflection {
     public static GridRenderer getJourneyMapGridRenderer() {
         try {
             return (GridRenderer) gridRenderer.get(null);
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e) {
             e.printStackTrace();
             return null;
         }

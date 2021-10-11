@@ -29,13 +29,14 @@ public class VPServerCache extends VPWorldCache {
         maxChunkZ = VPUtils.mapToCenterOreChunkCoord(maxChunkZ);
 
         List<VPOreVeinPosition> oreVeinPositions = new ArrayList<>();
-        for(int chunkX = minChunkX;chunkX <= maxChunkX;chunkX+=3)
-            for(int chunkZ = minChunkZ;chunkZ <= maxChunkZ;chunkZ+=3) {
+        for(int chunkX = minChunkX; chunkX <= maxChunkX; chunkX += 3) {
+            for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ += 3) {
                 final VPVeinType veinType = getOreVein(dimensionId, chunkX, chunkZ);
-                if(veinType != VPVeinType.NO_VEIN) {
+                if (veinType != VPVeinType.NO_VEIN) {
                     oreVeinPositions.add(new VPOreVeinPosition(chunkX, chunkZ, veinType));
                 }
             }
+        }
         return oreVeinPositions;
     }
 
@@ -57,25 +58,26 @@ public class VPServerCache extends VPWorldCache {
 
         List<VPOilFieldPosition> foundOilFields = new ArrayList<>((2 * oilFieldRadius + 1) * (2 * oilFieldRadius + 1));
 
-        for(int oilFieldX = 0;oilFieldX < 2*oilFieldRadius+1; oilFieldX++)
-            for(int oilFieldZ = 0;oilFieldZ < 2*oilFieldRadius+1; oilFieldZ++) {
+        for(int oilFieldX = 0; oilFieldX < 2 * oilFieldRadius + 1; oilFieldX++) {
+            for (int oilFieldZ = 0; oilFieldZ < 2 * oilFieldRadius + 1; oilFieldZ++) {
                 final int chunkX = minChunkX + oilFieldX * VP.oilFieldSizeChunkX;
                 final int chunkZ = minChunkZ + oilFieldZ * VP.oilFieldSizeChunkZ;
                 final int[][] chunks = new int[VP.oilFieldSizeChunkX][VP.oilFieldSizeChunkZ];
                 Fluid oil = null;
-                for(int offsetChunkX = 0;offsetChunkX<VP.oilFieldSizeChunkX;offsetChunkX++)
-                    for(int offsetChunkZ = 0;offsetChunkZ<VP.oilFieldSizeChunkZ;offsetChunkZ++) {
+                for (int offsetChunkX = 0; offsetChunkX < VP.oilFieldSizeChunkX; offsetChunkX++) {
+                    for (int offsetChunkZ = 0; offsetChunkZ < VP.oilFieldSizeChunkZ; offsetChunkZ++) {
                         final FluidStack prospectedOil = VPUtils.prospectOil(world, chunkX + offsetChunkX, chunkZ + offsetChunkZ);
-                        if(prospectedOil != null) {
+                        if (prospectedOil != null) {
                             oil = prospectedOil.getFluid();
                             chunks[offsetChunkX][offsetChunkZ] = prospectedOil.amount;
                         }
                     }
-                if(oil != null) {
+                }
+                if (oil != null) {
                     foundOilFields.add(new VPOilFieldPosition(chunkX, chunkZ, new VPOilField(oil, chunks)));
                 }
             }
-
+        }
         return foundOilFields;
     }
 }

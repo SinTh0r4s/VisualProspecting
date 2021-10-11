@@ -1,6 +1,5 @@
 package com.sinthoras.visualprospecting.database;
 
-import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPTags;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldSavedData;

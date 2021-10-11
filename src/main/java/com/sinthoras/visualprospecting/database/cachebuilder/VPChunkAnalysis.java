@@ -19,24 +19,27 @@ public class VPChunkAnalysis {
             final VPGregTechOre gtOre = new VPGregTechOre((NBTCompound) tileEntity);
             if(gtOre.isValidGTOre) {
                 ores.add(gtOre.metaData);
-                if(minVeinBlockY > gtOre.blockY)
+                if(minVeinBlockY > gtOre.blockY) {
                     minVeinBlockY = gtOre.blockY;
+                }
             }
         }
     }
 
     public boolean matchesSingleVein() {
         for(VPVeinType veinType : VPVeinTypeCaching.veinTypes) {
-            if(veinType.matches(ores))
+            if(veinType.matches(ores)) {
                 matchedVeins.add(veinType);
+            }
         }
         return matchedVeins.size() <= 1;
     }
 
     // Result only valid if matchesSingleVein() returned true
     public VPVeinType getMatchedVein() {
-        if(matchedVeins.isEmpty())
+        if(matchedVeins.isEmpty()) {
             return VPVeinType.NO_VEIN;
+        }
         return matchedVeins.stream().findAny().get();
     }
 

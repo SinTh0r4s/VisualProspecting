@@ -105,18 +105,20 @@ public class VPProspectingRequest implements IMessage {
                             // Check if neighboring veins could fit
                             final int centerChunkX = VPUtils.mapToCenterOreChunkCoord(chunkX);
                             final int centerChunkZ = VPUtils.mapToCenterOreChunkCoord(chunkZ);
-                            for(int offsetChunkX = -3;offsetChunkX <=3;offsetChunkX+=3)
-                                for(int offsetChunkZ = -3;offsetChunkZ <=3;offsetChunkZ+=3)
-                                    if(offsetChunkX != 0 || offsetChunkZ != 0) {
+                            for(int offsetChunkX = -3; offsetChunkX <= 3; offsetChunkX += 3) {
+                                for (int offsetChunkZ = -3; offsetChunkZ <= 3; offsetChunkZ += 3) {
+                                    if (offsetChunkX != 0 || offsetChunkZ != 0) {
                                         final int neighborChunkX = centerChunkX + offsetChunkX;
                                         final int neighborChunkZ = centerChunkZ + offsetChunkZ;
                                         final int distanceBlocks = Math.max(Math.abs(neighborChunkX - chunkX), Math.abs(neighborChunkZ - chunkZ));
                                         final VPVeinType neighborVein = VP.serverCache.getOreVein(message.dimensionId, neighborChunkX, neighborChunkZ);
                                         final int maxDistance = ((neighborVein.blockSize + 16) >> 4) + 1;  // Equals to: ceil(blockSize / 16.0) + 1
-                                        if(neighborVein.containsOre(message.foundOreMetaData) && distanceBlocks <= maxDistance) {
+                                        if (neighborVein.containsOre(message.foundOreMetaData) && distanceBlocks <= maxDistance) {
                                             return new VPProspectingNotification(message.dimensionId, new VPOreVeinPosition(neighborChunkX, neighborChunkZ, neighborVein));
                                         }
                                     }
+                                }
+                            }
                         }
                     }
                 }

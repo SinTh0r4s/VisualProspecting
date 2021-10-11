@@ -30,19 +30,22 @@ public class VPVeinTypeCaching implements Runnable {
         veinTypes.add(VPVeinType.NO_VEIN);
 
         for(GT_Worldgen_GT_Ore_Layer vein : GT_Worldgen_GT_Ore_Layer.sList) {
-            if(vein.mWorldGenName.equals(VPTags.ORE_MIX_NONE_NAME))
+            if(vein.mWorldGenName.equals(VPTags.ORE_MIX_NONE_NAME)) {
                 break;
+            }
             veinTypes.add(new VPVeinType(vein.mWorldGenName, vein.mSize, vein.mPrimaryMeta, vein.mSecondaryMeta, vein.mBetweenMeta, vein.mSporadicMeta));
         }
 
         if(isBartworksInstalled()) {
-            for(Object vein : getBWOreVeins())
-                veinTypes.add(new VPVeinType(getBWOreVeinName(vein),
-                                                getBWOreVeinSize(vein),
-                                                getBWOreVeinPrimaryMeta(vein),
-                                                getBWOreVeinSecondaryMeta(vein),
-                                                getBWOreVeinInBetweenMeta(vein),
-                                                getBWOreVeinSporadicMeta(vein)));
+            for(Object vein : getBWOreVeins()) {
+                veinTypes.add(new VPVeinType(
+                        getBWOreVeinName(vein),
+                        getBWOreVeinSize(vein),
+                        getBWOreVeinPrimaryMeta(vein),
+                        getBWOreVeinSecondaryMeta(vein),
+                        getBWOreVeinInBetweenMeta(vein),
+                        getBWOreVeinSporadicMeta(vein)));
+            }
         }
 
         // Assign veinTypeIds for efficient storage
@@ -52,8 +55,9 @@ public class VPVeinTypeCaching implements Runnable {
         short maxVeinTypeId = maxVeinTypeIdOptional.isPresent() ? maxVeinTypeIdOptional.get() : 0;
 
         for(VPVeinType veinType : veinTypes) {
-            if(veinTypeStorageInfo.containsKey(veinType.name))
+            if(veinTypeStorageInfo.containsKey(veinType.name)) {
                 veinType.veinId = veinTypeStorageInfo.get(veinType.name);
+            }
             else {
                 maxVeinTypeId++;
                 veinType.veinId = maxVeinTypeId;

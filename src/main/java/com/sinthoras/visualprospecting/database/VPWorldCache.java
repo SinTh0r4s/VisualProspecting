@@ -21,8 +21,9 @@ public abstract class VPWorldCache {
     protected abstract File getStorageDirectory();
 
     public boolean loadVeinCache(String worldId) {
-        if(this.worldId.equals(worldId))
+        if(this.worldId.equals(worldId)) {
             return true;
+        }
         this.worldId = worldId;
         final File worldCacheDirectory = new File(getStorageDirectory(), worldId);
         oreVeinCacheDirectory = new File(worldCacheDirectory, VPTags.OREVEIN_DIR);
@@ -34,8 +35,9 @@ public abstract class VPWorldCache {
         final Set<Integer> dimensionsIds = new HashSet<>();
         dimensionsIds.addAll(oreVeinDimensionBuffers.keySet());
         dimensionsIds.addAll(oilFieldDimensionBuffers.keySet());
-        if(dimensionsIds.isEmpty())
+        if(dimensionsIds.isEmpty()) {
             return false;
+        }
 
         dimensions.clear();
         for(int dimensionId : dimensionsIds) {
@@ -83,8 +85,9 @@ public abstract class VPWorldCache {
 
     public VPVeinType getOreVein(int dimensionId, int chunkX, int chunkZ) {
         VPDimensionCache dimension = dimensions.get(dimensionId);
-        if(dimension == null)
+        if(dimension == null) {
             return VPVeinType.NO_VEIN;
+        }
         return dimension.getOreVein(chunkX, chunkZ);
     }
 
@@ -99,8 +102,9 @@ public abstract class VPWorldCache {
 
     public VPOilField getOilField(int dimensionId, int chunkX, int chunkZ) {
         VPDimensionCache dimension = dimensions.get(dimensionId);
-        if(dimension == null)
+        if(dimension == null) {
             return VPOilField.NOT_PROSPECTED;
+        }
         return dimension.getOilField(chunkX, chunkZ);
     }
 }

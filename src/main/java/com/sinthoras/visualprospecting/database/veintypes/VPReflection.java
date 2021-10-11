@@ -26,7 +26,8 @@ public class VPReflection {
                 veinInBetweenOreMeta = bw_OreLayer.getDeclaredField("mBetweenMeta");
                 veinSporadicOreMeta = bw_OreLayer.getDeclaredField("mSporadicMeta");
                 veinSize = bw_OreLayer.getDeclaredField("mSize");
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -35,7 +36,8 @@ public class VPReflection {
     public static List<Object> getBWOreVeins() {
         try {
             return (List<Object>)bw_OreLayer.getField("sList").get(null);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
+        }
+        catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
             return new ArrayList<>();
         }
@@ -44,7 +46,8 @@ public class VPReflection {
     public static String getBWOreVeinName(Object vein) {
         try {
             return (String)veinName.get(vein);
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e) {
             e.printStackTrace();
             return "error!";
         }
@@ -53,7 +56,8 @@ public class VPReflection {
     public static short getBWOreVeinPrimaryMeta(Object vein) {
         try {
             return (short)veinPrimaryOreMeta.getInt(vein);
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e) {
             e.printStackTrace();
             return 0;
         }
@@ -62,7 +66,8 @@ public class VPReflection {
     public static short getBWOreVeinSecondaryMeta(Object vein) {
         try {
             return (short)veinSecondaryOreMeta.getInt(vein);
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e) {
             e.printStackTrace();
             return 0;
         }
@@ -71,7 +76,8 @@ public class VPReflection {
     public static short getBWOreVeinInBetweenMeta(Object vein) {
         try {
             return (short)veinInBetweenOreMeta.getInt(vein);
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e) {
             e.printStackTrace();
             return 0;
         }
@@ -80,7 +86,8 @@ public class VPReflection {
     public static short getBWOreVeinSporadicMeta(Object vein) {
         try {
             return (short)veinSporadicOreMeta.getInt(vein);
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e) {
             e.printStackTrace();
             return 0;
         }
@@ -89,7 +96,8 @@ public class VPReflection {
     public static int getBWOreVeinSize(Object vein) {
         try {
             return veinSize.getInt(vein);
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e) {
             e.printStackTrace();
             return 0;
         }

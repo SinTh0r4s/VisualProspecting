@@ -42,13 +42,14 @@ public class VPMapState {
             oldMinOreChunkZ = minOreChunkZ;
             oldMaxOreChunkZ = maxOreChunkZ;
             oreChunkDrawSteps.clear();
-            for (int chunkX = minOreChunkX; chunkX <= maxOreChunkX; chunkX += VP.oreVeinSizeChunkX)
+            for (int chunkX = minOreChunkX; chunkX <= maxOreChunkX; chunkX += VP.oreVeinSizeChunkX) {
                 for (int chunkZ = minOreChunkZ; chunkZ <= maxOreChunkZ; chunkZ += VP.oreVeinSizeChunkZ) {
                     final VPVeinType veinType = VP.clientCache.getOreVein(minecraft.thePlayer.dimension, chunkX, chunkZ);
                     if (veinType != VPVeinType.NO_VEIN) {
                         oreChunkDrawSteps.add(new VPOreVeinDrawStep(veinType, chunkX, chunkZ));
                     }
                 }
+            }
         }
         return oreChunkDrawSteps;
     }
@@ -69,18 +70,20 @@ public class VPMapState {
             oldMinOilFieldZ = minOilFieldZ;
             oldMaxOilFieldZ = maxOilFieldZ;
             oilFieldDrawSteps.clear();
-            for (int chunkX = minOilFieldX; chunkX <= maxOilFieldX; chunkX += VP.oilFieldSizeChunkX)
+            for (int chunkX = minOilFieldX; chunkX <= maxOilFieldX; chunkX += VP.oilFieldSizeChunkX) {
                 for (int chunkZ = minOilFieldZ; chunkZ <= maxOilFieldZ; chunkZ += VP.oilFieldSizeChunkZ) {
                     final VPOilField oilField = VP.clientCache.getOilField(minecraft.thePlayer.dimension, chunkX, chunkZ);
                     if (oilField != VPOilField.NOT_PROSPECTED) {
                         final int minAmountInField = oilField.getMinProduction();
                         final int maxAmountInField = oilField.getMaxProduction();
-                        for(int offsetChunkX = 0;offsetChunkX < VP.oilFieldSizeChunkX;offsetChunkX++)
-                            for(int offsetChunkZ = 0;offsetChunkZ < VP.oilFieldSizeChunkZ;offsetChunkZ++) {
+                        for (int offsetChunkX = 0; offsetChunkX < VP.oilFieldSizeChunkX; offsetChunkX++) {
+                            for (int offsetChunkZ = 0; offsetChunkZ < VP.oilFieldSizeChunkZ; offsetChunkZ++) {
                                 oilFieldDrawSteps.add(new VPOilFieldDrawStep(chunkX + offsetChunkX, chunkZ + offsetChunkZ, oilField.oil, oilField.chunks[offsetChunkX][offsetChunkZ], minAmountInField, maxAmountInField));
                             }
+                        }
                     }
                 }
+            }
         }
         return oilFieldDrawSteps;
     }
