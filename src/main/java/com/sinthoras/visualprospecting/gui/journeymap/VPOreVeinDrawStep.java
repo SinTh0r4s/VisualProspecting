@@ -35,22 +35,23 @@ public class VPOreVeinDrawStep implements DrawStep {
 
     @Override
     public void draw(double xOffset, double yOffset, GridRenderer gridRenderer, float drawScale, double fontScale, double rotation) {
+        final double textureSize = 32 * fontScale;
+        final double textureSizeHalf = textureSize / 2;
+        final Point2D.Double blockAsPixel = gridRenderer.getBlockPixelInGrid(blockX, blockZ);
+        final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + xOffset, blockAsPixel.getY() + yOffset);
+
+
         if(gridRenderer.getZoom() >= VPConfig.minZoomLevel) {
-            Materials aMaterial = GregTech_API.sGeneratedMaterials[veinType.primaryOreMeta];
-
-            final double textureSize = 32 * fontScale;
-            final double textureSizeHalf = textureSize / 2;
-
-            final Point2D.Double pixel = gridRenderer.getBlockPixelInGrid(blockX, blockZ);
-            DrawUtil.drawLabel(veinType.getNameReadable() + " Vein", pixel.getX() + xOffset, pixel.getY() + yOffset - textureSize, DrawUtil.HAlign.Center, DrawUtil.VAlign.Middle, 0, 180, 0x00FFFFFF, 255, fontScale, false, rotation);
-
-            final IIcon blockIcon = Blocks.stone.getIcon(0, 0);
-            drawQuad(blockIcon, pixel.getX() - textureSizeHalf + xOffset, pixel.getY() - textureSizeHalf + yOffset, textureSize, textureSize, 0.0, 0xFFFFFF, 255, false, GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, false);
-
-            final int color = (aMaterial.mRGBa[0] << 16) | (aMaterial.mRGBa[1]) << 8 | aMaterial.mRGBa[2];
-            final IIcon oreIcon = aMaterial.mIconSet.mTextures[OrePrefixes.ore.mTextureIndex].getIcon();
-            drawQuad(oreIcon, pixel.getX() - textureSizeHalf + xOffset, pixel.getY() - textureSizeHalf + yOffset, textureSize, textureSize, 0.0, color, 255, true, GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, false);
+            DrawUtil.drawLabel(veinType.getNameReadable() + " Vein", pixel.getX(), pixel.getY() - textureSize, DrawUtil.HAlign.Center, DrawUtil.VAlign.Middle, 0, 180, 0x00FFFFFF, 255, fontScale, false, rotation);
         }
+
+        final IIcon blockIcon = Blocks.stone.getIcon(0, 0);
+        drawQuad(blockIcon, pixel.getX() - textureSizeHalf, pixel.getY() - textureSizeHalf, textureSize, textureSize, 0.0, 0xFFFFFF, 255, false, GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, false);
+
+        Materials aMaterial = GregTech_API.sGeneratedMaterials[veinType.primaryOreMeta];
+        final int color = (aMaterial.mRGBa[0] << 16) | (aMaterial.mRGBa[1]) << 8 | aMaterial.mRGBa[2];
+        final IIcon oreIcon = aMaterial.mIconSet.mTextures[OrePrefixes.ore.mTextureIndex].getIcon();
+        drawQuad(oreIcon, pixel.getX() - textureSizeHalf, pixel.getY() - textureSizeHalf, textureSize, textureSize, 0.0, color, 255, true, GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, false);
     }
 
     public static void drawQuad(IIcon icon, double x, double y, double width, double height, double rotation, Integer color, float alpha, boolean blend, int glBlendSfactor, int glBlendDFactor, boolean clampTexture) {

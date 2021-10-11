@@ -73,13 +73,13 @@ public abstract class GT_MetaTileEntity_AdvSeismicProspectorMixin extends GT_Met
 
                 final List<VPOilFieldPosition> oilFieldPositions = VP.serverCache.prospectOilBlockRadius(aPlayer.worldObj, getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord(), VP.oilChunkProspectingRange);
                 String[] oilStrings = new String[9];
-                final int minOilFieldX = VPUtils.mapToCornerOilFieldChunkCoord(VPUtils.coordBlockToChunk(getBaseMetaTileEntity().getXCoord()));
-                final int minOilFieldZ = VPUtils.mapToCornerOilFieldChunkCoord(VPUtils.coordBlockToChunk(getBaseMetaTileEntity().getZCoord()));
+                final int minOilFieldX = VPUtils.mapToCornerOilFieldChunkCoord(VPUtils.coordBlockToChunk(getBaseMetaTileEntity().getXCoord())) - VP.oilFieldSizeChunkX * VP.oilChunkProspectingRange;
+                final int minOilFieldZ = VPUtils.mapToCornerOilFieldChunkCoord(VPUtils.coordBlockToChunk(getBaseMetaTileEntity().getZCoord())) - VP.oilFieldSizeChunkZ * VP.oilChunkProspectingRange;
                 for(VPOilFieldPosition oilFieldPosition : oilFieldPositions) {
                     final int offsetOilfieldX = (VPUtils.mapToCornerOilFieldChunkCoord(oilFieldPosition.chunkX) - minOilFieldX) >> 3;
                     final int offsetOilfieldZ = (VPUtils.mapToCornerOilFieldChunkCoord(oilFieldPosition.chunkZ) - minOilFieldZ) >> 3;
                     final int oilFieldBookId = offsetOilfieldX + offsetOilfieldZ * 3;
-                    oilStrings[oilFieldBookId] =  "" + oilFieldBookId + ": " + oilFieldPosition.getMinProduction() + "-" + oilFieldPosition.getMaxProduction() + " " + oilFieldPosition.oilField.oil.getLocalizedName(null);
+                    oilStrings[oilFieldBookId] =  "" + oilFieldBookId + ": " + oilFieldPosition.oilField.getMinProduction() + "-" + oilFieldPosition.oilField.getMaxProduction() + " " + oilFieldPosition.oilField.oil.getLocalizedName(null);
                 }
                 compound.setString(VPTags.PROSPECTION_OILS, String.join("|", oilStrings));
 

@@ -25,6 +25,7 @@ public class FullscreenMixin {
 
     private VPMapState vpMapState = new VPMapState();
     private ThemeButton buttonOreVeins;
+    private ThemeButton buttonOilFields;
 
     @Shadow(remap = false)
     private ThemeToolbar mapTypeToolbar;
@@ -48,10 +49,12 @@ public class FullscreenMixin {
             remap = false,
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void onBeforeDrawWaypoints(CallbackInfo callbackInfo, boolean refreshReady, StatTimer timer, int xOffset, int yOffset, float drawScale) {
+        final GridRenderer gridRenderer = getJourneyMapGridRenderer();
+        assert (gridRenderer != null);
+        if(vpMapState.drawOilFields) {
+            gridRenderer.draw(vpMapState.getOilFieldDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
+        }
         if(vpMapState.drawOreVeins) {
-            final GridRenderer gridRenderer = getJourneyMapGridRenderer();
-            assert (gridRenderer != null);
-
             gridRenderer.draw(vpMapState.getOreVeinDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
         }
     }
@@ -69,7 +72,14 @@ public class FullscreenMixin {
             return true;
         });
 
-        mapTypeToolbar = new ThemeToolbar(theme, buttonOreVeins, buttonCaves, buttonNight, buttonDay);
+        buttonOilFields = new ThemeToggle(theme, "visualprospecting.button.oilfield", "oilfields");
+        buttonOilFields.setToggled(true, false);
+        buttonOilFields.addToggleListener((button, toggled) -> {
+            vpMapState.drawOilFields = toggled;
+            return true;
+        });
+
+        mapTypeToolbar = new ThemeToolbar(theme, buttonOilFields, buttonOreVeins, buttonCaves, buttonNight, buttonDay);
     }
 
 

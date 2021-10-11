@@ -1,5 +1,6 @@
 package com.sinthoras.visualprospecting.database;
 
+import com.sinthoras.visualprospecting.VP;
 import net.minecraftforge.fluids.Fluid;
 
 import java.util.Arrays;
@@ -18,5 +19,27 @@ public class VPOilField {
 
     public boolean equals(VPOilField other) {
         return oil == other.oil && Arrays.deepEquals(chunks, other.chunks);
+    }
+
+    public int getMinProduction() {
+        int smallest = Integer.MAX_VALUE;
+        for(int chunkX = 0; chunkX< VP.oilFieldSizeChunkX; chunkX++)
+            for(int chunkZ=0;chunkZ< VP.oilFieldSizeChunkZ;chunkZ++) {
+                if(chunks[chunkX][chunkZ] < smallest) {
+                    smallest = chunks[chunkX][chunkZ];
+                }
+            }
+        return smallest;
+    }
+
+    public int getMaxProduction() {
+        int largest = Integer.MIN_VALUE;
+        for(int chunkX=0;chunkX< VP.oilFieldSizeChunkX;chunkX++)
+            for(int chunkZ=0;chunkZ< VP.oilFieldSizeChunkZ;chunkZ++) {
+                if(chunks[chunkX][chunkZ] > largest) {
+                    largest = chunks[chunkX][chunkZ];
+                }
+            }
+        return largest;
     }
 }

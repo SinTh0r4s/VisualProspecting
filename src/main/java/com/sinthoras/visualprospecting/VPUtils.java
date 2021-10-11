@@ -104,10 +104,7 @@ public class VPUtils {
             inputChannel.close();
             inputStream.close();
 
-            if(buffer.limit() % 10 == 0) {
-                return buffer;
-            }
-            return null;
+            return buffer;
         }
         catch (IOException e)
         {

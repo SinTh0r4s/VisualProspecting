@@ -7,6 +7,7 @@ import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 public abstract class VPWorldCache {
@@ -25,20 +26,21 @@ public abstract class VPWorldCache {
         this.worldId = worldId;
         final File worldCacheDirectory = new File(getStorageDirectory(), worldId);
         oreVeinCacheDirectory = new File(worldCacheDirectory, VPTags.OREVEIN_DIR);
-        oilCacheDirectory = new File(worldCacheDirectory, VPTags.OIL_DIR);
+        oilCacheDirectory = new File(worldCacheDirectory, VPTags.OILFIELD_DIR);
         oreVeinCacheDirectory.mkdirs();
         oilCacheDirectory.mkdirs();
         final HashMap<Integer, ByteBuffer> oreVeinDimensionBuffers = VPUtils.getDIMFiles(oreVeinCacheDirectory);
-        final HashMap<Integer, ByteBuffer> oilDimensionBuffers = VPUtils.getDIMFiles(oilCacheDirectory);
-        final Set<Integer> dimensionsIds = oreVeinDimensionBuffers.keySet();
-        dimensionsIds.addAll(oilDimensionBuffers.keySet());
+        final HashMap<Integer, ByteBuffer> oilFieldDimensionBuffers = VPUtils.getDIMFiles(oilCacheDirectory);
+        final Set<Integer> dimensionsIds = new HashSet<>();
+        dimensionsIds.addAll(oreVeinDimensionBuffers.keySet());
+        dimensionsIds.addAll(oilFieldDimensionBuffers.keySet());
         if(dimensionsIds.isEmpty())
             return false;
 
         dimensions.clear();
         for(int dimensionId : dimensionsIds) {
             final VPDimensionCache dimension = new VPDimensionCache(dimensionId);
-            dimension.loadCache(oreVeinDimensionBuffers.get(dimensionId), oilDimensionBuffers.get(dimensionId));
+            dimension.loadCache(oreVeinDimensionBuffers.get(dimensionId), oilFieldDimensionBuffers.get(dimensionId));
             dimensions.put(dimensionId, dimension);
         }
         return true;
@@ -48,12 +50,12 @@ public abstract class VPWorldCache {
         if(needsSaving) {
             for (VPDimensionCache dimension : dimensions.values()) {
                 final ByteBuffer oreVeinBuffer = dimension.saveOreChunks();
-                final ByteBuffer oilBuffer = dimension.saveOilFields();
                 if (oreVeinBuffer != null) {
-                    VPUtils.appendToFile(new File(oreVeinCacheDirectory, "DIM" + dimension.dimensionId), oreVeinBuffer);
+                    VPUtils.appendToFile(new File(oreVeinCacheDirectory.toPath() + "/DIM" + dimension.dimensionId), oreVeinBuffer);
                 }
-                if(oilBuffer != null) {
-                    VPUtils.appendToFile(new File(oilCacheDirectory, "DIM" + dimension.dimensionId), oilBuffer);
+                final ByteBuffer oilFieldBuffer = dimension.saveOilFields();
+                if(oilFieldBuffer != null) {
+                    VPUtils.appendToFile(new File(oilCacheDirectory.toPath() + "/DIM" + dimension.dimensionId), oilFieldBuffer);
                 }
             }
             needsSaving = false;

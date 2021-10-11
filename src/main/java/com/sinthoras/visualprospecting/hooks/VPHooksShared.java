@@ -22,6 +22,7 @@ import cpw.mods.fml.relauncher.Side;
 import gregtech.api.GregTech_API;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import java.io.IOException;
 import java.util.zip.DataFormatException;
@@ -49,6 +50,11 @@ public class VPHooksShared {
 	// postInit "Handle interaction with other mods, complete your setup based on this."
 	public void fmlLifeCycleEvent(FMLPostInitializationEvent event) {
 		GregTech_API.sAfterGTPostload.add(new VPVeinTypeCaching());
+
+		VP.naturalGas = FluidRegistry.getFluid("gas_natural_gas");
+		VP.lightOil = FluidRegistry.getFluid("liquid_light_oil");
+		VP.mediumOil = FluidRegistry.getFluid("liquid_medium_oil");
+		VP.heavyOil = FluidRegistry.getFluid("liquid_heavy_oil");
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerAboutToStartEvent event) {

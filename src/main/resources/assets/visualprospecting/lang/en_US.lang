@@ -5,3 +5,4 @@ visualprospecting.oilfields.prospected.onlynew=You found %s new oil fields!
 visualprospecting.oilfields.prospected.onlyupdated=You updated %s oil fields!
 visualprospecting.oilfields.prospected.newandupdated=You found %s new and updated %s oil fields!
 visualprospecting.button.orevein=Show GT Ore Veins
+visualprospecting.button.oilfield=Show GT Oil Fields

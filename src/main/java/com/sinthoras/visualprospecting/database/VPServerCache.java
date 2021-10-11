@@ -52,8 +52,8 @@ public class VPServerCache extends VPWorldCache {
     }
 
     public List<VPOilFieldPosition> prospectOilBlockRadius(World world, int blockX, int blockZ, int oilFieldRadius) {
-        final int minChunkX = VPUtils.mapToCornerOilFieldChunkCoord(VPUtils.coordBlockToChunk(blockX));
-        final int minChunkZ = VPUtils.mapToCornerOilFieldChunkCoord(VPUtils.coordBlockToChunk(blockZ));
+        final int minChunkX = VPUtils.mapToCornerOilFieldChunkCoord(VPUtils.coordBlockToChunk(blockX)) - VP.oilFieldSizeChunkX * oilFieldRadius;
+        final int minChunkZ = VPUtils.mapToCornerOilFieldChunkCoord(VPUtils.coordBlockToChunk(blockZ)) - VP.oilFieldSizeChunkZ * oilFieldRadius;
 
         List<VPOilFieldPosition> foundOilFields = new ArrayList<>((2 * oilFieldRadius + 1) * (2 * oilFieldRadius + 1));
 
