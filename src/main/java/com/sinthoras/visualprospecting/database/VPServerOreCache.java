@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VPServerCache extends VPWorldCache{
+public class VPServerOreCache extends VPWorldOreCache {
     public static class VPProspectionResult {
         public final int chunkX;
         public final int chunkZ;

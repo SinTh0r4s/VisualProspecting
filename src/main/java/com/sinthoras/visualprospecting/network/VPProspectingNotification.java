@@ -1,7 +1,7 @@
 package com.sinthoras.visualprospecting.network;
 
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.database.VPServerCache;
+import com.sinthoras.visualprospecting.database.VPServerOreCache;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -15,13 +15,13 @@ import java.util.List;
 public class VPProspectingNotification implements IMessage {
 
     private int dimensionId;
-    private List<VPServerCache.VPProspectionResult> prospectingResults;
+    private List<VPServerOreCache.VPProspectionResult> prospectingResults;
 
     public VPProspectingNotification() {
 
     }
 
-    public VPProspectingNotification(int dimensionId, List<VPServerCache.VPProspectionResult> prospectingResults) {
+    public VPProspectingNotification(int dimensionId, List<VPServerOreCache.VPProspectionResult> prospectingResults) {
         this.dimensionId = dimensionId;
         this.prospectingResults = prospectingResults;
     }
@@ -35,7 +35,7 @@ public class VPProspectingNotification implements IMessage {
             final int chunkX = buf.readInt();
             final int chunkZ = buf.readInt();
             final String oreVeinName = ByteBufUtils.readUTF8String(buf);
-            prospectingResults.add(new VPServerCache.VPProspectionResult(chunkX, chunkZ, VPVeinTypeCaching.getVeinType(oreVeinName)));
+            prospectingResults.add(new VPServerOreCache.VPProspectionResult(chunkX, chunkZ, VPVeinTypeCaching.getVeinType(oreVeinName)));
         }
     }
 
@@ -43,7 +43,7 @@ public class VPProspectingNotification implements IMessage {
     public void toBytes(ByteBuf buf) {
         buf.writeInt(dimensionId);
         buf.writeInt(prospectingResults.size());
-        for(VPServerCache.VPProspectionResult prospectionResult : prospectingResults) {
+        for(VPServerOreCache.VPProspectionResult prospectionResult : prospectingResults) {
             buf.writeInt(prospectionResult.chunkX);
             buf.writeInt(prospectionResult.chunkZ);
             ByteBufUtils.writeUTF8String(buf, prospectionResult.veinType.name);
