@@ -37,7 +37,7 @@ public class VPMapState {
             drawSteps.clear();
             for (int chunkX = minChunkX; chunkX <= maxChunkX; chunkX += 3)
                 for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ += 3) {
-                    final VPVeinType veinType = VP.clientVeinCache.getVeinType(minecraft.thePlayer.dimension, chunkX, chunkZ);
+                    final VPVeinType veinType = VP.clientVeinCache.getOreVein(minecraft.thePlayer.dimension, chunkX, chunkZ);
                     if (veinType != VPVeinType.NO_VEIN) {
                         drawSteps.add(new VPOreVeinDrawStep(veinType, chunkX, chunkZ));
                     }

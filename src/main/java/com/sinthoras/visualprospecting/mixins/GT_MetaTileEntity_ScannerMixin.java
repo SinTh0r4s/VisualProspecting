@@ -2,7 +2,7 @@ package com.sinthoras.visualprospecting.mixins;
 
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPTags;
-import com.sinthoras.visualprospecting.database.VPProspectionResult;
+import com.sinthoras.visualprospecting.database.VPOreVeinPosition;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
 import gregtech.api.util.GT_Utility;
@@ -53,7 +53,7 @@ public abstract class GT_MetaTileEntity_ScannerMixin extends GT_MetaTileEntity_B
                     + "Results are synchronized to your map";
             bookPages.appendTag(new NBTTagString(frontPage));
 
-            final List<VPProspectionResult> foundOreVeins = VP.serverVeinCache.prospectBlockRadius(dimensionId, blockX, blockZ, blockRadius);
+            final List<VPOreVeinPosition> foundOreVeins = VP.serverVeinCache.prospectBlockRadius(dimensionId, blockX, blockZ, blockRadius);
             if(foundOreVeins.isEmpty() == false) {
                 final int pageSize = 7;
                 final int numberOfPages = (foundOreVeins.size() + pageSize) / pageSize;  // Equals to ceil((foundOreVeins.size())
@@ -63,7 +63,7 @@ public abstract class GT_MetaTileEntity_ScannerMixin extends GT_MetaTileEntity_B
                     for (int i = 0; i < pageSize; i++) {
                         final int veinId = pageNumber * pageSize + i;
                         if(veinId < foundOreVeins.size()) {
-                            final VPProspectionResult oreVein = foundOreVeins.get(veinId);
+                            final VPOreVeinPosition oreVein = foundOreVeins.get(veinId);
                             pageString.append(oreVein.getBlockX()).append(",").append(oreVein.getBlockZ()).append(" - ").append(oreVein.veinType.getNameReadable() + " Vein").append("\n");
                         }
                     }

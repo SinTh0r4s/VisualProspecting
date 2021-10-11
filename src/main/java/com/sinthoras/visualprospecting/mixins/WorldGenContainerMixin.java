@@ -38,7 +38,7 @@ public class WorldGenContainerMixin {
             require = 1,
             locals = LocalCapture.CAPTURE_FAILSOFT)
     private void onOreVeinPlacedFailedA(int oreseedX, int oreseedZ, CallbackInfo callbackInfo, long oreveinSeed, XSTR oreveinRNG, int oreveinPercentageRoll, int noOrePlacedCount, String tDimensionName) {
-        VP.serverVeinCache.putVeinType(mWorld.provider.dimensionId, mX, mZ, VPVeinType.NO_VEIN);
+        VP.serverVeinCache.putOreVein(mWorld.provider.dimensionId, mX, mZ, VPVeinType.NO_VEIN);
     }
 
     @Inject(method = "worldGenFindVein",
@@ -47,7 +47,7 @@ public class WorldGenContainerMixin {
             require = 1,
             locals = LocalCapture.CAPTURE_FAILSOFT)
     private void onOreVeinPlacedFailedB(int oreseedX, int oreseedZ, CallbackInfo ci, long oreveinSeed, XSTR oreveinRNG, int oreveinPercentageRoll, int noOrePlacedCount, String tDimensionName, int placementAttempts, boolean oreveinFound, int i) {
-        VP.serverVeinCache.putVeinType(mWorld.provider.dimensionId, mX, mZ, VPVeinType.NO_VEIN);
+        VP.serverVeinCache.putOreVein(mWorld.provider.dimensionId, mX, mZ, VPVeinType.NO_VEIN);
     }
 
     @Inject(method = "worldGenFindVein",
@@ -56,7 +56,7 @@ public class WorldGenContainerMixin {
             require = 2,
             locals = LocalCapture.CAPTURE_FAILSOFT)
     private void onOreVeinPlacedSuccess(int oreseedX, int oreseedZ, CallbackInfo callbackInfo, long oreveinSeed, XSTR oreveinRNG, int oreveinPercentageRoll, int noOrePlacedCount, String tDimensionName, int placementAttempts, boolean oreveinFound, int i, int tRandomWeight, Iterator var13, GT_Worldgen_GT_Ore_Layer tWorldGen, int placementResult) {
-        VP.serverVeinCache.putVeinType(mWorld.provider.dimensionId, mX, mZ, VPVeinTypeCaching.getVeinType(tWorldGen.mWorldGenName));
+        VP.serverVeinCache.putOreVein(mWorld.provider.dimensionId, mX, mZ, VPVeinTypeCaching.getVeinType(tWorldGen.mWorldGenName));
     }
 
 }

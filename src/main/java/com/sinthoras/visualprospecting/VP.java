@@ -1,7 +1,7 @@
 package com.sinthoras.visualprospecting;
 
-import com.sinthoras.visualprospecting.database.VPClientOreCache;
-import com.sinthoras.visualprospecting.database.VPServerOreCache;
+import com.sinthoras.visualprospecting.database.VPClientCache;
+import com.sinthoras.visualprospecting.database.VPServerCache;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,14 +11,16 @@ public class VP {
 
     public static SimpleNetworkWrapper network;
 
-    public static VPServerOreCache serverVeinCache = new VPServerOreCache();
-    public static VPClientOreCache clientVeinCache = new VPClientOreCache();
+    public static VPServerCache serverVeinCache = new VPServerCache();
+    public static VPClientCache clientVeinCache = new VPClientCache();
 
     private static Logger LOG = LogManager.getLogger(VPTags.MODID);
     public static final int gregTechSmallOreMinimumMeta = 16000;
     public static final int minecraftWorldHeight = 256;
     public static final int chunksPerRegionFileX = 32;
     public static final int chunksPerRegionFileZ = 32;
+    public static final int oilFieldSizeChunkX = 8;
+    public static final int oilFieldSizeChunkZ = 8;
 
 
     public static void debug(String message) {

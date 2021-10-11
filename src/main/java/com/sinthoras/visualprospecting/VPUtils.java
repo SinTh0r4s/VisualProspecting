@@ -45,6 +45,10 @@ public class VPUtils {
         return chunkCoord - nonNegativeModulo(chunkCoord - 1, 3) + 1;
     }
 
+    public static int mapToCornerOilFieldChunkCoord(final int chunkCoord) {
+        return chunkCoord & 0xFFFFFFF8;
+    }
+
     public static boolean isSmallOreId(short metaData) {
         return metaData >= VP.gregTechSmallOreMinimumMeta;
     }

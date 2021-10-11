@@ -1,4 +1,7 @@
 visualprospecting.vein.prospected=You found a %s vein %s!
 visualprospecting.vein.contents=You may find: %s
 visualprospecting.veins.prospected=You found %s new ore veins!
+visualprospecting.oilfields.prospected.onlynew=You found %s new oil fields!
+visualprospecting.oilfields.prospected.onlyupdated=You updated %s oil fields!
+visualprospecting.oilfields.prospected.newandupdated=You found %s new and updated %s oil fields!
 visualprospecting.button.orevein=Show GT Ore Veins

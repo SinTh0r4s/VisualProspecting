@@ -1,7 +1,7 @@
 package com.sinthoras.visualprospecting.network;
 
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.database.VPProspectionResult;
+import com.sinthoras.visualprospecting.database.VPOreVeinPosition;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -15,13 +15,13 @@ import java.util.List;
 public class VPProspectingNotification implements IMessage {
 
     private int dimensionId;
-    private List<VPProspectionResult> prospectingResults;
+    private List<VPOreVeinPosition> prospectingResults;
 
     public VPProspectingNotification() {
 
     }
 
-    public VPProspectingNotification(int dimensionId, List<VPProspectionResult> prospectingResults) {
+    public VPProspectingNotification(int dimensionId, List<VPOreVeinPosition> prospectingResults) {
         this.dimensionId = dimensionId;
         this.prospectingResults = prospectingResults;
     }
@@ -35,7 +35,7 @@ public class VPProspectingNotification implements IMessage {
             final int chunkX = buf.readInt();
             final int chunkZ = buf.readInt();
             final String oreVeinName = ByteBufUtils.readUTF8String(buf);
-            prospectingResults.add(new VPProspectionResult(chunkX, chunkZ, VPVeinTypeCaching.getVeinType(oreVeinName)));
+            prospectingResults.add(new VPOreVeinPosition(chunkX, chunkZ, VPVeinTypeCaching.getVeinType(oreVeinName)));
         }
     }
 
@@ -43,7 +43,7 @@ public class VPProspectingNotification implements IMessage {
     public void toBytes(ByteBuf buf) {
         buf.writeInt(dimensionId);
         buf.writeInt(prospectingResults.size());
-        for(VPProspectionResult prospectionResult : prospectingResults) {
+        for(VPOreVeinPosition prospectionResult : prospectingResults) {
             buf.writeInt(prospectionResult.chunkX);
             buf.writeInt(prospectionResult.chunkZ);
             ByteBufUtils.writeUTF8String(buf, prospectionResult.veinType.name);
@@ -54,7 +54,7 @@ public class VPProspectingNotification implements IMessage {
 
         @Override
         public IMessage onMessage(VPProspectingNotification message, MessageContext ctx) {
-            VP.clientVeinCache.putVeinTypes(message.dimensionId, message.prospectingResults);
+            VP.clientVeinCache.putOreVeins(message.dimensionId, message.prospectingResults);
             return null;
         }
     }

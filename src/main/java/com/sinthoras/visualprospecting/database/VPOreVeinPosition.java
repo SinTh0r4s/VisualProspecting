@@ -3,12 +3,12 @@ package com.sinthoras.visualprospecting.database;
 import com.sinthoras.visualprospecting.VPUtils;
 import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
 
-public class VPProspectionResult {
+public class VPOreVeinPosition {
     public final int chunkX;
     public final int chunkZ;
     public final VPVeinType veinType;
 
-    public VPProspectionResult(int chunkX, int chunkZ, VPVeinType veinType) {
+    public VPOreVeinPosition(int chunkX, int chunkZ, VPVeinType veinType) {
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
         this.veinType = veinType;

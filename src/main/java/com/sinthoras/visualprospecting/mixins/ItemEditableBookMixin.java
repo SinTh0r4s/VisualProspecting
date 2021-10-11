@@ -3,7 +3,7 @@ package com.sinthoras.visualprospecting.mixins;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.VPTags;
 import com.sinthoras.visualprospecting.VPUtils;
-import com.sinthoras.visualprospecting.database.VPProspectionResult;
+import com.sinthoras.visualprospecting.database.VPOreVeinPosition;
 import com.sinthoras.visualprospecting.network.VPProspectingNotification;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -31,9 +31,9 @@ public class ItemEditableBookMixin {
                 final int blockX = compound.getInteger(VPTags.PROSPECTION_BLOCK_X);
                 final int blockZ = compound.getInteger(VPTags.PROSPECTION_BLOCK_Z);
                 final int blockRadius = compound.getInteger(VPTags.PROSPECTION_RADIUS);
-                final List<VPProspectionResult> foundOreVeins = VP.serverVeinCache.prospectBlockRadius(dimensionId, blockX, blockZ, blockRadius);
+                final List<VPOreVeinPosition> foundOreVeins = VP.serverVeinCache.prospectBlockRadius(dimensionId, blockX, blockZ, blockRadius);
                 if(VPUtils.isLogicalClient()) {
-                    VP.clientVeinCache.putVeinTypes(dimensionId, foundOreVeins);
+                    VP.clientVeinCache.putOreVeins(dimensionId, foundOreVeins);
                 }
                 else {
                     VP.network.sendTo(new VPProspectingNotification(dimensionId, foundOreVeins), (EntityPlayerMP) entityPlayer);
