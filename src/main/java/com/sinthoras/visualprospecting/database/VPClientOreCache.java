@@ -17,14 +17,14 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class VPClientCache extends VPWorldCache{
+public class VPClientOreCache extends VPWorldOreCache {
 
     protected File getStorageDirectory() {
         final EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
         return new File(VPUtils.getSubDirectory(VPTags.CLIENT_DIR), player.getDisplayName() + "_" + player.getPersistentID().toString());
     }
 
-    private void notifyNewVein(VPServerCache.VPProspectionResult prospectionResult) {
+    private void notifyNewVein(VPServerOreCache.VPProspectionResult prospectionResult) {
         final String location = "(" + prospectionResult.getBlockX() + "," + prospectionResult.getBlockZ() + ")";
         final IChatComponent veinNotification = new ChatComponentTranslation("visualprospecting.vein.prospected", prospectionResult.veinType.getNameReadable(), location);
         veinNotification.getChatStyle().setItalic(true);
@@ -38,16 +38,16 @@ public class VPClientCache extends VPWorldCache{
         Minecraft.getMinecraft().thePlayer.addChatMessage(oresNotification);
     }
 
-    public void putVeinTypes(int dimensionId, List<VPServerCache.VPProspectionResult> prospectionResults) {
+    public void putVeinTypes(int dimensionId, List<VPServerOreCache.VPProspectionResult> prospectionResults) {
         if(prospectionResults.size() == 1) {
-            final VPServerCache.VPProspectionResult prospectionResult = prospectionResults.get(0);
+            final VPServerOreCache.VPProspectionResult prospectionResult = prospectionResults.get(0);
             if(putVeinType(dimensionId, prospectionResult.chunkX, prospectionResult.chunkZ, prospectionResult.veinType)) {
                 notifyNewVein(prospectionResult);
             }
         }
         else if(prospectionResults.size() > 1) {
             int newVeins = 0;
-            for(VPServerCache.VPProspectionResult prospectionResult : prospectionResults) {
+            for(VPServerOreCache.VPProspectionResult prospectionResult : prospectionResults) {
                 if(putVeinType(dimensionId, prospectionResult.chunkX, prospectionResult.chunkZ, prospectionResult.veinType)) {
                     newVeins++;
                 }
