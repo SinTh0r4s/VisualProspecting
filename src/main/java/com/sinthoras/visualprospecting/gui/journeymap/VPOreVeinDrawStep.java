@@ -42,7 +42,8 @@ public class VPOreVeinDrawStep implements DrawStep {
 
 
         if(gridRenderer.getZoom() >= VPConfig.minZoomLevel) {
-            DrawUtil.drawLabel(veinType.getNameReadable() + " Vein", pixel.getX(), pixel.getY() - textureSize, DrawUtil.HAlign.Center, DrawUtil.VAlign.Middle, 0, 180, 0x00FFFFFF, 255, fontScale, false, rotation);
+            final int fontColor = veinType.isHighlighted() ? 0xFFFFFF : 0x7F7F7F;
+            DrawUtil.drawLabel(veinType.getNameReadable() + " Vein", pixel.getX(), pixel.getY() - textureSize, DrawUtil.HAlign.Center, DrawUtil.VAlign.Middle, 0, 180, fontColor, 255, fontScale, false, rotation);
         }
 
         final IIcon blockIcon = Blocks.stone.getIcon(0, 0);
@@ -52,6 +53,10 @@ public class VPOreVeinDrawStep implements DrawStep {
         final int color = (aMaterial.mRGBa[0] << 16) | (aMaterial.mRGBa[1]) << 8 | aMaterial.mRGBa[2];
         final IIcon oreIcon = aMaterial.mIconSet.mTextures[OrePrefixes.ore.mTextureIndex].getIcon();
         drawQuad(oreIcon, pixel.getX() - textureSizeHalf, pixel.getY() - textureSizeHalf, textureSize, textureSize, 0.0, color, 255, true, GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, false);
+
+        if(veinType.isHighlighted() == false) {
+            DrawUtil.drawRectangle(pixel.getX() - textureSizeHalf, pixel.getY() - textureSizeHalf, textureSize, textureSize, 0x000000, 150);
+        }
     }
 
     public static void drawQuad(IIcon icon, double x, double y, double width, double height, double rotation, Integer color, float alpha, boolean blend, int glBlendSfactor, int glBlendDFactor, boolean clampTexture) {

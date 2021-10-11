@@ -21,6 +21,7 @@ public class VPVeinType {
     public final short inBetweenOreMeta;
     public final short sporadicOreMeta;
     private final HashSet<Short> oresAsHashSet;
+    private boolean isHighlighted = true;
 
     // Available after VisualProspecting post GT initialization
     public final static VPVeinType NO_VEIN = new VPVeinType(VPTags.ORE_MIX_NONE_NAME, 0, (short)-1, (short)-1, (short)-1, (short)-1);
@@ -99,5 +100,13 @@ public class VPVeinType {
             default:
                 return result;
         }
+    }
+
+    public boolean isHighlighted() {
+        return isHighlighted;
+    }
+
+    public void setNEISearchHeighlight(boolean isHighlighted) {
+        this.isHighlighted = isHighlighted;
     }
 }

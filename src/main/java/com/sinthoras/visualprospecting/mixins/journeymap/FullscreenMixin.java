@@ -1,5 +1,6 @@
 package com.sinthoras.visualprospecting.mixins.journeymap;
 
+import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
 import com.sinthoras.visualprospecting.gui.journeymap.VPMapState;
 import journeymap.client.io.ThemeFileHandler;
 import journeymap.client.log.StatTimer;
@@ -23,7 +24,7 @@ import static com.sinthoras.visualprospecting.gui.journeymap.VPReflection.getJou
 @Mixin(Fullscreen.class)
 public class FullscreenMixin {
 
-    private VPMapState vpMapState = new VPMapState();
+    private VPMapState mapState = new VPMapState();
     private ThemeButton buttonOreVeins;
     private ThemeButton buttonOilFields;
 
@@ -44,6 +45,11 @@ public class FullscreenMixin {
         throw new IllegalStateException("Mixin failed to shadow getMapFontScale()");
     }
 
+    @Inject(method = "<init>*", at = @At("RETURN"), remap = false, require = 1)
+    private void onConstructed(CallbackInfo callbackInfo) {
+        VPVeinTypeCaching.recalculateNEISearch();
+    }
+
     @Inject(method = "drawMap",
             at = @At(value = "INVOKE", target = "Ljourneymap/client/model/MapState;getDrawWaypointSteps()Ljava/util/List;"),
             remap = false,
@@ -51,11 +57,11 @@ public class FullscreenMixin {
     private void onBeforeDrawWaypoints(CallbackInfo callbackInfo, boolean refreshReady, StatTimer timer, int xOffset, int yOffset, float drawScale) {
         final GridRenderer gridRenderer = getJourneyMapGridRenderer();
         assert (gridRenderer != null);
-        if(vpMapState.drawOilFields) {
-            gridRenderer.draw(vpMapState.getOilFieldDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
+        if(mapState.drawOilFields) {
+            gridRenderer.draw(mapState.getOilFieldDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
         }
-        if(vpMapState.drawOreVeins) {
-            gridRenderer.draw(vpMapState.getOreVeinDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
+        if(mapState.drawOreVeins) {
+            gridRenderer.draw(mapState.getOreVeinDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
         }
     }
 
@@ -68,14 +74,14 @@ public class FullscreenMixin {
         buttonOreVeins = new ThemeToggle(theme, "visualprospecting.button.orevein", "oreveins");
         buttonOreVeins.setToggled(true, false);
         buttonOreVeins.addToggleListener((button, toggled) -> {
-            vpMapState.drawOreVeins = toggled;
+            mapState.drawOreVeins = toggled;
             return true;
         });
 
         buttonOilFields = new ThemeToggle(theme, "visualprospecting.button.oilfield", "oilfields");
         buttonOilFields.setToggled(true, false);
         buttonOilFields.addToggleListener((button, toggled) -> {
-            vpMapState.drawOilFields = toggled;
+            mapState.drawOilFields = toggled;
             return true;
         });
 

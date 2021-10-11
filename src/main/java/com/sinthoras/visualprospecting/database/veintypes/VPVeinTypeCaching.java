@@ -1,13 +1,17 @@
 package com.sinthoras.visualprospecting.database.veintypes;
 
+import codechicken.nei.NEIClientConfig;
+import codechicken.nei.SearchField;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.sinthoras.visualprospecting.VPTags;
 import com.sinthoras.visualprospecting.VPUtils;
+import gregtech.api.enums.Materials;
 import gregtech.common.GT_Worldgen_GT_Ore_Layer;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.sinthoras.visualprospecting.VPUtils.isBartworksInstalled;
 import static com.sinthoras.visualprospecting.database.veintypes.VPReflection.*;
@@ -104,5 +108,23 @@ public class VPVeinTypeCaching implements Runnable {
 
     private static void saveVeinTypeStorageInfo() {
         VPUtils.writeMapToFile(getVeinTypeStorageInfoFile(), veinTypeStorageInfo);
+    }
+
+    public static void recalculateNEISearch() {
+        final boolean isSearchActive = SearchField.searchInventories();
+        final String searchString = NEIClientConfig.getSearchExpression().toLowerCase();
+
+        for(VPVeinType veinType : veinTypes) {
+            if(veinType != VPVeinType.NO_VEIN) {
+                if (isSearchActive) {
+                    List<String> searchableStrings = veinType.getOreMaterials().stream().filter(Objects::nonNull).map(material -> material.mLocalizedName + " ore").collect(Collectors.toList());
+                    searchableStrings.add(veinType.getNameReadable() + " Vein");
+                    searchableStrings = searchableStrings.stream().map(String::toLowerCase).filter(searchableString -> searchableString.contains(searchString)).collect(Collectors.toList());
+                    veinType.setNEISearchHeighlight(searchableStrings.isEmpty() == false);
+                } else {
+                    veinType.setNEISearchHeighlight(true);
+                }
+            }
+        }
     }
 }
