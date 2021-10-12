@@ -28,6 +28,13 @@ public class OilChunkDrawStep implements DrawStep {
         this.minAmountInField = minAmountInField;
     }
 
+    private String getOilAmountFormatted() {
+        if(oilAmount >= 1000) {
+            return (oilAmount / 1000) + "kL";
+        }
+        return oilAmount + "L";
+    }
+
     @Override
     public void draw(double xOffset, double yOffset, GridRenderer gridRenderer, float drawScale, double fontScale, double rotation) {
         if (oilAmount > 0) {
@@ -48,7 +55,7 @@ public class OilChunkDrawStep implements DrawStep {
             }
 
             if (gridRenderer.getZoom() >= Config.minZoomLevel) {
-                DrawUtil.drawLabel("" + oilAmount + "L", pixel.getX() + 3 * blockSize, pixel.getY() + 3 * blockSize, DrawUtil.HAlign.Right, DrawUtil.VAlign.Middle, 0, 180, 0x00FFFFFF, 255, fontScale, false, rotation);
+                DrawUtil.drawLabel(getOilAmountFormatted(), pixel.getX() + 13 * blockSize, pixel.getY() + 13 * blockSize, DrawUtil.HAlign.Left, DrawUtil.VAlign.Above, 0, 180, 0x00FFFFFF, 255, fontScale, false, rotation);
             }
         }
     }
