@@ -65,7 +65,9 @@ public class VPVeinType {
     }
 
     public String getNameReadable() {
-        return name.substring(8, 9).toUpperCase() + name.substring(9);
+        final String[] fragments = name.split("\\.");
+        final String veinName = fragments[fragments.length - 1];
+        return veinName.substring(0, 1).toUpperCase() + veinName.substring(1);
     }
 
     public HashSet<Short> getOresAtLayer(int layerBlockY) {
