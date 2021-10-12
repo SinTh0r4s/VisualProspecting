@@ -12,6 +12,7 @@ import gregtech.common.GT_UndergroundOil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -73,6 +74,37 @@ public class Utils {
 
     public static boolean isLogicalClient() {
         return VPMod.proxy instanceof HooksClient;
+    }
+
+    public static int getMapColorForOil(final Fluid oil) {
+        if(oil == VP.naturalGas) {
+            return 0xfffcfc;
+        }
+        if(oil == VP.lightOil) {
+            return 0xB88428;
+        }
+        if(oil == VP.mediumOil) {
+            return 0x964B00;
+        }
+        if(oil == VP.heavyOil) {
+            return 0x0A0A0A;
+        }
+        return oil.getColor();
+    }
+
+    public static String getEnglishLocalization(Fluid oil) {
+        switch(oil.getUnlocalizedName()) {
+            case "gas_natural_gas":
+                return "Natural Gas";
+            case "liquid_light_oil":
+                return "Light Oil";
+            case "liquid_medium_oil":
+                return "Raw Oil";
+            case "liquid_heavy_oil":
+                return "Heavy Oil";
+            default:
+                return oil.getLocalizedName(null);
+        }
     }
 
     public static File getMinecraftDirectory() {

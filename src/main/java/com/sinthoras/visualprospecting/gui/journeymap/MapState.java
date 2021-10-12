@@ -16,6 +16,7 @@ public class MapState {
     private int oldMaxOreChunkX = 0;
     private int oldMinOreChunkZ = 0;
     private int oldMaxOreChunkZ = 0;
+    private final List<OilChunkDrawStep> oilChunkDrawSteps = new ArrayList<>();
     private final List<OilFieldDrawStep> oilFieldDrawSteps = new ArrayList<>();
     private int oldMinOilFieldX = 0;
     private int oldMaxOilFieldX = 0;
@@ -54,7 +55,7 @@ public class MapState {
         return oreChunkDrawSteps;
     }
 
-    public List<OilFieldDrawStep> getOilFieldDrawSteps(final GridRenderer gridRenderer) {
+    private void updateOilRelatedDrawSteps(final GridRenderer gridRenderer) {
         final Minecraft minecraft = Minecraft.getMinecraft();
         final int centerBlockX = (int) Math.round(gridRenderer.getCenterBlockX());
         final int centerBlockZ = (int) Math.round(gridRenderer.getCenterBlockZ());
@@ -69,7 +70,8 @@ public class MapState {
             oldMaxOilFieldX = maxOilFieldX;
             oldMinOilFieldZ = minOilFieldZ;
             oldMaxOilFieldZ = maxOilFieldZ;
-            oilFieldDrawSteps.clear();
+
+            oilChunkDrawSteps.clear();
             for (int chunkX = minOilFieldX; chunkX <= maxOilFieldX; chunkX += VP.oilFieldSizeChunkX) {
                 for (int chunkZ = minOilFieldZ; chunkZ <= maxOilFieldZ; chunkZ += VP.oilFieldSizeChunkZ) {
                     final OilField oilField = VP.clientCache.getOilField(minecraft.thePlayer.dimension, chunkX, chunkZ);
@@ -78,13 +80,32 @@ public class MapState {
                         final int maxAmountInField = oilField.getMaxProduction();
                         for (int offsetChunkX = 0; offsetChunkX < VP.oilFieldSizeChunkX; offsetChunkX++) {
                             for (int offsetChunkZ = 0; offsetChunkZ < VP.oilFieldSizeChunkZ; offsetChunkZ++) {
-                                oilFieldDrawSteps.add(new OilFieldDrawStep(chunkX + offsetChunkX, chunkZ + offsetChunkZ, oilField.oil, oilField.chunks[offsetChunkX][offsetChunkZ], minAmountInField, maxAmountInField));
+                                oilChunkDrawSteps.add(new OilChunkDrawStep(chunkX + offsetChunkX, chunkZ + offsetChunkZ, oilField.oil, oilField.chunks[offsetChunkX][offsetChunkZ], minAmountInField, maxAmountInField));
                             }
                         }
                     }
                 }
             }
+
+            oilFieldDrawSteps.clear();
+            for (int chunkX = minOilFieldX; chunkX <= maxOilFieldX; chunkX += VP.oilFieldSizeChunkX) {
+                for (int chunkZ = minOilFieldZ; chunkZ <= maxOilFieldZ; chunkZ += VP.oilFieldSizeChunkZ) {
+                    final OilField oilField = VP.clientCache.getOilField(minecraft.thePlayer.dimension, chunkX, chunkZ);
+                    if (oilField != OilField.NOT_PROSPECTED) {
+                        oilFieldDrawSteps.add(new OilFieldDrawStep(chunkX, chunkZ, oilField.oil, oilField.getMinProduction(), oilField.getMaxProduction()));
+                    }
+                }
+            }
         }
+    }
+
+    public List<OilChunkDrawStep> getOilChunkDrawSteps(final GridRenderer gridRenderer) {
+        updateOilRelatedDrawSteps(gridRenderer);
+        return oilChunkDrawSteps;
+    }
+
+    public List<OilFieldDrawStep> getOilFieldDrawSteps(final GridRenderer gridRenderer) {
+        updateOilRelatedDrawSteps(gridRenderer);
         return oilFieldDrawSteps;
     }
 }

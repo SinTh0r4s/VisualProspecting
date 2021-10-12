@@ -40,21 +40,6 @@ public abstract class GT_MetaTileEntity_AdvSeismicProspectorMixin extends GT_Met
         super(0, "", "", 0, 0, "", 0, 0, "", "", (ITexture[]) null);
     }
 
-    private String getEnglishLocalization(Fluid oil) {
-        switch(oil.getUnlocalizedName()) {
-            case "gas_natural_gas":
-                return "Natural Gas";
-            case "liquid_light_oil":
-                return "Light Oil";
-            case "liquid_medium_oil":
-                return "Raw Oil";
-            case "liquid_heavy_oil":
-                return "Heavy Oil";
-            default:
-                return oil.getLocalizedName(null);
-        }
-    }
-
     /**
      * @author SinTh0r4s
      * @reason Redirect game mechanics onto VP database
@@ -96,7 +81,7 @@ public abstract class GT_MetaTileEntity_AdvSeismicProspectorMixin extends GT_Met
                     final int offsetOilfieldX = (Utils.mapToCornerOilFieldChunkCoord(oilFieldPosition.chunkX) - minOilFieldX) >> 3;
                     final int offsetOilfieldZ = (Utils.mapToCornerOilFieldChunkCoord(oilFieldPosition.chunkZ) - minOilFieldZ) >> 3;
                     final int oilFieldBookId = offsetOilfieldX + offsetOilfieldZ * 3;
-                    oilStrings[oilFieldBookId] =  "" + oilFieldBookId + ": " + oilFieldPosition.oilField.getMinProduction() + "-" + oilFieldPosition.oilField.getMaxProduction() + " " + getEnglishLocalization(oilFieldPosition.oilField.oil);
+                    oilStrings[oilFieldBookId] =  "" + oilFieldBookId + ": " + oilFieldPosition.oilField.getMinProduction() + "-" + oilFieldPosition.oilField.getMaxProduction() + " " + Utils.getEnglishLocalization(oilFieldPosition.oilField.oil);
                 }
                 compound.setString(Tags.PROSPECTION_OILS, String.join("|", oilStrings));
 

@@ -58,6 +58,7 @@ public class FullscreenMixin {
         final GridRenderer gridRenderer = getJourneyMapGridRenderer();
         assert (gridRenderer != null);
         if(mapState.drawOilFields) {
+            gridRenderer.draw(mapState.getOilChunkDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
             gridRenderer.draw(mapState.getOilFieldDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
         }
         if(mapState.drawOreVeins) {
