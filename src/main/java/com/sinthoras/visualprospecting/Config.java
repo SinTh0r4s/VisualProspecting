@@ -5,7 +5,7 @@ import net.minecraftforge.common.config.Property;
 
 import java.io.File;
 
-public class VPConfig {
+public class Config {
 
     private static class Defaults {
 

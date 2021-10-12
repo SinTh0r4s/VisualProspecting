@@ -1,10 +1,10 @@
 package com.sinthoras.visualprospecting.network;
 
+import com.sinthoras.visualprospecting.Config;
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.VPConfig;
-import com.sinthoras.visualprospecting.VPUtils;
-import com.sinthoras.visualprospecting.database.VPOreVeinPosition;
-import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
+import com.sinthoras.visualprospecting.Utils;
+import com.sinthoras.visualprospecting.database.OreVeinPosition;
+import com.sinthoras.visualprospecting.database.veintypes.VeinType;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -17,10 +17,10 @@ import net.minecraft.world.World;
 
 import java.util.*;
 
-import static com.sinthoras.visualprospecting.VPUtils.isSmallOreId;
-import static com.sinthoras.visualprospecting.VPUtils.oreIdToMaterialId;
+import static com.sinthoras.visualprospecting.Utils.isSmallOreId;
+import static com.sinthoras.visualprospecting.Utils.oreIdToMaterialId;
 
-public class VPProspectingRequest implements IMessage {
+public class ProspectingRequest implements IMessage {
 
     public static long timestampLastRequest = 0;
 
@@ -30,11 +30,11 @@ public class VPProspectingRequest implements IMessage {
     private int blockZ;
     private short foundOreMetaData;
 
-    public VPProspectingRequest() {
+    public ProspectingRequest() {
 
     }
 
-    public VPProspectingRequest(int dimensionId, int blockX, int blockY, int blockZ, short foundOreMetaData) {
+    public ProspectingRequest(int dimensionId, int blockX, int blockY, int blockZ, short foundOreMetaData) {
         this.dimensionId = dimensionId;
         this.blockX = blockX;
         this.blockY = blockY;
@@ -44,7 +44,7 @@ public class VPProspectingRequest implements IMessage {
 
     public static boolean canSendRequest() {
         final long timestamp = System.currentTimeMillis();
-        if(timestamp - timestampLastRequest > VPConfig.minDelayBetweenVeinRequests) {
+        if(timestamp - timestampLastRequest > Config.minDelayBetweenVeinRequests) {
             timestampLastRequest = timestamp;
             return true;
         }
@@ -69,24 +69,24 @@ public class VPProspectingRequest implements IMessage {
         buf.writeShort(foundOreMetaData);
     }
 
-    public static class Handler implements IMessageHandler<VPProspectingRequest, IMessage> {
+    public static class Handler implements IMessageHandler<ProspectingRequest, IMessage> {
 
         private static final HashMap<UUID, Long> lastRequestPerPlayer = new HashMap<>();
 
         @Override
-        public IMessage onMessage(VPProspectingRequest message, MessageContext ctx) {
+        public IMessage onMessage(ProspectingRequest message, MessageContext ctx) {
             // Check if request is valid/not tempered with
             final UUID uuid = ctx.getServerHandler().playerEntity.getUniqueID();
             final long lastRequest = lastRequestPerPlayer.containsKey(uuid) ? lastRequestPerPlayer.get(uuid) : 0;
             final long timestamp = System.currentTimeMillis();
             final float distanceSquared = ctx.getServerHandler().playerEntity.getPlayerCoordinates().getDistanceSquared(message.blockX, message.blockY, message.blockZ);
             final World world = ctx.getServerHandler().playerEntity.getEntityWorld();
-            final int chunkX = VPUtils.coordBlockToChunk(message.blockX);
-            final int chunkZ = VPUtils.coordBlockToChunk(message.blockZ);
+            final int chunkX = Utils.coordBlockToChunk(message.blockX);
+            final int chunkZ = Utils.coordBlockToChunk(message.blockZ);
             final boolean isChunkLoaded = world.getChunkProvider().chunkExists(chunkX, chunkZ);
             if(ctx.getServerHandler().playerEntity.dimension == message.dimensionId
                     && distanceSquared <= 1024  // max 32 blocks distance
-                    && timestamp - lastRequest >= VPConfig.minDelayBetweenVeinRequests
+                    && timestamp - lastRequest >= Config.minDelayBetweenVeinRequests
                     && isChunkLoaded) {
                 final Block block = world.getBlock(message.blockX, message.blockY, message.blockZ);
                 if(block instanceof GT_Block_Ores_Abstract) {
@@ -97,24 +97,24 @@ public class VPProspectingRequest implements IMessage {
                             lastRequestPerPlayer.put(uuid, timestamp);
 
                             // Prioritise center vein
-                            final VPVeinType centerVein = VP.serverCache.getOreVein(message.dimensionId, chunkX, chunkZ);
+                            final VeinType centerVein = VP.serverCache.getOreVein(message.dimensionId, chunkX, chunkZ);
                             if(centerVein.containsOre(message.foundOreMetaData)) {
-                                return new VPProspectingNotification(message.dimensionId, new VPOreVeinPosition(chunkX, chunkZ, centerVein));
+                                return new ProspectingNotification(message.dimensionId, new OreVeinPosition(chunkX, chunkZ, centerVein));
                             }
 
                             // Check if neighboring veins could fit
-                            final int centerChunkX = VPUtils.mapToCenterOreChunkCoord(chunkX);
-                            final int centerChunkZ = VPUtils.mapToCenterOreChunkCoord(chunkZ);
+                            final int centerChunkX = Utils.mapToCenterOreChunkCoord(chunkX);
+                            final int centerChunkZ = Utils.mapToCenterOreChunkCoord(chunkZ);
                             for(int offsetChunkX = -3; offsetChunkX <= 3; offsetChunkX += 3) {
                                 for (int offsetChunkZ = -3; offsetChunkZ <= 3; offsetChunkZ += 3) {
                                     if (offsetChunkX != 0 || offsetChunkZ != 0) {
                                         final int neighborChunkX = centerChunkX + offsetChunkX;
                                         final int neighborChunkZ = centerChunkZ + offsetChunkZ;
                                         final int distanceBlocks = Math.max(Math.abs(neighborChunkX - chunkX), Math.abs(neighborChunkZ - chunkZ));
-                                        final VPVeinType neighborVein = VP.serverCache.getOreVein(message.dimensionId, neighborChunkX, neighborChunkZ);
+                                        final VeinType neighborVein = VP.serverCache.getOreVein(message.dimensionId, neighborChunkX, neighborChunkZ);
                                         final int maxDistance = ((neighborVein.blockSize + 16) >> 4) + 1;  // Equals to: ceil(blockSize / 16.0) + 1
                                         if (neighborVein.containsOre(message.foundOreMetaData) && distanceBlocks <= maxDistance) {
-                                            return new VPProspectingNotification(message.dimensionId, new VPOreVeinPosition(neighborChunkX, neighborChunkZ, neighborVein));
+                                            return new ProspectingNotification(message.dimensionId, new OreVeinPosition(neighborChunkX, neighborChunkZ, neighborVein));
                                         }
                                     }
                                 }

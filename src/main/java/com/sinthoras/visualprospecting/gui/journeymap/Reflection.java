@@ -5,7 +5,7 @@ import journeymap.client.ui.fullscreen.Fullscreen;
 
 import java.lang.reflect.Field;
 
-public class VPReflection {
+public class Reflection {
 
     private static Field gridRenderer;
 

@@ -1,6 +1,6 @@
 package com.sinthoras.visualprospecting;
 
-public class VPTags {
+public class Tags {
 
     public static final String MODID = "visualprospecting";
     public static final String VERSION = "GRADLETOKEN_VERSION";

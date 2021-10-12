@@ -1,15 +1,15 @@
 package com.sinthoras.visualprospecting.database.cachebuilder;
 
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.VPUtils;
-import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
-import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
+import com.sinthoras.visualprospecting.Utils;
+import com.sinthoras.visualprospecting.database.veintypes.VeinType;
+import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import io.xol.enklume.nbt.*;
 
 import java.util.*;
 
 // Slower, but more sophisticated approach to identify overlapping veins
-public class VPDetailedChunkAnalysis {
+public class DetailedChunkAnalysis {
 
     private final int dimensionId;
     public final int chunkX;
@@ -17,7 +17,7 @@ public class VPDetailedChunkAnalysis {
     // For each height we count how often a ore (short) has occured
     private final HashMap<Short, Integer>[] oresPerY = new HashMap[VP.minecraftWorldHeight];
 
-    public VPDetailedChunkAnalysis(int dimensionId, int chunkX, int chunkZ) {
+    public DetailedChunkAnalysis(int dimensionId, int chunkX, int chunkZ) {
         this.dimensionId = dimensionId;
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
@@ -25,7 +25,7 @@ public class VPDetailedChunkAnalysis {
 
     public void processMinecraftChunk(final NBTCompound chunkRoot) {
         for (final NBTNamed tileEntity : ((NBTList) chunkRoot.getTag("Level.TileEntities")).elements) {
-            final VPGregTechOre gtOre = new VPGregTechOre((NBTCompound) tileEntity);
+            final GregTechOre gtOre = new GregTechOre((NBTCompound) tileEntity);
             if(gtOre.isValidGTOre) {
                 if(oresPerY[gtOre.blockY] == null) {
                     oresPerY[gtOre.blockY] = new HashMap<>();
@@ -39,7 +39,7 @@ public class VPDetailedChunkAnalysis {
     }
 
     public void cleanUpWithNeighbors(final HashMap<Long, Integer> veinChunkY) {
-        final VPVeinType[] neighbors = new VPVeinType[] {
+        final VeinType[] neighbors = new VeinType[] {
                 VP.serverCache.getOreVein(dimensionId, chunkX - 3, chunkZ + 3),
                 VP.serverCache.getOreVein(dimensionId, chunkX, chunkZ + 3),
                 VP.serverCache.getOreVein(dimensionId, chunkX + 3, chunkZ + 3),
@@ -50,23 +50,23 @@ public class VPDetailedChunkAnalysis {
                 VP.serverCache.getOreVein(dimensionId, chunkX - 3, chunkZ)
         };
         final int[] neighborVeinBlockY = new int[] {
-                veinChunkY.getOrDefault(VPUtils.chunkCoordsToKey(chunkX, chunkZ + 3), 0),
-                veinChunkY.getOrDefault(VPUtils.chunkCoordsToKey(chunkX + 3, chunkZ + 3), 0),
-                veinChunkY.getOrDefault(VPUtils.chunkCoordsToKey(chunkX + 3, chunkZ), 0),
-                veinChunkY.getOrDefault(VPUtils.chunkCoordsToKey(chunkX + 3, chunkZ - 3), 0),
-                veinChunkY.getOrDefault(VPUtils.chunkCoordsToKey(chunkX, chunkZ - 3), 0),
-                veinChunkY.getOrDefault(VPUtils.chunkCoordsToKey(chunkX, chunkZ - 3), 0),
-                veinChunkY.getOrDefault(VPUtils.chunkCoordsToKey(chunkX - 3, chunkZ - 3), 0),
-                veinChunkY.getOrDefault(VPUtils.chunkCoordsToKey(chunkX - 3, chunkZ), 0)
+                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX, chunkZ + 3), 0),
+                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX + 3, chunkZ + 3), 0),
+                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX + 3, chunkZ), 0),
+                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX + 3, chunkZ - 3), 0),
+                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX, chunkZ - 3), 0),
+                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX, chunkZ - 3), 0),
+                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX - 3, chunkZ - 3), 0),
+                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX - 3, chunkZ), 0)
         };
 
         // Remove all generated ores from neighbors. They could also be generated in the same chunk,
         // but that case is rare and therefore, neglected
         for(int neighborId=0;neighborId<neighbors.length;neighborId++) {
-            final VPVeinType neighbor = neighbors[neighborId];
+            final VeinType neighbor = neighbors[neighborId];
             if (neighbor != null && neighbor.canOverlapIntoNeighborOreChunk()) {
                 final int veinBlockY = neighborVeinBlockY[neighborId];
-                for (int layerBlockY = 0;layerBlockY<VPVeinType.veinHeight;layerBlockY++) {
+                for (int layerBlockY = 0; layerBlockY< VeinType.veinHeight; layerBlockY++) {
                     final int blockY = veinBlockY + layerBlockY;
                     if(blockY > 255) {
                         break;
@@ -81,8 +81,8 @@ public class VPDetailedChunkAnalysis {
         }
     }
 
-    public VPVeinType getMatchedVein() {
-        final HashSet<VPVeinType> matchedVeins = new HashSet<>();
+    public VeinType getMatchedVein() {
+        final HashSet<VeinType> matchedVeins = new HashSet<>();
 
         final HashMap<Short, Integer> allOres = new HashMap<>();
         for(HashMap<Short, Integer> oreLevel : oresPerY) {
@@ -95,7 +95,7 @@ public class VPDetailedChunkAnalysis {
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .map(Map.Entry::getKey).findFirst();
         if(dominantOre.isPresent()) {
-            for(VPVeinType veinType : VPVeinTypeCaching.veinTypes) {
+            for(VeinType veinType : VeinTypeCaching.veinTypes) {
                 if(veinType.matchesWithSpecificPrimaryOrSecondary(allOres.keySet(), dominantOre.get())) {
                     matchedVeins.add(veinType);
                 }
@@ -106,7 +106,7 @@ public class VPDetailedChunkAnalysis {
             return matchedVeins.stream().findAny().get();
         }
         else {
-            return VPVeinType.NO_VEIN;
+            return VeinType.NO_VEIN;
         }
     }
 }

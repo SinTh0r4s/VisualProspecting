@@ -1,7 +1,7 @@
 package com.sinthoras.visualprospecting.mixins.journeymap;
 
-import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
-import com.sinthoras.visualprospecting.gui.journeymap.VPMapState;
+import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
+import com.sinthoras.visualprospecting.gui.journeymap.MapState;
 import journeymap.client.io.ThemeFileHandler;
 import journeymap.client.log.StatTimer;
 import journeymap.client.render.map.GridRenderer;
@@ -19,12 +19,12 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import static com.sinthoras.visualprospecting.gui.journeymap.VPReflection.getJourneyMapGridRenderer;
+import static com.sinthoras.visualprospecting.gui.journeymap.Reflection.getJourneyMapGridRenderer;
 
 @Mixin(Fullscreen.class)
 public class FullscreenMixin {
 
-    private VPMapState mapState = new VPMapState();
+    private MapState mapState = new MapState();
     private ThemeButton buttonOreVeins;
     private ThemeButton buttonOilFields;
 
@@ -47,7 +47,7 @@ public class FullscreenMixin {
 
     @Inject(method = "<init>*", at = @At("RETURN"), remap = false, require = 1)
     private void onConstructed(CallbackInfo callbackInfo) {
-        VPVeinTypeCaching.recalculateNEISearch();
+        VeinTypeCaching.recalculateNEISearch();
     }
 
     @Inject(method = "drawMap",

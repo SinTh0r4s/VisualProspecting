@@ -1,6 +1,6 @@
 package com.sinthoras.visualprospecting.database.veintypes;
 
-import com.sinthoras.visualprospecting.VPTags;
+import com.sinthoras.visualprospecting.Tags;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class VPVeinType {
+public class VeinType {
 
     public static final int veinHeight = 9;
 
@@ -24,9 +24,9 @@ public class VPVeinType {
     private boolean isHighlighted = true;
 
     // Available after VisualProspecting post GT initialization
-    public final static VPVeinType NO_VEIN = new VPVeinType(VPTags.ORE_MIX_NONE_NAME, 0, (short)-1, (short)-1, (short)-1, (short)-1);
+    public final static VeinType NO_VEIN = new VeinType(Tags.ORE_MIX_NONE_NAME, 0, (short)-1, (short)-1, (short)-1, (short)-1);
 
-    public VPVeinType(String name, int blockSize, short primaryOreMeta, short secondaryOreMeta, short inBetweenOreMeta, short sporadicOreMeta)
+    public VeinType(String name, int blockSize, short primaryOreMeta, short secondaryOreMeta, short inBetweenOreMeta, short sporadicOreMeta)
     {
         this.name = name;
         this.blockSize = blockSize;

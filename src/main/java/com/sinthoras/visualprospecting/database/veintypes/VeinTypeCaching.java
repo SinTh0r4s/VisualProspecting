@@ -4,24 +4,23 @@ import codechicken.nei.NEIClientConfig;
 import codechicken.nei.SearchField;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.sinthoras.visualprospecting.VPTags;
-import com.sinthoras.visualprospecting.VPUtils;
-import gregtech.api.enums.Materials;
+import com.sinthoras.visualprospecting.Tags;
+import com.sinthoras.visualprospecting.Utils;
 import gregtech.common.GT_Worldgen_GT_Ore_Layer;
 
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.sinthoras.visualprospecting.VPUtils.isBartworksInstalled;
-import static com.sinthoras.visualprospecting.database.veintypes.VPReflection.*;
+import static com.sinthoras.visualprospecting.Utils.isBartworksInstalled;
+import static com.sinthoras.visualprospecting.database.veintypes.Reflection.*;
 
-public class VPVeinTypeCaching implements Runnable {
+public class VeinTypeCaching implements Runnable {
 
-    private static BiMap<Short, VPVeinType> veinTypeLookupTableForIds = HashBiMap.create();
-    private static Map<String, VPVeinType> veinTypeLookupTableForNames = new HashMap<>();
+    private static BiMap<Short, VeinType> veinTypeLookupTableForIds = HashBiMap.create();
+    private static Map<String, VeinType> veinTypeLookupTableForNames = new HashMap<>();
     private static Map<String, Short> veinTypeStorageInfo;
-    public static List<VPVeinType> veinTypes;
+    public static List<VeinType> veinTypes;
     public static HashSet<Short> largeVeinOres;
 
     // BartWorks initializes veins in FML preInit
@@ -31,18 +30,18 @@ public class VPVeinTypeCaching implements Runnable {
     public void run() {
         veinTypes = new ArrayList<>();
         largeVeinOres = new HashSet<>();
-        veinTypes.add(VPVeinType.NO_VEIN);
+        veinTypes.add(VeinType.NO_VEIN);
 
         for(GT_Worldgen_GT_Ore_Layer vein : GT_Worldgen_GT_Ore_Layer.sList) {
-            if(vein.mWorldGenName.equals(VPTags.ORE_MIX_NONE_NAME)) {
+            if(vein.mWorldGenName.equals(Tags.ORE_MIX_NONE_NAME)) {
                 break;
             }
-            veinTypes.add(new VPVeinType(vein.mWorldGenName, vein.mSize, vein.mPrimaryMeta, vein.mSecondaryMeta, vein.mBetweenMeta, vein.mSporadicMeta));
+            veinTypes.add(new VeinType(vein.mWorldGenName, vein.mSize, vein.mPrimaryMeta, vein.mSecondaryMeta, vein.mBetweenMeta, vein.mSporadicMeta));
         }
 
         if(isBartworksInstalled()) {
             for(Object vein : getBWOreVeins()) {
-                veinTypes.add(new VPVeinType(
+                veinTypes.add(new VeinType(
                         getBWOreVeinName(vein),
                         getBWOreVeinSize(vein),
                         getBWOreVeinPrimaryMeta(vein),
@@ -58,7 +57,7 @@ public class VPVeinTypeCaching implements Runnable {
         final Optional<Short> maxVeinTypeIdOptional = veinTypeStorageInfo.values().stream().max(Short::compare);
         short maxVeinTypeId = maxVeinTypeIdOptional.isPresent() ? maxVeinTypeIdOptional.get() : 0;
 
-        for(VPVeinType veinType : veinTypes) {
+        for(VeinType veinType : veinTypes) {
             if(veinTypeStorageInfo.containsKey(veinType.name)) {
                 veinType.veinId = veinTypeStorageInfo.get(veinType.name);
             }
@@ -84,38 +83,38 @@ public class VPVeinTypeCaching implements Runnable {
         saveVeinTypeStorageInfo();
     }
 
-    public static short getVeinTypeId(VPVeinType veinType) {
+    public static short getVeinTypeId(VeinType veinType) {
         return veinTypeLookupTableForIds.inverse().get(veinType);
     }
 
-    public static VPVeinType getVeinType(short veinTypeId) {
-        return veinTypeLookupTableForIds.getOrDefault(veinTypeId, VPVeinType.NO_VEIN);
+    public static VeinType getVeinType(short veinTypeId) {
+        return veinTypeLookupTableForIds.getOrDefault(veinTypeId, VeinType.NO_VEIN);
     }
 
-    public static VPVeinType getVeinType(String veinTypeName) {
-        return veinTypeLookupTableForNames.getOrDefault(veinTypeName, VPVeinType.NO_VEIN);
+    public static VeinType getVeinType(String veinTypeName) {
+        return veinTypeLookupTableForNames.getOrDefault(veinTypeName, VeinType.NO_VEIN);
     }
 
     private static File getVeinTypeStorageInfoFile() {
-        final File directory = VPUtils.getSubDirectory(VPTags.VISUALPROSPECTING_DIR);
+        final File directory = Utils.getSubDirectory(Tags.VISUALPROSPECTING_DIR);
         directory.mkdirs();
         return new File(directory, "veintypesLUT");
     }
 
     private static void loadVeinTypeStorageInfo() {
-        veinTypeStorageInfo = VPUtils.readFileToMap(getVeinTypeStorageInfoFile());
+        veinTypeStorageInfo = Utils.readFileToMap(getVeinTypeStorageInfoFile());
     }
 
     private static void saveVeinTypeStorageInfo() {
-        VPUtils.writeMapToFile(getVeinTypeStorageInfoFile(), veinTypeStorageInfo);
+        Utils.writeMapToFile(getVeinTypeStorageInfoFile(), veinTypeStorageInfo);
     }
 
     public static void recalculateNEISearch() {
         final boolean isSearchActive = SearchField.searchInventories();
         final String searchString = NEIClientConfig.getSearchExpression().toLowerCase();
 
-        for(VPVeinType veinType : veinTypes) {
-            if(veinType != VPVeinType.NO_VEIN) {
+        for(VeinType veinType : veinTypes) {
+            if(veinType != VeinType.NO_VEIN) {
                 if (isSearchActive) {
                     List<String> searchableStrings = veinType.getOreMaterials().stream().filter(Objects::nonNull).map(material -> material.mLocalizedName + " ore").collect(Collectors.toList());
                     searchableStrings.add(veinType.getNameReadable() + " Vein");

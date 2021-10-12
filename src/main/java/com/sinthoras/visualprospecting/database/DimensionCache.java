@@ -1,9 +1,9 @@
 package com.sinthoras.visualprospecting.database;
 
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.VPUtils;
-import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
-import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
+import com.sinthoras.visualprospecting.Utils;
+import com.sinthoras.visualprospecting.database.veintypes.VeinType;
+import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class VPDimensionCache {
+public class DimensionCache {
 
     public enum UpdateResult {
         AlreadyKnown,
@@ -19,15 +19,15 @@ public class VPDimensionCache {
         New
     }
 
-    private final HashMap<Long, VPVeinType> oreChunks = new HashMap<>();
-    private final HashMap<Long, VPOilField> oilFields = new HashMap<>();
+    private final HashMap<Long, VeinType> oreChunks = new HashMap<>();
+    private final HashMap<Long, OilField> oilFields = new HashMap<>();
     private final HashSet<Long> changedOrNewOreChunks = new HashSet<>();
     private final HashSet<Long> changedOrNewOilFields = new HashSet<>();
     private boolean oreChunksNeedsSaving = false;
     private boolean oilFieldsNeedsSaving = false;
     public final int dimensionId;
 
-    public VPDimensionCache(int dimensionId) {
+    public DimensionCache(int dimensionId) {
         this.dimensionId = dimensionId;
     }
 
@@ -36,7 +36,7 @@ public class VPDimensionCache {
             final ByteBuffer byteBuffer = ByteBuffer.allocate(changedOrNewOreChunks.size() * (Long.BYTES + Short.BYTES));
             for (long key : changedOrNewOreChunks) {
                 byteBuffer.putLong(key);
-                byteBuffer.putShort(VPVeinTypeCaching.getVeinTypeId(oreChunks.get(key)));
+                byteBuffer.putShort(VeinTypeCaching.getVeinTypeId(oreChunks.get(key)));
             }
             oreChunksNeedsSaving = false;
             changedOrNewOreChunks.clear();
@@ -51,7 +51,7 @@ public class VPDimensionCache {
             final ByteBuffer byteBuffer = ByteBuffer.allocate(changedOrNewOilFields.size() * (Long.BYTES + Integer.BYTES * (1 + VP.oilFieldSizeChunkX * VP.oilFieldSizeChunkZ)));
             for (long key : changedOrNewOilFields) {
                 byteBuffer.putLong(key);
-                final VPOilField oilField = oilFields.get(key);
+                final OilField oilField = oilFields.get(key);
                 byteBuffer.putInt(oilField.oil.getID());
                 for(int offsetChunkX = 0; offsetChunkX < VP.oilFieldSizeChunkX; offsetChunkX++) {
                     for (int offsetChunkZ = 0; offsetChunkZ < VP.oilFieldSizeChunkZ; offsetChunkZ++) {
@@ -71,7 +71,7 @@ public class VPDimensionCache {
         if(oreChunksBuffer != null) {
             while (oreChunksBuffer.remaining() >= Long.BYTES + Short.BYTES) {
                 final long key = oreChunksBuffer.getLong();
-                final VPVeinType veinType = VPVeinTypeCaching.getVeinType(oreChunksBuffer.getShort());
+                final VeinType veinType = VeinTypeCaching.getVeinType(oreChunksBuffer.getShort());
                 oreChunks.put(key, veinType);
             }
         }
@@ -85,16 +85,16 @@ public class VPDimensionCache {
                         chunks[offsetChunkX][offsetChunkZ] = oilFieldsBuffer.getInt();
                     }
                 }
-                oilFields.put(key, new VPOilField(oil, chunks));
+                oilFields.put(key, new OilField(oil, chunks));
             }
         }
     }
 
     private long getOreVeinKey(int chunkX, int chunkZ) {
-        return VPUtils.chunkCoordsToKey(VPUtils.mapToCenterOreChunkCoord(chunkX), VPUtils.mapToCenterOreChunkCoord(chunkZ));
+        return Utils.chunkCoordsToKey(Utils.mapToCenterOreChunkCoord(chunkX), Utils.mapToCenterOreChunkCoord(chunkZ));
     }
 
-    public UpdateResult putOreVein(int chunkX, int chunkZ, final VPVeinType veinType) {
+    public UpdateResult putOreVein(int chunkX, int chunkZ, final VeinType veinType) {
         final long key = getOreVeinKey(chunkX, chunkZ);
         if(oreChunks.containsKey(key) == false || oreChunks.get(key) != veinType) {
             changedOrNewOreChunks.add(key);
@@ -105,16 +105,16 @@ public class VPDimensionCache {
         return UpdateResult.AlreadyKnown;
     }
 
-    public VPVeinType getOreVein(int chunkX, int chunkZ) {
+    public VeinType getOreVein(int chunkX, int chunkZ) {
         final long key = getOreVeinKey(chunkX, chunkZ);
-        return oreChunks.getOrDefault(key, VPVeinType.NO_VEIN);
+        return oreChunks.getOrDefault(key, VeinType.NO_VEIN);
     }
 
     private long getOilFieldKey(int chunkX, int chunkZ) {
-        return VPUtils.chunkCoordsToKey(VPUtils.mapToCornerOilFieldChunkCoord(chunkX), VPUtils.mapToCornerOilFieldChunkCoord(chunkZ));
+        return Utils.chunkCoordsToKey(Utils.mapToCornerOilFieldChunkCoord(chunkX), Utils.mapToCornerOilFieldChunkCoord(chunkZ));
     }
 
-    public UpdateResult putOilField(int chunkX, int chunkZ, final VPOilField oilField) {
+    public UpdateResult putOilField(int chunkX, int chunkZ, final OilField oilField) {
         final long key = getOilFieldKey(chunkX, chunkZ);
         if(oilFields.containsKey(key) == false) {
             changedOrNewOilFields.add(key);
@@ -131,8 +131,8 @@ public class VPDimensionCache {
         return UpdateResult.AlreadyKnown;
     }
 
-    public VPOilField getOilField(int chunkX, int chunkZ) {
+    public OilField getOilField(int chunkX, int chunkZ) {
         final long key = getOilFieldKey(chunkX, chunkZ);
-        return oilFields.getOrDefault(key, VPOilField.NOT_PROSPECTED);
+        return oilFields.getOrDefault(key, OilField.NOT_PROSPECTED);
     }
 }

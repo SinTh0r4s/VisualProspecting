@@ -1,7 +1,7 @@
 package com.sinthoras.visualprospecting;
 
-import com.sinthoras.visualprospecting.database.VPClientCache;
-import com.sinthoras.visualprospecting.database.VPServerCache;
+import com.sinthoras.visualprospecting.database.ClientCache;
+import com.sinthoras.visualprospecting.database.ServerCache;
 import net.minecraftforge.fluids.Fluid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,15 +12,15 @@ public class VP {
 
     public static SimpleNetworkWrapper network;
 
-    public static VPServerCache serverCache = new VPServerCache();
-    public static VPClientCache clientCache = new VPClientCache();
+    public static ServerCache serverCache = new ServerCache();
+    public static ClientCache clientCache = new ClientCache();
 
     public static Fluid naturalGas;
     public static Fluid lightOil;
     public static Fluid mediumOil;
     public static Fluid heavyOil;
 
-    private static Logger LOG = LogManager.getLogger(VPTags.MODID);
+    private static Logger LOG = LogManager.getLogger(Tags.MODID);
     public static final int gregTechSmallOreMinimumMeta = 16000;
     public static final int minecraftWorldHeight = 256;
     public static final int chunksPerRegionFileX = 32;
@@ -52,6 +52,6 @@ public class VP {
     }
 
     private static String formatMessage(String message) {
-        return "[" + VPTags.VISUALPROSPECTING + "] " + message;
+        return "[" + Tags.VISUALPROSPECTING + "] " + message;
     }
 }

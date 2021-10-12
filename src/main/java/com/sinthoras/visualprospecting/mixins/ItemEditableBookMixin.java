@@ -1,11 +1,11 @@
 package com.sinthoras.visualprospecting.mixins;
 
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.VPTags;
-import com.sinthoras.visualprospecting.VPUtils;
-import com.sinthoras.visualprospecting.database.VPOilFieldPosition;
-import com.sinthoras.visualprospecting.database.VPOreVeinPosition;
-import com.sinthoras.visualprospecting.network.VPProspectingNotification;
+import com.sinthoras.visualprospecting.Tags;
+import com.sinthoras.visualprospecting.Utils;
+import com.sinthoras.visualprospecting.database.OilFieldPosition;
+import com.sinthoras.visualprospecting.database.OreVeinPosition;
+import com.sinthoras.visualprospecting.network.ProspectingNotification;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemEditableBook;
@@ -27,19 +27,19 @@ public class ItemEditableBookMixin {
     private void onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer, CallbackInfoReturnable<ItemStack> callbackInfoReturnable) {
         if(world.isRemote == false) {
             final NBTTagCompound compound = itemStack.getTagCompound();
-            if(compound.hasKey(VPTags.VISUALPROSPECTING_FLAG)) {
-                final int dimensionId = compound.getInteger(VPTags.PROSPECTION_DIMENSION_ID);
-                final int blockX = compound.getInteger(VPTags.PROSPECTION_BLOCK_X);
-                final int blockZ = compound.getInteger(VPTags.PROSPECTION_BLOCK_Z);
-                final int blockRadius = compound.getInteger(VPTags.PROSPECTION_ORE_RADIUS);
-                final List<VPOreVeinPosition> foundOreVeins = VP.serverCache.prospectOreBlockRadius(dimensionId, blockX, blockZ, blockRadius);
-                final List<VPOilFieldPosition> foundOilFields = VP.serverCache.prospectOilBlockRadius(world, blockX, blockZ, VP.oilChunkProspectingRange);
-                if(VPUtils.isLogicalClient()) {
+            if(compound.hasKey(Tags.VISUALPROSPECTING_FLAG)) {
+                final int dimensionId = compound.getInteger(Tags.PROSPECTION_DIMENSION_ID);
+                final int blockX = compound.getInteger(Tags.PROSPECTION_BLOCK_X);
+                final int blockZ = compound.getInteger(Tags.PROSPECTION_BLOCK_Z);
+                final int blockRadius = compound.getInteger(Tags.PROSPECTION_ORE_RADIUS);
+                final List<OreVeinPosition> foundOreVeins = VP.serverCache.prospectOreBlockRadius(dimensionId, blockX, blockZ, blockRadius);
+                final List<OilFieldPosition> foundOilFields = VP.serverCache.prospectOilBlockRadius(world, blockX, blockZ, VP.oilChunkProspectingRange);
+                if(Utils.isLogicalClient()) {
                     VP.clientCache.putOreVeins(dimensionId, foundOreVeins);
                     VP.clientCache.putOilFields(dimensionId, foundOilFields);
                 }
                 else {
-                    VP.network.sendTo(new VPProspectingNotification(dimensionId, foundOreVeins, foundOilFields), (EntityPlayerMP) entityPlayer);
+                    VP.network.sendTo(new ProspectingNotification(dimensionId, foundOreVeins, foundOilFields), (EntityPlayerMP) entityPlayer);
                 }
             }
         }

@@ -1,8 +1,8 @@
 package com.sinthoras.visualprospecting.gui.journeymap;
 
-import com.sinthoras.visualprospecting.VPConfig;
-import com.sinthoras.visualprospecting.VPUtils;
-import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
+import com.sinthoras.visualprospecting.Config;
+import com.sinthoras.visualprospecting.Utils;
+import com.sinthoras.visualprospecting.database.veintypes.VeinType;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
@@ -20,16 +20,16 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.geom.Point2D;
 
-public class VPOreVeinDrawStep implements DrawStep {
+public class OreVeinDrawStep implements DrawStep {
 
     private final int blockX;
     private final int blockZ;
-    private final VPVeinType veinType;
+    private final VeinType veinType;
 
 
-    public VPOreVeinDrawStep(final VPVeinType veinType, int chunkX, int chunkZ) {
-        blockX = VPUtils.coordChunkToBlock(chunkX) + 8;
-        blockZ = VPUtils.coordChunkToBlock(chunkZ) + 8;
+    public OreVeinDrawStep(final VeinType veinType, int chunkX, int chunkZ) {
+        blockX = Utils.coordChunkToBlock(chunkX) + 8;
+        blockZ = Utils.coordChunkToBlock(chunkZ) + 8;
         this.veinType = veinType;
     }
 
@@ -41,7 +41,7 @@ public class VPOreVeinDrawStep implements DrawStep {
         final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + xOffset, blockAsPixel.getY() + yOffset);
 
 
-        if(gridRenderer.getZoom() >= VPConfig.minZoomLevel) {
+        if(gridRenderer.getZoom() >= Config.minZoomLevel) {
             final int fontColor = veinType.isHighlighted() ? 0xFFFFFF : 0x7F7F7F;
             DrawUtil.drawLabel(veinType.getNameReadable() + " Vein", pixel.getX(), pixel.getY() - textureSize, DrawUtil.HAlign.Center, DrawUtil.VAlign.Middle, 0, 180, fontColor, 255, fontScale, false, rotation);
         }

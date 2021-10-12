@@ -1,10 +1,10 @@
 package com.sinthoras.visualprospecting.network;
 
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.database.VPOilField;
-import com.sinthoras.visualprospecting.database.VPOilFieldPosition;
-import com.sinthoras.visualprospecting.database.VPOreVeinPosition;
-import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
+import com.sinthoras.visualprospecting.database.OilField;
+import com.sinthoras.visualprospecting.database.OilFieldPosition;
+import com.sinthoras.visualprospecting.database.OreVeinPosition;
+import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -17,25 +17,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class VPProspectingNotification implements IMessage {
+public class ProspectingNotification implements IMessage {
 
-    private static List<VPOilFieldPosition> emptyOilFieldPositions = new ArrayList<>(0);
+    private static List<OilFieldPosition> emptyOilFieldPositions = new ArrayList<>(0);
 
     private int dimensionId;
-    private List<VPOreVeinPosition> oreVeinPositions;
-    private List<VPOilFieldPosition> oilFieldPositions;
+    private List<OreVeinPosition> oreVeinPositions;
+    private List<OilFieldPosition> oilFieldPositions;
 
-    public VPProspectingNotification() {
+    public ProspectingNotification() {
 
     }
 
-    public VPProspectingNotification(int dimensionId, VPOreVeinPosition oreVeinPosition) {
+    public ProspectingNotification(int dimensionId, OreVeinPosition oreVeinPosition) {
         this.dimensionId = dimensionId;
         oreVeinPositions = Collections.singletonList(oreVeinPosition);
         oilFieldPositions = emptyOilFieldPositions;
     }
 
-    public VPProspectingNotification(int dimensionId, List<VPOreVeinPosition> oreVeinPositions, List<VPOilFieldPosition> oilFieldPositions) {
+    public ProspectingNotification(int dimensionId, List<OreVeinPosition> oreVeinPositions, List<OilFieldPosition> oilFieldPositions) {
         this.dimensionId = dimensionId;
         this.oreVeinPositions = oreVeinPositions;
         this.oilFieldPositions = oilFieldPositions;
@@ -50,7 +50,7 @@ public class VPProspectingNotification implements IMessage {
             final int chunkX = buf.readInt();
             final int chunkZ = buf.readInt();
             final String oreVeinName = ByteBufUtils.readUTF8String(buf);
-            oreVeinPositions.add(new VPOreVeinPosition(chunkX, chunkZ, VPVeinTypeCaching.getVeinType(oreVeinName)));
+            oreVeinPositions.add(new OreVeinPosition(chunkX, chunkZ, VeinTypeCaching.getVeinType(oreVeinName)));
         }
         final int numberOfOilFields = buf.readInt();
         oilFieldPositions = new ArrayList<>(numberOfOilFields);
@@ -63,7 +63,7 @@ public class VPProspectingNotification implements IMessage {
                 for(int offsetChunkZ = 0; offsetChunkZ< VP.oilFieldSizeChunkZ; offsetChunkZ++) {
                     chunks[offsetChunkX][offsetChunkZ] = buf.readInt();
                 }
-            oilFieldPositions.add(new VPOilFieldPosition(chunkX, chunkZ, new VPOilField(oil, chunks)));
+            oilFieldPositions.add(new OilFieldPosition(chunkX, chunkZ, new OilField(oil, chunks)));
         }
     }
 
@@ -71,13 +71,13 @@ public class VPProspectingNotification implements IMessage {
     public void toBytes(ByteBuf buf) {
         buf.writeInt(dimensionId);
         buf.writeInt(oreVeinPositions.size());
-        for(VPOreVeinPosition oreVeinPosition : oreVeinPositions) {
+        for(OreVeinPosition oreVeinPosition : oreVeinPositions) {
             buf.writeInt(oreVeinPosition.chunkX);
             buf.writeInt(oreVeinPosition.chunkZ);
             ByteBufUtils.writeUTF8String(buf, oreVeinPosition.veinType.name);
         }
         buf.writeInt(oilFieldPositions.size());
-        for(VPOilFieldPosition oilFieldPosition : oilFieldPositions) {
+        for(OilFieldPosition oilFieldPosition : oilFieldPositions) {
             buf.writeInt(oilFieldPosition.chunkX);
             buf.writeInt(oilFieldPosition.chunkZ);
             buf.writeInt(oilFieldPosition.oilField.oil.getID());
@@ -89,10 +89,10 @@ public class VPProspectingNotification implements IMessage {
         }
     }
 
-    public static class Handler implements IMessageHandler<VPProspectingNotification, IMessage> {
+    public static class Handler implements IMessageHandler<ProspectingNotification, IMessage> {
 
         @Override
-        public IMessage onMessage(VPProspectingNotification message, MessageContext ctx) {
+        public IMessage onMessage(ProspectingNotification message, MessageContext ctx) {
             VP.clientCache.putOreVeins(message.dimensionId, message.oreVeinPositions);
             VP.clientCache.putOilFields(message.dimensionId, message.oilFieldPositions);
             return null;

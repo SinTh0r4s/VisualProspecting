@@ -1,8 +1,8 @@
 package com.sinthoras.visualprospecting.database;
 
 import com.sinthoras.visualprospecting.*;
-import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
-import com.sinthoras.visualprospecting.network.VPProspectingRequest;
+import com.sinthoras.visualprospecting.database.veintypes.VeinType;
+import com.sinthoras.visualprospecting.network.ProspectingRequest;
 import gregtech.common.blocks.GT_TileEntity_Ores;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
@@ -17,14 +17,14 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class VPClientCache extends VPWorldCache {
+public class ClientCache extends WorldCache {
 
     protected File getStorageDirectory() {
         final EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-        return new File(VPUtils.getSubDirectory(VPTags.CLIENT_DIR), player.getDisplayName() + "_" + player.getPersistentID().toString());
+        return new File(Utils.getSubDirectory(Tags.CLIENT_DIR), player.getDisplayName() + "_" + player.getPersistentID().toString());
     }
 
-    private void notifyNewOreVein(VPOreVeinPosition oreVeinPosition) {
+    private void notifyNewOreVein(OreVeinPosition oreVeinPosition) {
         final String location = "(" + oreVeinPosition.getBlockX() + "," + oreVeinPosition.getBlockZ() + ")";
         final IChatComponent veinNotification = new ChatComponentTranslation("visualprospecting.vein.prospected", oreVeinPosition.veinType.getNameReadable(), location);
         veinNotification.getChatStyle().setItalic(true);
@@ -38,17 +38,17 @@ public class VPClientCache extends VPWorldCache {
         Minecraft.getMinecraft().thePlayer.addChatMessage(oresNotification);
     }
 
-    public void putOreVeins(int dimensionId, List<VPOreVeinPosition> oreVeinPositions) {
+    public void putOreVeins(int dimensionId, List<OreVeinPosition> oreVeinPositions) {
         if(oreVeinPositions.size() == 1) {
-            final VPOreVeinPosition oreVeinPosition = oreVeinPositions.get(0);
-            if(putOreVein(dimensionId, oreVeinPosition.chunkX, oreVeinPosition.chunkZ, oreVeinPosition.veinType) != VPDimensionCache.UpdateResult.AlreadyKnown) {
+            final OreVeinPosition oreVeinPosition = oreVeinPositions.get(0);
+            if(putOreVein(dimensionId, oreVeinPosition.chunkX, oreVeinPosition.chunkZ, oreVeinPosition.veinType) != DimensionCache.UpdateResult.AlreadyKnown) {
                 notifyNewOreVein(oreVeinPosition);
             }
         }
         else if(oreVeinPositions.size() > 1) {
             int newOreVeins = 0;
-            for(VPOreVeinPosition oreVeinPosition : oreVeinPositions) {
-                if(putOreVein(dimensionId, oreVeinPosition.chunkX, oreVeinPosition.chunkZ, oreVeinPosition.veinType) != VPDimensionCache.UpdateResult.AlreadyKnown) {
+            for(OreVeinPosition oreVeinPosition : oreVeinPositions) {
+                if(putOreVein(dimensionId, oreVeinPosition.chunkX, oreVeinPosition.chunkZ, oreVeinPosition.veinType) != DimensionCache.UpdateResult.AlreadyKnown) {
                     newOreVeins++;
                 }
             }
@@ -61,15 +61,15 @@ public class VPClientCache extends VPWorldCache {
         }
     }
 
-    public void putOilFields(int dimensionId, List<VPOilFieldPosition> oilFields) {
+    public void putOilFields(int dimensionId, List<OilFieldPosition> oilFields) {
         int newOilFields = 0;
         int updatedOilFields = 0;
-        for(VPOilFieldPosition oilFieldPosition : oilFields) {
-            VPDimensionCache.UpdateResult updateResult = putOilField(dimensionId, oilFieldPosition.chunkX, oilFieldPosition.chunkZ, oilFieldPosition.oilField);
-            if(updateResult == VPDimensionCache.UpdateResult.New) {
+        for(OilFieldPosition oilFieldPosition : oilFields) {
+            DimensionCache.UpdateResult updateResult = putOilField(dimensionId, oilFieldPosition.chunkX, oilFieldPosition.chunkZ, oilFieldPosition.oilField);
+            if(updateResult == DimensionCache.UpdateResult.New) {
                 newOilFields++;
             }
-            if(updateResult == VPDimensionCache.UpdateResult.Updated) {
+            if(updateResult == DimensionCache.UpdateResult.Updated) {
                 updatedOilFields++;
             }
         }
@@ -96,19 +96,19 @@ public class VPClientCache extends VPWorldCache {
     }
 
     public void onOreInteracted(World world, int blockX, int blockY, int blockZ, EntityPlayer entityPlayer) {
-        if(VPConfig.enableProspecting
+        if(Config.enableProspecting
                 && Minecraft.getMinecraft().thePlayer == entityPlayer) {
             final TileEntity tTileEntity = world.getTileEntity(blockX, blockY, blockZ);
             if (tTileEntity instanceof GT_TileEntity_Ores) {
                 final short oreMetaData = ((GT_TileEntity_Ores) tTileEntity).mMetaData;
-                if (VPUtils.isSmallOreId(oreMetaData) == false
+                if (Utils.isSmallOreId(oreMetaData) == false
                         && oreMetaData != 0) {
-                    final int chunkX = VPUtils.coordBlockToChunk(blockX);
-                    final int chunkZ = VPUtils.coordBlockToChunk(blockZ);
-                    final VPVeinType veinType = getOreVein(entityPlayer.dimension, chunkX, chunkZ);
-                    final short materialId = VPUtils.oreIdToMaterialId(oreMetaData);
-                    if(veinType.containsOre(materialId) == false && VPProspectingRequest.canSendRequest()) {
-                        VP.network.sendToServer(new VPProspectingRequest(entityPlayer.dimension, blockX, blockY, blockZ, materialId));
+                    final int chunkX = Utils.coordBlockToChunk(blockX);
+                    final int chunkZ = Utils.coordBlockToChunk(blockZ);
+                    final VeinType veinType = getOreVein(entityPlayer.dimension, chunkX, chunkZ);
+                    final short materialId = Utils.oreIdToMaterialId(oreMetaData);
+                    if(veinType.containsOre(materialId) == false && ProspectingRequest.canSendRequest()) {
+                        VP.network.sendToServer(new ProspectingRequest(entityPlayer.dimension, blockX, blockY, blockZ, materialId));
                     }
                 }
             }

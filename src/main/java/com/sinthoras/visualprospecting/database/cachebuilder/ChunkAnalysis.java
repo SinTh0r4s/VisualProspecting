@@ -1,22 +1,22 @@
 package com.sinthoras.visualprospecting.database.cachebuilder;
 
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
-import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
+import com.sinthoras.visualprospecting.database.veintypes.VeinType;
+import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import io.xol.enklume.nbt.*;
 
 import java.util.HashSet;
 
 // A slim, but faster version to identify >90% of veins
-public class VPChunkAnalysis {
+public class ChunkAnalysis {
 
     private final HashSet<Short> ores = new HashSet<>();
-    private final HashSet<VPVeinType> matchedVeins = new HashSet<>();
+    private final HashSet<VeinType> matchedVeins = new HashSet<>();
     private int minVeinBlockY = VP.minecraftWorldHeight;
 
     public void processMinecraftChunk(final NBTCompound chunkRoot) {
         for (final NBTNamed tileEntity : ((NBTList) chunkRoot.getTag("Level.TileEntities")).elements) {
-            final VPGregTechOre gtOre = new VPGregTechOre((NBTCompound) tileEntity);
+            final GregTechOre gtOre = new GregTechOre((NBTCompound) tileEntity);
             if(gtOre.isValidGTOre) {
                 ores.add(gtOre.metaData);
                 if(minVeinBlockY > gtOre.blockY) {
@@ -27,7 +27,7 @@ public class VPChunkAnalysis {
     }
 
     public boolean matchesSingleVein() {
-        for(VPVeinType veinType : VPVeinTypeCaching.veinTypes) {
+        for(VeinType veinType : VeinTypeCaching.veinTypes) {
             if(veinType.matches(ores)) {
                 matchedVeins.add(veinType);
             }
@@ -36,9 +36,9 @@ public class VPChunkAnalysis {
     }
 
     // Result only valid if matchesSingleVein() returned true
-    public VPVeinType getMatchedVein() {
+    public VeinType getMatchedVein() {
         if(matchedVeins.isEmpty()) {
-            return VPVeinType.NO_VEIN;
+            return VeinType.NO_VEIN;
         }
         return matchedVeins.stream().findAny().get();
     }

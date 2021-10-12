@@ -5,19 +5,19 @@ import net.minecraftforge.fluids.Fluid;
 
 import java.util.Arrays;
 
-public class VPOilField {
+public class OilField {
 
-    public static final VPOilField NOT_PROSPECTED = new VPOilField(new Fluid("no_oil"), new int[][]{{0, 0, 0}, {0, 0, 0}, {0, 0, 0}});
+    public static final OilField NOT_PROSPECTED = new OilField(new Fluid("no_oil"), new int[][]{{0, 0, 0}, {0, 0, 0}, {0, 0, 0}});
 
     public final Fluid oil;
     public final int[][] chunks;
 
-    public VPOilField(Fluid oil, int[][] chunks) {
+    public OilField(Fluid oil, int[][] chunks) {
         this.oil = oil;
         this.chunks = chunks;
     }
 
-    public boolean equals(VPOilField other) {
+    public boolean equals(OilField other) {
         return oil == other.oil && Arrays.deepEquals(chunks, other.chunks);
     }
 

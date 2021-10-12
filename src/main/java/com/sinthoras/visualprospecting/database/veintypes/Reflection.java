@@ -4,9 +4,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sinthoras.visualprospecting.VPUtils.isBartworksInstalled;
+import static com.sinthoras.visualprospecting.Utils.isBartworksInstalled;
 
-public class VPReflection {
+public class Reflection {
 
     private static Class bw_OreLayer;
     private static Field veinName;

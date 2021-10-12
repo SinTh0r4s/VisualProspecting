@@ -2,7 +2,7 @@ package com.sinthoras.visualprospecting;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sinthoras.visualprospecting.hooks.VPHooksClient;
+import com.sinthoras.visualprospecting.hooks.HooksClient;
 import cpw.mods.fml.common.Loader;
 import gregtech.GT_Mod;
 import gregtech.api.objects.GT_UO_Dimension;
@@ -29,7 +29,7 @@ import static gregtech.api.objects.XSTR.XSTR_INSTANCE;
 import static gregtech.common.GT_Proxy.*;
 import static gregtech.common.GT_Proxy.GTOIL;
 
-public class VPUtils {
+public class Utils {
 
     public static boolean isBartworksInstalled() {
         return Loader.isModLoaded("bartworks");
@@ -72,7 +72,7 @@ public class VPUtils {
     }
 
     public static boolean isLogicalClient() {
-        return VPMod.proxy instanceof VPHooksClient;
+        return VPMod.proxy instanceof HooksClient;
     }
 
     public static File getMinecraftDirectory() {

@@ -1,8 +1,8 @@
 package com.sinthoras.visualprospecting.mixins;
 
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.database.veintypes.VPVeinType;
-import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
+import com.sinthoras.visualprospecting.database.veintypes.VeinType;
+import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import gregtech.api.objects.XSTR;
 import gregtech.common.GT_Worldgen_GT_Ore_Layer;
 import gregtech.common.GT_Worldgenerator;
@@ -38,7 +38,7 @@ public class WorldGenContainerMixin {
             require = 1,
             locals = LocalCapture.CAPTURE_FAILSOFT)
     private void onOreVeinPlacedFailedA(int oreseedX, int oreseedZ, CallbackInfo callbackInfo, long oreveinSeed, XSTR oreveinRNG, int oreveinPercentageRoll, int noOrePlacedCount, String tDimensionName) {
-        VP.serverCache.putOreVein(mWorld.provider.dimensionId, mX, mZ, VPVeinType.NO_VEIN);
+        VP.serverCache.putOreVein(mWorld.provider.dimensionId, mX, mZ, VeinType.NO_VEIN);
     }
 
     @Inject(method = "worldGenFindVein",
@@ -47,7 +47,7 @@ public class WorldGenContainerMixin {
             require = 1,
             locals = LocalCapture.CAPTURE_FAILSOFT)
     private void onOreVeinPlacedFailedB(int oreseedX, int oreseedZ, CallbackInfo ci, long oreveinSeed, XSTR oreveinRNG, int oreveinPercentageRoll, int noOrePlacedCount, String tDimensionName, int placementAttempts, boolean oreveinFound, int i) {
-        VP.serverCache.putOreVein(mWorld.provider.dimensionId, mX, mZ, VPVeinType.NO_VEIN);
+        VP.serverCache.putOreVein(mWorld.provider.dimensionId, mX, mZ, VeinType.NO_VEIN);
     }
 
     @Inject(method = "worldGenFindVein",
@@ -56,7 +56,7 @@ public class WorldGenContainerMixin {
             require = 2,
             locals = LocalCapture.CAPTURE_FAILSOFT)
     private void onOreVeinPlacedSuccess(int oreseedX, int oreseedZ, CallbackInfo callbackInfo, long oreveinSeed, XSTR oreveinRNG, int oreveinPercentageRoll, int noOrePlacedCount, String tDimensionName, int placementAttempts, boolean oreveinFound, int i, int tRandomWeight, Iterator var13, GT_Worldgen_GT_Ore_Layer tWorldGen, int placementResult) {
-        VP.serverCache.putOreVein(mWorld.provider.dimensionId, mX, mZ, VPVeinTypeCaching.getVeinType(tWorldGen.mWorldGenName));
+        VP.serverCache.putOreVein(mWorld.provider.dimensionId, mX, mZ, VeinTypeCaching.getVeinType(tWorldGen.mWorldGenName));
     }
 
 }

@@ -1,43 +1,43 @@
 package com.sinthoras.visualprospecting.database;
 
-import com.sinthoras.visualprospecting.VPTags;
+import com.sinthoras.visualprospecting.Tags;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.WorldServer;
 
 import java.util.UUID;
 
-public class VPWorldIdHandler extends WorldSavedData {
+public class WorldIdHandler extends WorldSavedData {
 
-    private static VPWorldIdHandler instance;
+    private static WorldIdHandler instance;
     private String worldId;
 
-    public VPWorldIdHandler() {
-        super(VPTags.MODID);
+    public WorldIdHandler() {
+        super(Tags.MODID);
     }
 
-    public VPWorldIdHandler(String name) {
+    public WorldIdHandler(String name) {
         super(name);
     }
 
     public static void load(WorldServer world) {
-        instance = (VPWorldIdHandler) world.mapStorage.loadData(VPWorldIdHandler.class, VPTags.MODID);
+        instance = (WorldIdHandler) world.mapStorage.loadData(WorldIdHandler.class, Tags.MODID);
         if (instance == null) {
-            instance = new VPWorldIdHandler(VPTags.MODID);
+            instance = new WorldIdHandler(Tags.MODID);
             instance.worldId = world.func_73046_m().getFolderName() + "_" + UUID.randomUUID();
-            world.mapStorage.setData(VPTags.MODID, instance);
+            world.mapStorage.setData(Tags.MODID, instance);
             instance.markDirty();
         }
     }
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
-        worldId = compound.getString(VPTags.worldId);
+        worldId = compound.getString(Tags.worldId);
     }
 
     @Override
     public void writeToNBT(NBTTagCompound compound) {
-        compound.setString(VPTags.worldId, worldId);
+        compound.setString(Tags.worldId, worldId);
     }
 
     public static String getWorldId() {

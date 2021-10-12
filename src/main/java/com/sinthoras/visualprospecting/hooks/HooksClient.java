@@ -9,7 +9,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 
-public class VPHooksClient extends VPHooksShared {
+public class HooksClient extends HooksShared {
 
 	@Override
 	// load "Do your mod setup. Build whatever data structures you care about. Register recipes."

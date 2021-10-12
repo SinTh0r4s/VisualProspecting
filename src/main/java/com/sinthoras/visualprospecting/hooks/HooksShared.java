@@ -1,14 +1,14 @@
 package com.sinthoras.visualprospecting.hooks;
 
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.VPConfig;
-import com.sinthoras.visualprospecting.VPTags;
-import com.sinthoras.visualprospecting.database.VPWorldIdHandler;
-import com.sinthoras.visualprospecting.database.cachebuilder.VPWorldAnalysis;
-import com.sinthoras.visualprospecting.database.veintypes.VPVeinTypeCaching;
-import com.sinthoras.visualprospecting.network.VPProspectingNotification;
-import com.sinthoras.visualprospecting.network.VPProspectingRequest;
-import com.sinthoras.visualprospecting.network.VPWorldIdNotification;
+import com.sinthoras.visualprospecting.Config;
+import com.sinthoras.visualprospecting.Tags;
+import com.sinthoras.visualprospecting.database.WorldIdHandler;
+import com.sinthoras.visualprospecting.database.cachebuilder.WorldAnalysis;
+import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
+import com.sinthoras.visualprospecting.network.ProspectingNotification;
+import com.sinthoras.visualprospecting.network.ProspectingRequest;
+import com.sinthoras.visualprospecting.network.WorldIdNotification;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -28,28 +28,28 @@ import java.io.IOException;
 import java.util.zip.DataFormatException;
 
 
-public class VPHooksShared {
+public class HooksShared {
 	
 	// preInit "Run before anything else. Read your config, create blocks, items, 
 	// etc, and register them with the GameRegistry."
 	public void fmlLifeCycleEvent(FMLPreInitializationEvent event) 	{
-		VPConfig.syncronizeConfiguration(event.getSuggestedConfigurationFile());
+		Config.syncronizeConfiguration(event.getSuggestedConfigurationFile());
 
-		VP.network = NetworkRegistry.INSTANCE.newSimpleChannel(VPTags.MODID);
+		VP.network = NetworkRegistry.INSTANCE.newSimpleChannel(Tags.MODID);
 		int networkId = 0;
-		VP.network.registerMessage(VPProspectingRequest.Handler.class, VPProspectingRequest.class, networkId++, Side.SERVER);
-		VP.network.registerMessage(VPProspectingNotification.Handler.class, VPProspectingNotification.class, networkId++, Side.CLIENT);
-		VP.network.registerMessage(VPWorldIdNotification.Handler.class, VPWorldIdNotification.class, networkId++, Side.CLIENT);
+		VP.network.registerMessage(ProspectingRequest.Handler.class, ProspectingRequest.class, networkId++, Side.SERVER);
+		VP.network.registerMessage(ProspectingNotification.Handler.class, ProspectingNotification.class, networkId++, Side.CLIENT);
+		VP.network.registerMessage(WorldIdNotification.Handler.class, WorldIdNotification.class, networkId++, Side.CLIENT);
 	}
 	
 	// load "Do your mod setup. Build whatever data structures you care about. Register recipes."
 	public void fmlLifeCycleEvent(FMLInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(new VPHooksEventBus());
+		MinecraftForge.EVENT_BUS.register(new HooksEventBus());
 	}
 	
 	// postInit "Handle interaction with other mods, complete your setup based on this."
 	public void fmlLifeCycleEvent(FMLPostInitializationEvent event) {
-		GregTech_API.sAfterGTPostload.add(new VPVeinTypeCaching());
+		GregTech_API.sAfterGTPostload.add(new VeinTypeCaching());
 
 		VP.naturalGas = FluidRegistry.getFluid("gas_natural_gas");
 		VP.lightOil = FluidRegistry.getFluid("liquid_light_oil");
@@ -64,10 +64,10 @@ public class VPHooksShared {
 	// register server commands in this event handler
 	public void fmlLifeCycleEvent(FMLServerStartingEvent event) {
 		final MinecraftServer minecraftServer = event.getServer();
-		VPWorldIdHandler.load(minecraftServer.worldServers[0]);
-		if(VP.serverCache.loadVeinCache(VPWorldIdHandler.getWorldId()) == false || VPConfig.recacheVeins) {
+		WorldIdHandler.load(minecraftServer.worldServers[0]);
+		if(VP.serverCache.loadVeinCache(WorldIdHandler.getWorldId()) == false || Config.recacheVeins) {
 			try {
-				VPWorldAnalysis world = new VPWorldAnalysis(minecraftServer.getEntityWorld().getSaveHandler().getWorldDirectory());
+				WorldAnalysis world = new WorldAnalysis(minecraftServer.getEntityWorld().getSaveHandler().getWorldDirectory());
 				world.cacheVeins();
 				VP.serverCache.saveVeinCache();
 			}

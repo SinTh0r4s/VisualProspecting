@@ -1,8 +1,8 @@
 package com.sinthoras.visualprospecting.mixins;
 
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.VPTags;
-import com.sinthoras.visualprospecting.database.VPOreVeinPosition;
+import com.sinthoras.visualprospecting.Tags;
+import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
 import gregtech.api.util.GT_Utility;
@@ -35,12 +35,12 @@ public abstract class GT_MetaTileEntity_ScannerMixin extends GT_MetaTileEntity_B
     private void onAnalyzeProspectionData(CallbackInfoReturnable<Integer> callbackInfoReturnable) {
         final ItemStack itemStack = getInputAt(0);
         final NBTTagCompound compound = itemStack.getTagCompound();
-        if(compound.hasKey(VPTags.VISUALPROSPECTING_FLAG)) {
-            final int dimensionId = compound.getInteger(VPTags.PROSPECTION_DIMENSION_ID);
-            final int blockX = compound.getInteger(VPTags.PROSPECTION_BLOCK_X);
-            final int blockY = compound.getInteger(VPTags.PROSPECTION_BLOCK_Y);
-            final int blockZ = compound.getInteger(VPTags.PROSPECTION_BLOCK_Z);
-            final int blockRadius = compound.getInteger(VPTags.PROSPECTION_ORE_RADIUS);
+        if(compound.hasKey(Tags.VISUALPROSPECTING_FLAG)) {
+            final int dimensionId = compound.getInteger(Tags.PROSPECTION_DIMENSION_ID);
+            final int blockX = compound.getInteger(Tags.PROSPECTION_BLOCK_X);
+            final int blockY = compound.getInteger(Tags.PROSPECTION_BLOCK_Y);
+            final int blockZ = compound.getInteger(Tags.PROSPECTION_BLOCK_Z);
+            final int blockRadius = compound.getInteger(Tags.PROSPECTION_ORE_RADIUS);
             final String position = "X: " + blockX + " Y: " + blockY + " Z: " + blockZ;
 
             final NBTTagList bookPages = new NBTTagList();
@@ -53,7 +53,7 @@ public abstract class GT_MetaTileEntity_ScannerMixin extends GT_MetaTileEntity_B
                     + "Results are synchronized to your map";
             bookPages.appendTag(new NBTTagString(frontPage));
 
-            final List<VPOreVeinPosition> foundOreVeins = VP.serverCache.prospectOreBlockRadius(dimensionId, blockX, blockZ, blockRadius);
+            final List<OreVeinPosition> foundOreVeins = VP.serverCache.prospectOreBlockRadius(dimensionId, blockX, blockZ, blockRadius);
             if(foundOreVeins.isEmpty() == false) {
                 final int pageSize = 7;
                 final int numberOfPages = (foundOreVeins.size() + pageSize) / pageSize;  // Equals to ceil((foundOreVeins.size())
@@ -63,7 +63,7 @@ public abstract class GT_MetaTileEntity_ScannerMixin extends GT_MetaTileEntity_B
                     for (int i = 0; i < pageSize; i++) {
                         final int veinId = pageNumber * pageSize + i;
                         if(veinId < foundOreVeins.size()) {
-                            final VPOreVeinPosition oreVein = foundOreVeins.get(veinId);
+                            final OreVeinPosition oreVein = foundOreVeins.get(veinId);
                             pageString.append(oreVein.getBlockX()).append(",").append(oreVein.getBlockZ()).append(" - ").append(oreVein.veinType.getNameReadable() + " Vein").append("\n");
                         }
                     }
@@ -73,8 +73,8 @@ public abstract class GT_MetaTileEntity_ScannerMixin extends GT_MetaTileEntity_B
                 }
             }
 
-            if(compound.hasKey(VPTags.PROSPECTION_OILS)) {
-                GT_Utility.ItemNBT.fillBookWithList(bookPages, "Oils%s\n\n", "\n", 9, compound.getString(VPTags.PROSPECTION_OILS).split("\\|"));
+            if(compound.hasKey(Tags.PROSPECTION_OILS)) {
+                GT_Utility.ItemNBT.fillBookWithList(bookPages, "Oils%s\n\n", "\n", 9, compound.getString(Tags.PROSPECTION_OILS).split("\\|"));
 
                 final String oilCoverPage = "Oil notes\n\n"
                         + "Prospects from NW to SE 576 chunks"

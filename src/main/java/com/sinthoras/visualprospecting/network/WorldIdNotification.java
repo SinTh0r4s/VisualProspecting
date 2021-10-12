@@ -7,15 +7,15 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 
-public class VPWorldIdNotification implements IMessage {
+public class WorldIdNotification implements IMessage {
 
     private String worldId;
 
-    public VPWorldIdNotification() {
+    public WorldIdNotification() {
 
     }
 
-    public VPWorldIdNotification(String worldId) {
+    public WorldIdNotification(String worldId) {
         this.worldId = worldId;
     }
 
@@ -29,10 +29,10 @@ public class VPWorldIdNotification implements IMessage {
         ByteBufUtils.writeUTF8String(buf, worldId);
     }
 
-    public static class Handler implements IMessageHandler<VPWorldIdNotification, IMessage> {
+    public static class Handler implements IMessageHandler<WorldIdNotification, IMessage> {
 
         @Override
-        public IMessage onMessage(VPWorldIdNotification message, MessageContext ctx) {
+        public IMessage onMessage(WorldIdNotification message, MessageContext ctx) {
             VP.clientCache.loadVeinCache(message.worldId);
             return null;
         }

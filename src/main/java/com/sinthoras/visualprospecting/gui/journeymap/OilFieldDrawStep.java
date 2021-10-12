@@ -1,8 +1,8 @@
 package com.sinthoras.visualprospecting.gui.journeymap;
 
+import com.sinthoras.visualprospecting.Config;
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.VPConfig;
-import com.sinthoras.visualprospecting.VPUtils;
+import com.sinthoras.visualprospecting.Utils;
 import journeymap.client.render.draw.DrawStep;
 import journeymap.client.render.draw.DrawUtil;
 import journeymap.client.render.map.GridRenderer;
@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.Fluid;
 
 import java.awt.geom.Point2D;
 
-public class VPOilFieldDrawStep implements DrawStep {
+public class OilFieldDrawStep implements DrawStep {
 
     private final int blockX;
     private final int blockZ;
@@ -19,9 +19,9 @@ public class VPOilFieldDrawStep implements DrawStep {
     private final int maxAmountInField;
     private final int minAmountInField;
 
-    public VPOilFieldDrawStep(int chunkX, int chunkZ, Fluid oil, int oilAmount, int minAmountInField, int maxAmountInField) {
-        blockX = VPUtils.coordChunkToBlock(chunkX);
-        blockZ = VPUtils.coordChunkToBlock(chunkZ);
+    public OilFieldDrawStep(int chunkX, int chunkZ, Fluid oil, int oilAmount, int minAmountInField, int maxAmountInField) {
+        blockX = Utils.coordChunkToBlock(chunkX);
+        blockZ = Utils.coordChunkToBlock(chunkZ);
         this.oil = oil;
         this.oilAmount = oilAmount;
         this.maxAmountInField = maxAmountInField;
@@ -63,7 +63,7 @@ public class VPOilFieldDrawStep implements DrawStep {
                 DrawUtil.drawRectangle(pixel.getX(), pixel.getY() + 1 * blockSize, blockSize, 15 * blockSize, borderColor, borderAlpha);
             }
 
-            if (gridRenderer.getZoom() >= VPConfig.minZoomLevel) {
+            if (gridRenderer.getZoom() >= Config.minZoomLevel) {
                 DrawUtil.drawLabel("" + oilAmount + "L", pixel.getX() + 3 * blockSize, pixel.getY() + 3 * blockSize, DrawUtil.HAlign.Right, DrawUtil.VAlign.Middle, 0, 180, 0x00FFFFFF, 255, fontScale, false, rotation);
             }
         }

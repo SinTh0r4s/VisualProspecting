@@ -1,22 +1,22 @@
 package com.sinthoras.visualprospecting;
 
-import com.sinthoras.visualprospecting.hooks.VPHooksShared;
+import com.sinthoras.visualprospecting.hooks.HooksShared;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 
 
-@Mod(modid = VPTags.MODID, version = VPTags.VERSION, name = VPTags.VISUALPROSPECTING)
+@Mod(modid = Tags.MODID, version = Tags.VERSION, name = Tags.VISUALPROSPECTING)
 public class VPMod {
 
-    @SidedProxy(clientSide=VPTags.COM_SINTHORAS_VISUALPROSPECTING + ".hooks.VPHooksClient", serverSide=VPTags.COM_SINTHORAS_VISUALPROSPECTING + ".hooks.VPHooksShared")
-    public static VPHooksShared proxy;
+    @SidedProxy(clientSide= Tags.COM_SINTHORAS_VISUALPROSPECTING + ".hooks.HooksClient", serverSide= Tags.COM_SINTHORAS_VISUALPROSPECTING + ".hooks.HooksShared")
+    public static HooksShared proxy;
 
     @Mod.EventHandler
     // preInit "Run before anything else. Read your config, create blocks, items,
     // etc, and register them with the GameRegistry."
     public void fmlLifeCycleEvent(FMLPreInitializationEvent event) {
-        VP.debug("Registered sided proxy for: " + (VPUtils.isLogicalClient() ? "Client" : "Dedicated server"));
+        VP.debug("Registered sided proxy for: " + (Utils.isLogicalClient() ? "Client" : "Dedicated server"));
         VP.debug("preInit()"+event.getModMetadata().name);
         proxy.fmlLifeCycleEvent(event);
     }

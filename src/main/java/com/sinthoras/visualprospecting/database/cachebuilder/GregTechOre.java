@@ -5,16 +5,16 @@ import io.xol.enklume.nbt.NBTInt;
 import io.xol.enklume.nbt.NBTShort;
 import io.xol.enklume.nbt.NBTString;
 
-import static com.sinthoras.visualprospecting.VPUtils.isSmallOreId;
-import static com.sinthoras.visualprospecting.VPUtils.oreIdToMaterialId;
+import static com.sinthoras.visualprospecting.Utils.isSmallOreId;
+import static com.sinthoras.visualprospecting.Utils.oreIdToMaterialId;
 
-public class VPGregTechOre {
+public class GregTechOre {
 
     public final boolean isValidGTOre;
     public final short metaData;
     public final int blockY;
 
-    public VPGregTechOre(NBTCompound tileEntity) {
+    public GregTechOre(NBTCompound tileEntity) {
         final NBTString tagId = (NBTString) tileEntity.getTag("id");
         final NBTShort tagMeta = (NBTShort) tileEntity.getTag("m");
         final NBTInt tagBlockY = (NBTInt) tileEntity.getTag("y");
