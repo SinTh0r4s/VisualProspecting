@@ -5,8 +5,6 @@ This mod is intended for player convenience, but may also be used as API, since 
 
 VisualProspecting tracks all ores that a player interacted with, by right or by left click. It also integrates prospecting data from GTs _Advanced Seismic Prospector_.
 
-Further, it adds a craftable _Prospectors Log_ that allows sharing prospected locations between players.
-
 This mod is tailored to _GregTech: New Horizons 2_, but feel free to use it however you like. Even though this mod is build against the custom GT5U from GT:NH, it should still work fine with other GT5U versions.
 
 
