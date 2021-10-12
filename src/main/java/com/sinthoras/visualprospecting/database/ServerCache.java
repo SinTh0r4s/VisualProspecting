@@ -52,9 +52,12 @@ public class ServerCache extends WorldCache {
         return prospectOreBlocks(dimensionId, blockX - blockRadius, blockZ - blockRadius, blockX + blockRadius, blockZ + blockRadius);
     }
 
-    public List<OilFieldPosition> prospectOilBlockRadius(World world, int blockX, int blockZ, int oilFieldRadius) {
-        final int minChunkX = Utils.mapToCornerOilFieldChunkCoord(Utils.coordBlockToChunk(blockX)) - VP.oilFieldSizeChunkX * oilFieldRadius;
-        final int minChunkZ = Utils.mapToCornerOilFieldChunkCoord(Utils.coordBlockToChunk(blockZ)) - VP.oilFieldSizeChunkZ * oilFieldRadius;
+    public List<OilFieldPosition> prospectOilBlockRadius(World world, int blockX, int blockZ, int oilFieldBlockRadius) {
+        final int minChunkX = Utils.mapToCornerOilFieldChunkCoord(Utils.coordBlockToChunk(blockX - oilFieldBlockRadius));
+        final int minChunkZ = Utils.mapToCornerOilFieldChunkCoord(Utils.coordBlockToChunk(blockZ - oilFieldBlockRadius));
+
+        // Equals to ceil(oilFieldBlockRadius / (VP.oilFieldSizeChunkX * VP.chunkWidth))
+        final int oilFieldRadius = (oilFieldBlockRadius + VP.oilFieldSizeChunkX * VP.chunkWidth - 1) / (VP.oilFieldSizeChunkX * VP.chunkWidth);
 
         List<OilFieldPosition> foundOilFields = new ArrayList<>((2 * oilFieldRadius + 1) * (2 * oilFieldRadius + 1));
 

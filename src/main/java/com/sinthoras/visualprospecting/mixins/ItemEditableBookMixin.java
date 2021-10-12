@@ -33,7 +33,7 @@ public class ItemEditableBookMixin {
                 final int blockZ = compound.getInteger(Tags.PROSPECTION_BLOCK_Z);
                 final int blockRadius = compound.getInteger(Tags.PROSPECTION_ORE_RADIUS);
                 final List<OreVeinPosition> foundOreVeins = VP.serverCache.prospectOreBlockRadius(dimensionId, blockX, blockZ, blockRadius);
-                final List<OilFieldPosition> foundOilFields = VP.serverCache.prospectOilBlockRadius(world, blockX, blockZ, VP.oilChunkProspectingRange);
+                final List<OilFieldPosition> foundOilFields = VP.serverCache.prospectOilBlockRadius(world, blockX, blockZ, VP.oilChunkProspectingBlockRadius);
                 if(Utils.isLogicalClient()) {
                     VP.clientCache.putOreVeins(dimensionId, foundOreVeins);
                     VP.clientCache.putOilFields(dimensionId, foundOilFields);

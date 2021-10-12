@@ -29,10 +29,10 @@ public class VP {
     public static final int oreVeinSizeChunkZ = 3;
     public static final int oilFieldSizeChunkX = 8;
     public static final int oilFieldSizeChunkZ = 8;
-    public static final int oilChunkProspectingRange = 1;
     public static final int chunkWidth = 16;
     public static final int chunkHeight = 16;
     public static final int chunkDepth = 16;
+    public static final int oilChunkProspectingBlockRadius = oilFieldSizeChunkX * chunkWidth;
 
 
     public static void debug(String message) {

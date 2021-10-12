@@ -88,10 +88,10 @@ public abstract class GT_MetaTileEntity_AdvSeismicProspectorMixin extends GT_Met
                 compound.setInteger(Tags.PROSPECTION_BLOCK_Z, getBaseMetaTileEntity().getZCoord());
                 compound.setInteger(Tags.PROSPECTION_ORE_RADIUS, radius);
 
-                final List<OilFieldPosition> oilFieldPositions = VP.serverCache.prospectOilBlockRadius(aPlayer.worldObj, getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord(), VP.oilChunkProspectingRange);
+                final List<OilFieldPosition> oilFieldPositions = VP.serverCache.prospectOilBlockRadius(aPlayer.worldObj, getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord(), VP.oilChunkProspectingBlockRadius);
                 String[] oilStrings = new String[9];
-                final int minOilFieldX = Utils.mapToCornerOilFieldChunkCoord(Utils.coordBlockToChunk(getBaseMetaTileEntity().getXCoord())) - VP.oilFieldSizeChunkX * VP.oilChunkProspectingRange;
-                final int minOilFieldZ = Utils.mapToCornerOilFieldChunkCoord(Utils.coordBlockToChunk(getBaseMetaTileEntity().getZCoord())) - VP.oilFieldSizeChunkZ * VP.oilChunkProspectingRange;
+                final int minOilFieldX = Utils.mapToCornerOilFieldChunkCoord(Utils.coordBlockToChunk(getBaseMetaTileEntity().getXCoord() - VP.oilChunkProspectingBlockRadius));
+                final int minOilFieldZ = Utils.mapToCornerOilFieldChunkCoord(Utils.coordBlockToChunk(getBaseMetaTileEntity().getZCoord() - VP.oilChunkProspectingBlockRadius));
                 for(OilFieldPosition oilFieldPosition : oilFieldPositions) {
                     final int offsetOilfieldX = (Utils.mapToCornerOilFieldChunkCoord(oilFieldPosition.chunkX) - minOilFieldX) >> 3;
                     final int offsetOilfieldZ = (Utils.mapToCornerOilFieldChunkCoord(oilFieldPosition.chunkZ) - minOilFieldZ) >> 3;
