@@ -91,6 +91,58 @@ public class Utils {
                 return "Raw Oil";
             case "liquid_heavy_oil":
                 return "Heavy Oil";
+            case "oil":
+                return "Oil";
+            case "helium-3":
+                return "Helium-3";
+            case "saltwater":
+                return "Saltwater";
+            case "molten.iron":
+                return "Molten Iron";
+            case "molten.lead":
+                return "Molten Lead";
+            case "sulfuricacid":
+                return "Sulfuric Acid";
+            case "carbondioxide":
+                return "Carbondioxide";
+            case "chlorobenzene":
+                return "Chlorobenzene";
+            case "liquid_extra_heavy_oil":
+                return "Extra Heavy Oil";
+            case "ic2distilledwater":
+                return "Distilled Water";
+            case "oxygen":
+                return "Oxygen";
+            case "liquidair":
+                return "Liquid Air";
+            case "methane":
+                return "Methane";
+            case "ethane":
+                return "Ethane";
+            case "liquid_hydricsulfur":
+                return "Liquid Hydric Sulfur";
+            case "carbonmonoxide":
+                return "Carbonmonoxide";
+            case "nitrogen":
+                return "Nitrogen";
+            case "ethylene":
+                return "Ethylene";
+            case "deuterium":
+                return "Deuterium";
+            case "fluorine":
+                return "Fluorine";
+            case "hydrofluoricacid_gt5u":
+                return "Hydrofluoric Acid";
+            case "molten.copper":
+                return "Molten Copper";
+            case "unknowwater":
+                return "Unknowwater";
+            case "molten.tin":
+                return "Molten Tin";
+            case "hydrogen":
+                return "Hydrogen";
+            case "lava":
+                return "Lava";
             default:
                 return fluid.getLocalizedName(null);
         }
