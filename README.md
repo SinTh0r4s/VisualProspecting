@@ -1,5 +1,5 @@
 # GregTech5U Add-On: VisualProspecting
-### by SinTh0r4s
+### For Minecraft 1.7.10
 
 This mod is intended for player convenience, but may also be used as API, since it provides the location of all GT ore veins in a cache. VisualProspecting tracks all GT Ore Veins a player has found and visualizes them in JourneyMap (optional, if installed).
 
@@ -7,6 +7,19 @@ VisualProspecting tracks all ores that a player interacted with, by right or by 
 
 This mod is tailored to _GregTech: New Horizons 2_, but feel free to use it however you like. Even though this mod is build against the custom GT5U from GT:NH, it should still work fine with other GT5U versions.
 
+
+### Dependencies
+
+#### Required Mods:
+ - Minecraft Forge
+    - Injected class: [_ItemEditableBook_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/ItemEditableBookMixin.java)
+ - GregTech5-Unofficial
+    - Injected classes: [_GT_Block_Ores_Abstract_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/GT_Block_Ores_AbstractMixin.java), [_GT_MetaTileEntity_AdvSeismicProspector_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/GT_MetaTileEntity_AdvSeismicProspectorMixin.java), [_GT_MetaTileEntity_Scanner_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/GT_MetaTileEntity_ScannerMixin.java), [_GT_Worldgenerator.WorldGenContainer_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/WorldGenContainerMixin.java)
+ - SpongeMixin
+#### Optional Mods:
+ - JourneyMap: Visualizes prospected ore veins and oil fields on custom overlay, that can be toggled on and off.
+    - Injected class: [_Fullscreen_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/FullscreenMixin.java)
+ - NEI: Ores on JourneyMap are highlighted according to NEI search if active (double click on search field).
 
 ### Add Visual Prospecting as API
 
