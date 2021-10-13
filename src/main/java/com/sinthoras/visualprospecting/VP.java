@@ -2,7 +2,6 @@ package com.sinthoras.visualprospecting;
 
 import com.sinthoras.visualprospecting.database.ClientCache;
 import com.sinthoras.visualprospecting.database.ServerCache;
-import net.minecraftforge.fluids.Fluid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,11 +13,6 @@ public class VP {
 
     public static ServerCache serverCache = new ServerCache();
     public static ClientCache clientCache = new ClientCache();
-
-    public static Fluid naturalGas;
-    public static Fluid lightOil;
-    public static Fluid mediumOil;
-    public static Fluid heavyOil;
 
     private static Logger LOG = LogManager.getLogger(Tags.MODID);
     public static final int gregTechSmallOreMinimumMeta = 16000;
