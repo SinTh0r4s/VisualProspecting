@@ -7,10 +7,10 @@ VisualProspecting tracks all ores that a player interacted with, by right or by 
 
 This mod is tailored to _GregTech: New Horizons 2_, but feel free to use it however you like. Even though this mod is build against the custom GT5U from GT:NH, it should still work fine with other GT5U versions.
 
-![Oil fields in JourneyMap overlay](https://i.ibb.co/crPhR1X/2021-10-12-15-45-25.png)
+![Oil fields in JourneyMap overlay](https://i.ibb.co/crPhR1X/2021-10-12-15-45-25.png) \
 _Oil fields in JourneyMap overlay._
 
-![GregTech ore veins in JourneyMap overlay](https://i.ibb.co/cg7gH0P/2021-10-13-16-32-06.png)
+![GregTech ore veins in JourneyMap overlay](https://i.ibb.co/cg7gH0P/2021-10-13-16-32-06.png) \
 _GregTech ore veins in JourneyMap overlay._
 
 ### Dependencies
