@@ -27,12 +27,12 @@ public class VP {
     public static final int chunksPerRegionFileZ = 32;
     public static final int oreVeinSizeChunkX = 3;
     public static final int oreVeinSizeChunkZ = 3;
-    public static final int oilFieldSizeChunkX = 8;
-    public static final int oilFieldSizeChunkZ = 8;
+    public static final int undergroundFluidSizeChunkX = 8;
+    public static final int undergroundFluidSizeChunkZ = 8;
     public static final int chunkWidth = 16;
     public static final int chunkHeight = 16;
     public static final int chunkDepth = 16;
-    public static final int oilChunkProspectingBlockRadius = oilFieldSizeChunkX * chunkWidth;
+    public static final int undergroundFluidChunkProspectingBlockRadius = undergroundFluidSizeChunkX * chunkWidth;
 
 
     public static void debug(String message) {

@@ -26,7 +26,7 @@ public class FullscreenMixin {
 
     private MapState mapState = new MapState();
     private ThemeButton buttonOreVeins;
-    private ThemeButton buttonOilFields;
+    private ThemeButton buttonUndergroundFluids;
 
     @Shadow(remap = false)
     private ThemeToolbar mapTypeToolbar;
@@ -57,9 +57,9 @@ public class FullscreenMixin {
     private void onBeforeDrawWaypoints(CallbackInfo callbackInfo, boolean refreshReady, StatTimer timer, int xOffset, int yOffset, float drawScale) {
         final GridRenderer gridRenderer = getJourneyMapGridRenderer();
         assert (gridRenderer != null);
-        if(mapState.drawOilFields) {
-            gridRenderer.draw(mapState.getOilChunkDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
-            gridRenderer.draw(mapState.getOilFieldDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
+        if(mapState.drawUndergroundFluids) {
+            gridRenderer.draw(mapState.getUndergroundFluidChunksDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
+            gridRenderer.draw(mapState.getUndergroundFluidsDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
         }
         if(mapState.drawOreVeins) {
             gridRenderer.draw(mapState.getOreVeinDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
@@ -79,14 +79,14 @@ public class FullscreenMixin {
             return true;
         });
 
-        buttonOilFields = new ThemeToggle(theme, "visualprospecting.button.oilfield", "oilfields");
-        buttonOilFields.setToggled(true, false);
-        buttonOilFields.addToggleListener((button, toggled) -> {
-            mapState.drawOilFields = toggled;
+        buttonUndergroundFluids = new ThemeToggle(theme, "visualprospecting.button.undergroundfluid", "undergroundfluid");
+        buttonUndergroundFluids.setToggled(true, false);
+        buttonUndergroundFluids.addToggleListener((button, toggled) -> {
+            mapState.drawUndergroundFluids = toggled;
             return true;
         });
 
-        mapTypeToolbar = new ThemeToolbar(theme, buttonOilFields, buttonOreVeins, buttonCaves, buttonNight, buttonDay);
+        mapTypeToolbar = new ThemeToolbar(theme, buttonUndergroundFluids, buttonOreVeins, buttonCaves, buttonNight, buttonDay);
     }
 
 

@@ -61,36 +61,36 @@ public class ClientCache extends WorldCache {
         }
     }
 
-    public void putOilFields(int dimensionId, List<OilFieldPosition> oilFields) {
-        int newOilFields = 0;
-        int updatedOilFields = 0;
-        for(OilFieldPosition oilFieldPosition : oilFields) {
-            DimensionCache.UpdateResult updateResult = putOilField(dimensionId, oilFieldPosition.chunkX, oilFieldPosition.chunkZ, oilFieldPosition.oilField);
+    public void putUndergroundFluids(int dimensionId, List<UndergroundFluidPosition> undergroundFluids) {
+        int newUndergroundFluids = 0;
+        int updatedUndergroundFluids = 0;
+        for(UndergroundFluidPosition undergroundFluidPosition : undergroundFluids) {
+            DimensionCache.UpdateResult updateResult = putUndergroundFluids(dimensionId, undergroundFluidPosition.chunkX, undergroundFluidPosition.chunkZ, undergroundFluidPosition.undergroundFluid);
             if(updateResult == DimensionCache.UpdateResult.New) {
-                newOilFields++;
+                newUndergroundFluids++;
             }
             if(updateResult == DimensionCache.UpdateResult.Updated) {
-                updatedOilFields++;
+                updatedUndergroundFluids++;
             }
         }
-        if(newOilFields > 0 && updatedOilFields > 0) {
-            final IChatComponent oreVeinNotification = new ChatComponentTranslation("visualprospecting.oilfields.prospected.newandupdated", newOilFields, updatedOilFields);
-            oreVeinNotification.getChatStyle().setItalic(true);
-            oreVeinNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
-            Minecraft.getMinecraft().thePlayer.addChatMessage(oreVeinNotification);
+        if(newUndergroundFluids > 0 && updatedUndergroundFluids > 0) {
+            final IChatComponent undergroundFluidsNotification = new ChatComponentTranslation("visualprospecting.undergroundfluid.prospected.newandupdated", newUndergroundFluids, updatedUndergroundFluids);
+            undergroundFluidsNotification.getChatStyle().setItalic(true);
+            undergroundFluidsNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
+            Minecraft.getMinecraft().thePlayer.addChatMessage(undergroundFluidsNotification);
         }
         else {
-            if(newOilFields > 0) {
-                final IChatComponent oreVeinNotification = new ChatComponentTranslation("visualprospecting.oilfields.prospected.onlynew", newOilFields);
-                oreVeinNotification.getChatStyle().setItalic(true);
-                oreVeinNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
-                Minecraft.getMinecraft().thePlayer.addChatMessage(oreVeinNotification);
+            if(newUndergroundFluids > 0) {
+                final IChatComponent undergroundFluidsNotification = new ChatComponentTranslation("visualprospecting.undergroundfluid.prospected.onlynew", newUndergroundFluids);
+                undergroundFluidsNotification.getChatStyle().setItalic(true);
+                undergroundFluidsNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
+                Minecraft.getMinecraft().thePlayer.addChatMessage(undergroundFluidsNotification);
             }
-            if(updatedOilFields > 0) {
-                final IChatComponent oreVeinNotification = new ChatComponentTranslation("visualprospecting.oilfields.prospected.onlyupdated", updatedOilFields);
-                oreVeinNotification.getChatStyle().setItalic(true);
-                oreVeinNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
-                Minecraft.getMinecraft().thePlayer.addChatMessage(oreVeinNotification);
+            if(updatedUndergroundFluids > 0) {
+                final IChatComponent undergroundFluidsNotification = new ChatComponentTranslation("visualprospecting.undergroundfluid.prospected.onlyupdated", updatedUndergroundFluids);
+                undergroundFluidsNotification.getChatStyle().setItalic(true);
+                undergroundFluidsNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
+                Minecraft.getMinecraft().thePlayer.addChatMessage(undergroundFluidsNotification);
             }
         }
     }

@@ -20,11 +20,11 @@ public class DimensionCache {
     }
 
     private final HashMap<Long, VeinType> oreChunks = new HashMap<>();
-    private final HashMap<Long, OilField> oilFields = new HashMap<>();
+    private final HashMap<Long, UndergroundFluid> undergroundFluids = new HashMap<>();
     private final HashSet<Long> changedOrNewOreChunks = new HashSet<>();
-    private final HashSet<Long> changedOrNewOilFields = new HashSet<>();
+    private final HashSet<Long> changedOrNewUndergroundFluids = new HashSet<>();
     private boolean oreChunksNeedsSaving = false;
-    private boolean oilFieldsNeedsSaving = false;
+    private boolean undergroundFluidsNeedsSaving = false;
     public final int dimensionId;
 
     public DimensionCache(int dimensionId) {
@@ -46,28 +46,28 @@ public class DimensionCache {
         return null;
     }
 
-    public ByteBuffer saveOilFields() {
-        if(oilFieldsNeedsSaving) {
-            final ByteBuffer byteBuffer = ByteBuffer.allocate(changedOrNewOilFields.size() * (Long.BYTES + Integer.BYTES * (1 + VP.oilFieldSizeChunkX * VP.oilFieldSizeChunkZ)));
-            for (long key : changedOrNewOilFields) {
+    public ByteBuffer saveUndergroundFluids() {
+        if(undergroundFluidsNeedsSaving) {
+            final ByteBuffer byteBuffer = ByteBuffer.allocate(changedOrNewUndergroundFluids.size() * (Long.BYTES + Integer.BYTES * (1 + VP.undergroundFluidSizeChunkX * VP.undergroundFluidSizeChunkZ)));
+            for (long key : changedOrNewUndergroundFluids) {
                 byteBuffer.putLong(key);
-                final OilField oilField = oilFields.get(key);
-                byteBuffer.putInt(oilField.oil.getID());
-                for(int offsetChunkX = 0; offsetChunkX < VP.oilFieldSizeChunkX; offsetChunkX++) {
-                    for (int offsetChunkZ = 0; offsetChunkZ < VP.oilFieldSizeChunkZ; offsetChunkZ++) {
-                        byteBuffer.putInt(oilField.chunks[offsetChunkX][offsetChunkZ]);
+                final UndergroundFluid undergroundFluid = undergroundFluids.get(key);
+                byteBuffer.putInt(undergroundFluid.fluid.getID());
+                for(int offsetChunkX = 0; offsetChunkX < VP.undergroundFluidSizeChunkX; offsetChunkX++) {
+                    for (int offsetChunkZ = 0; offsetChunkZ < VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
+                        byteBuffer.putInt(undergroundFluid.chunks[offsetChunkX][offsetChunkZ]);
                     }
                 }
             }
-            oilFieldsNeedsSaving = false;
-            changedOrNewOilFields.clear();
+            undergroundFluidsNeedsSaving = false;
+            changedOrNewUndergroundFluids.clear();
             byteBuffer.flip();
             return byteBuffer;
         }
         return null;
     }
 
-    public void loadCache(ByteBuffer oreChunksBuffer, ByteBuffer oilFieldsBuffer) {
+    public void loadCache(ByteBuffer oreChunksBuffer, ByteBuffer undergroundFluidsBuffer) {
         if(oreChunksBuffer != null) {
             while (oreChunksBuffer.remaining() >= Long.BYTES + Short.BYTES) {
                 final long key = oreChunksBuffer.getLong();
@@ -75,17 +75,17 @@ public class DimensionCache {
                 oreChunks.put(key, veinType);
             }
         }
-        if(oilFieldsBuffer != null) {
-            while (oilFieldsBuffer.remaining() >= Long.BYTES + Integer.BYTES * (1 + VP.oilFieldSizeChunkX * VP.oilFieldSizeChunkZ)) {
-                final long key = oilFieldsBuffer.getLong();
-                final Fluid oil = FluidRegistry.getFluid(oilFieldsBuffer.getInt());
-                final int[][] chunks = new int[VP.oilFieldSizeChunkX][VP.oilFieldSizeChunkZ];
-                for(int offsetChunkX = 0; offsetChunkX < VP.oilFieldSizeChunkX; offsetChunkX++) {
-                    for (int offsetChunkZ = 0; offsetChunkZ < VP.oilFieldSizeChunkZ; offsetChunkZ++) {
-                        chunks[offsetChunkX][offsetChunkZ] = oilFieldsBuffer.getInt();
+        if(undergroundFluidsBuffer != null) {
+            while (undergroundFluidsBuffer.remaining() >= Long.BYTES + Integer.BYTES * (1 + VP.undergroundFluidSizeChunkX * VP.undergroundFluidSizeChunkZ)) {
+                final long key = undergroundFluidsBuffer.getLong();
+                final Fluid fluid = FluidRegistry.getFluid(undergroundFluidsBuffer.getInt());
+                final int[][] chunks = new int[VP.undergroundFluidSizeChunkX][VP.undergroundFluidSizeChunkZ];
+                for(int offsetChunkX = 0; offsetChunkX < VP.undergroundFluidSizeChunkX; offsetChunkX++) {
+                    for (int offsetChunkZ = 0; offsetChunkZ < VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
+                        chunks[offsetChunkX][offsetChunkZ] = undergroundFluidsBuffer.getInt();
                     }
                 }
-                oilFields.put(key, new OilField(oil, chunks));
+                undergroundFluids.put(key, new UndergroundFluid(fluid, chunks));
             }
         }
     }
@@ -110,29 +110,29 @@ public class DimensionCache {
         return oreChunks.getOrDefault(key, VeinType.NO_VEIN);
     }
 
-    private long getOilFieldKey(int chunkX, int chunkZ) {
-        return Utils.chunkCoordsToKey(Utils.mapToCornerOilFieldChunkCoord(chunkX), Utils.mapToCornerOilFieldChunkCoord(chunkZ));
+    private long getUndergroundFluidKey(int chunkX, int chunkZ) {
+        return Utils.chunkCoordsToKey(Utils.mapToCornerUndergroundFluidChunkCoord(chunkX), Utils.mapToCornerUndergroundFluidChunkCoord(chunkZ));
     }
 
-    public UpdateResult putOilField(int chunkX, int chunkZ, final OilField oilField) {
-        final long key = getOilFieldKey(chunkX, chunkZ);
-        if(oilFields.containsKey(key) == false) {
-            changedOrNewOilFields.add(key);
-            oilFields.put(key, oilField);
-            oilFieldsNeedsSaving = true;
+    public UpdateResult putUndergroundFluid(int chunkX, int chunkZ, final UndergroundFluid undergroundFluid) {
+        final long key = getUndergroundFluidKey(chunkX, chunkZ);
+        if(undergroundFluids.containsKey(key) == false) {
+            changedOrNewUndergroundFluids.add(key);
+            undergroundFluids.put(key, undergroundFluid);
+            undergroundFluidsNeedsSaving = true;
             return UpdateResult.New;
         }
-        else if(oilFields.get(key).equals(oilField) == false) {
-            changedOrNewOilFields.add(key);
-            oilFields.put(key, oilField);
-            oilFieldsNeedsSaving = true;
+        else if(undergroundFluids.get(key).equals(undergroundFluid) == false) {
+            changedOrNewUndergroundFluids.add(key);
+            undergroundFluids.put(key, undergroundFluid);
+            undergroundFluidsNeedsSaving = true;
             return UpdateResult.Updated;
         }
         return UpdateResult.AlreadyKnown;
     }
 
-    public OilField getOilField(int chunkX, int chunkZ) {
-        final long key = getOilFieldKey(chunkX, chunkZ);
-        return oilFields.getOrDefault(key, OilField.NOT_PROSPECTED);
+    public UndergroundFluid getUndergroundFluid(int chunkX, int chunkZ) {
+        final long key = getUndergroundFluidKey(chunkX, chunkZ);
+        return undergroundFluids.getOrDefault(key, UndergroundFluid.NOT_PROSPECTED);
     }
 }

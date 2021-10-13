@@ -2,7 +2,7 @@ package com.sinthoras.visualprospecting.gui.journeymap;
 
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Utils;
-import com.sinthoras.visualprospecting.database.OilField;
+import com.sinthoras.visualprospecting.database.UndergroundFluid;
 import com.sinthoras.visualprospecting.database.veintypes.VeinType;
 import journeymap.client.render.map.GridRenderer;
 import net.minecraft.client.Minecraft;
@@ -16,15 +16,15 @@ public class MapState {
     private int oldMaxOreChunkX = 0;
     private int oldMinOreChunkZ = 0;
     private int oldMaxOreChunkZ = 0;
-    private final List<OilChunkDrawStep> oilChunkDrawSteps = new ArrayList<>();
-    private final List<OilFieldDrawStep> oilFieldDrawSteps = new ArrayList<>();
-    private int oldMinOilFieldX = 0;
-    private int oldMaxOilFieldX = 0;
-    private int oldMinOilFieldZ = 0;
-    private int oldMaxOilFieldZ = 0;
+    private final List<UndergroundFluidChunkDrawStep> undergroundFluidChunksDrawSteps = new ArrayList<>();
+    private final List<UndergroundFluidDrawStep> undergroundFluidsDrawSteps = new ArrayList<>();
+    private int oldMinUndergroundFluidX = 0;
+    private int oldMaxUndergroundFluidX = 0;
+    private int oldMinUndergroundFluidZ = 0;
+    private int oldMaxUndergroundFluidZ = 0;
 
     public boolean drawOreVeins = true;
-    public boolean drawOilFields = true;
+    public boolean drawUndergroundFluids = true;
 
     public List<OreVeinDrawStep> getOreVeinDrawSteps(final GridRenderer gridRenderer) {
         final Minecraft minecraft = Minecraft.getMinecraft();
@@ -55,57 +55,57 @@ public class MapState {
         return oreChunkDrawSteps;
     }
 
-    private void updateOilRelatedDrawSteps(final GridRenderer gridRenderer) {
+    private void updateUndergroundFluidRelatedDrawSteps(final GridRenderer gridRenderer) {
         final Minecraft minecraft = Minecraft.getMinecraft();
         final int centerBlockX = (int) Math.round(gridRenderer.getCenterBlockX());
         final int centerBlockZ = (int) Math.round(gridRenderer.getCenterBlockZ());
         final int radiusBlockX = minecraft.displayWidth >> (1 + gridRenderer.getZoom());
         final int radiusBlockZ = minecraft.displayHeight >> (1 + gridRenderer.getZoom());
-        final int minOilFieldX = Utils.mapToCornerOilFieldChunkCoord(Utils.coordBlockToChunk(centerBlockX - radiusBlockX));
-        final int minOilFieldZ = Utils.mapToCornerOilFieldChunkCoord(Utils.coordBlockToChunk(centerBlockZ - radiusBlockZ));
-        final int maxOilFieldX = Utils.mapToCornerOilFieldChunkCoord(Utils.coordBlockToChunk(centerBlockX + radiusBlockX));
-        final int maxOilFieldZ = Utils.mapToCornerOilFieldChunkCoord(Utils.coordBlockToChunk(centerBlockZ + radiusBlockZ));
-        if (minOilFieldX != oldMinOilFieldX || maxOilFieldX != oldMaxOilFieldX || minOilFieldZ != oldMinOilFieldZ || maxOilFieldZ != oldMaxOilFieldZ) {
-            oldMinOilFieldX = minOilFieldX;
-            oldMaxOilFieldX = maxOilFieldX;
-            oldMinOilFieldZ = minOilFieldZ;
-            oldMaxOilFieldZ = maxOilFieldZ;
+        final int minUndergroundFluidX = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(centerBlockX - radiusBlockX));
+        final int minUndergroundFluidZ = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(centerBlockZ - radiusBlockZ));
+        final int maxUndergroundFluidX = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(centerBlockX + radiusBlockX));
+        final int maxUndergroundFluidZ = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(centerBlockZ + radiusBlockZ));
+        if (minUndergroundFluidX != oldMinUndergroundFluidX || maxUndergroundFluidX != oldMaxUndergroundFluidX || minUndergroundFluidZ != oldMinUndergroundFluidZ || maxUndergroundFluidZ != oldMaxUndergroundFluidZ) {
+            oldMinUndergroundFluidX = minUndergroundFluidX;
+            oldMaxUndergroundFluidX = maxUndergroundFluidX;
+            oldMinUndergroundFluidZ = minUndergroundFluidZ;
+            oldMaxUndergroundFluidZ = maxUndergroundFluidZ;
 
-            oilChunkDrawSteps.clear();
-            for (int chunkX = minOilFieldX; chunkX <= maxOilFieldX; chunkX += VP.oilFieldSizeChunkX) {
-                for (int chunkZ = minOilFieldZ; chunkZ <= maxOilFieldZ; chunkZ += VP.oilFieldSizeChunkZ) {
-                    final OilField oilField = VP.clientCache.getOilField(minecraft.thePlayer.dimension, chunkX, chunkZ);
-                    if (oilField != OilField.NOT_PROSPECTED) {
-                        final int minAmountInField = oilField.getMinProduction();
-                        final int maxAmountInField = oilField.getMaxProduction();
-                        for (int offsetChunkX = 0; offsetChunkX < VP.oilFieldSizeChunkX; offsetChunkX++) {
-                            for (int offsetChunkZ = 0; offsetChunkZ < VP.oilFieldSizeChunkZ; offsetChunkZ++) {
-                                oilChunkDrawSteps.add(new OilChunkDrawStep(chunkX + offsetChunkX, chunkZ + offsetChunkZ, oilField.oil, oilField.chunks[offsetChunkX][offsetChunkZ], minAmountInField, maxAmountInField));
+            undergroundFluidChunksDrawSteps.clear();
+            for (int chunkX = minUndergroundFluidX; chunkX <= maxUndergroundFluidX; chunkX += VP.undergroundFluidSizeChunkX) {
+                for (int chunkZ = minUndergroundFluidZ; chunkZ <= maxUndergroundFluidZ; chunkZ += VP.undergroundFluidSizeChunkZ) {
+                    final UndergroundFluid undergroundFluid = VP.clientCache.getUndergroundFluid(minecraft.thePlayer.dimension, chunkX, chunkZ);
+                    if (undergroundFluid != UndergroundFluid.NOT_PROSPECTED) {
+                        final int minAmountInField = undergroundFluid.getMinProduction();
+                        final int maxAmountInField = undergroundFluid.getMaxProduction();
+                        for (int offsetChunkX = 0; offsetChunkX < VP.undergroundFluidSizeChunkX; offsetChunkX++) {
+                            for (int offsetChunkZ = 0; offsetChunkZ < VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
+                                undergroundFluidChunksDrawSteps.add(new UndergroundFluidChunkDrawStep(chunkX + offsetChunkX, chunkZ + offsetChunkZ, undergroundFluid.fluid, undergroundFluid.chunks[offsetChunkX][offsetChunkZ], minAmountInField, maxAmountInField));
                             }
                         }
                     }
                 }
             }
 
-            oilFieldDrawSteps.clear();
-            for (int chunkX = minOilFieldX; chunkX <= maxOilFieldX; chunkX += VP.oilFieldSizeChunkX) {
-                for (int chunkZ = minOilFieldZ; chunkZ <= maxOilFieldZ; chunkZ += VP.oilFieldSizeChunkZ) {
-                    final OilField oilField = VP.clientCache.getOilField(minecraft.thePlayer.dimension, chunkX, chunkZ);
-                    if (oilField != OilField.NOT_PROSPECTED) {
-                        oilFieldDrawSteps.add(new OilFieldDrawStep(chunkX, chunkZ, oilField.oil, oilField.getMinProduction(), oilField.getMaxProduction()));
+            undergroundFluidsDrawSteps.clear();
+            for (int chunkX = minUndergroundFluidX; chunkX <= maxUndergroundFluidX; chunkX += VP.undergroundFluidSizeChunkX) {
+                for (int chunkZ = minUndergroundFluidZ; chunkZ <= maxUndergroundFluidZ; chunkZ += VP.undergroundFluidSizeChunkZ) {
+                    final UndergroundFluid undergroundFluid = VP.clientCache.getUndergroundFluid(minecraft.thePlayer.dimension, chunkX, chunkZ);
+                    if (undergroundFluid != UndergroundFluid.NOT_PROSPECTED) {
+                        undergroundFluidsDrawSteps.add(new UndergroundFluidDrawStep(chunkX, chunkZ, undergroundFluid.fluid, undergroundFluid.getMinProduction(), undergroundFluid.getMaxProduction()));
                     }
                 }
             }
         }
     }
 
-    public List<OilChunkDrawStep> getOilChunkDrawSteps(final GridRenderer gridRenderer) {
-        updateOilRelatedDrawSteps(gridRenderer);
-        return oilChunkDrawSteps;
+    public List<UndergroundFluidChunkDrawStep> getUndergroundFluidChunksDrawSteps(final GridRenderer gridRenderer) {
+        updateUndergroundFluidRelatedDrawSteps(gridRenderer);
+        return undergroundFluidChunksDrawSteps;
     }
 
-    public List<OilFieldDrawStep> getOilFieldDrawSteps(final GridRenderer gridRenderer) {
-        updateOilRelatedDrawSteps(gridRenderer);
-        return oilFieldDrawSteps;
+    public List<UndergroundFluidDrawStep> getUndergroundFluidsDrawSteps(final GridRenderer gridRenderer) {
+        updateUndergroundFluidRelatedDrawSteps(gridRenderer);
+        return undergroundFluidsDrawSteps;
     }
 }

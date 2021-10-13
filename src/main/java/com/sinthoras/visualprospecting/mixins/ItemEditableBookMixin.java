@@ -3,7 +3,7 @@ package com.sinthoras.visualprospecting.mixins;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.Utils;
-import com.sinthoras.visualprospecting.database.OilFieldPosition;
+import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.network.ProspectingNotification;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,10 +33,10 @@ public class ItemEditableBookMixin {
                 final int blockZ = compound.getInteger(Tags.PROSPECTION_BLOCK_Z);
                 final int blockRadius = compound.getInteger(Tags.PROSPECTION_ORE_RADIUS);
                 final List<OreVeinPosition> foundOreVeins = VP.serverCache.prospectOreBlockRadius(dimensionId, blockX, blockZ, blockRadius);
-                final List<OilFieldPosition> foundOilFields = VP.serverCache.prospectOilBlockRadius(world, blockX, blockZ, VP.oilChunkProspectingBlockRadius);
+                final List<UndergroundFluidPosition> foundOilFields = VP.serverCache.prospectUndergroundFluidBlockRadius(world, blockX, blockZ, VP.undergroundFluidChunkProspectingBlockRadius);
                 if(Utils.isLogicalClient()) {
                     VP.clientCache.putOreVeins(dimensionId, foundOreVeins);
-                    VP.clientCache.putOilFields(dimensionId, foundOilFields);
+                    VP.clientCache.putUndergroundFluids(dimensionId, foundOilFields);
                 }
                 else {
                     VP.network.sendTo(new ProspectingNotification(dimensionId, foundOreVeins, foundOilFields), (EntityPlayerMP) entityPlayer);

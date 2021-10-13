@@ -2,15 +2,15 @@ package com.sinthoras.visualprospecting.database;
 
 import com.sinthoras.visualprospecting.Utils;
 
-public class OilFieldPosition {
+public class UndergroundFluidPosition {
     public final int chunkX;
     public final int chunkZ;
-    public final OilField oilField;
+    public final UndergroundFluid undergroundFluid;
 
-    public OilFieldPosition(int chunkX, int chunkZ, OilField oilField) {
+    public UndergroundFluidPosition(int chunkX, int chunkZ, UndergroundFluid undergroundFluid) {
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
-        this.oilField = oilField;
+        this.undergroundFluid = undergroundFluid;
     }
 
     public int getBlockX() {

@@ -65,7 +65,7 @@ public class Utils {
         return chunkCoord - nonNegativeModulo(chunkCoord - 1, 3) + 1;
     }
 
-    public static int mapToCornerOilFieldChunkCoord(final int chunkCoord) {
+    public static int mapToCornerUndergroundFluidChunkCoord(final int chunkCoord) {
         return chunkCoord & 0xFFFFFFF8;
     }
 
@@ -81,24 +81,8 @@ public class Utils {
         return VPMod.proxy instanceof HooksClient;
     }
 
-    public static int getMapColorForOil(final Fluid oil) {
-        if(oil == VP.naturalGas) {
-            return 0xfffcfc;
-        }
-        if(oil == VP.lightOil) {
-            return 0xB88428;
-        }
-        if(oil == VP.mediumOil) {
-            return 0x964B00;
-        }
-        if(oil == VP.heavyOil) {
-            return 0x0A0A0A;
-        }
-        return oil.getColor();
-    }
-
-    public static String getEnglishLocalization(Fluid oil) {
-        switch(oil.getUnlocalizedName()) {
+    public static String getEnglishLocalization(Fluid fluid) {
+        switch(fluid.getUnlocalizedName()) {
             case "gas_natural_gas":
                 return "Natural Gas";
             case "liquid_light_oil":
@@ -108,7 +92,7 @@ public class Utils {
             case "liquid_heavy_oil":
                 return "Heavy Oil";
             default:
-                return oil.getLocalizedName(null);
+                return fluid.getLocalizedName(null);
         }
     }
 
@@ -224,7 +208,7 @@ public class Utils {
 
     // Rewrite from GT_UndergroundOil.undergroundOil(Chunk chunk, float readOrDrainCoefficient),
     // because there is no reason to require a chunk to be loaded
-    public static FluidStack prospectOil(World world, int chunkX, int chunkZ) {
+    public static FluidStack prospectFluid(World world, int chunkX, int chunkZ) {
         final ChunkCoordIntPair chunkCoordinate = new ChunkCoordIntPair(chunkX, chunkZ);
         int dimensionId = world.provider.dimensionId;
         GT_UO_Dimension dimension = GT_Mod.gregtechproxy.mUndergroundOil.GetDimension(dimensionId);

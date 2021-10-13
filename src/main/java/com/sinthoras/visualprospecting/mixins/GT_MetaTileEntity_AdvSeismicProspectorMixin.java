@@ -3,7 +3,7 @@ package com.sinthoras.visualprospecting.mixins;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.Utils;
-import com.sinthoras.visualprospecting.database.OilFieldPosition;
+import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
 import gregtech.api.interfaces.ITexture;
@@ -72,17 +72,17 @@ public abstract class GT_MetaTileEntity_AdvSeismicProspectorMixin extends GT_Met
                 compound.setInteger(Tags.PROSPECTION_BLOCK_Z, getBaseMetaTileEntity().getZCoord());
                 compound.setInteger(Tags.PROSPECTION_ORE_RADIUS, radius);
 
-                final List<OilFieldPosition> oilFieldPositions = VP.serverCache.prospectOilBlockRadius(aPlayer.worldObj, getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord(), VP.oilChunkProspectingBlockRadius);
-                String[] oilStrings = new String[9];
-                final int minOilFieldX = Utils.mapToCornerOilFieldChunkCoord(Utils.coordBlockToChunk(getBaseMetaTileEntity().getXCoord() - VP.oilChunkProspectingBlockRadius));
-                final int minOilFieldZ = Utils.mapToCornerOilFieldChunkCoord(Utils.coordBlockToChunk(getBaseMetaTileEntity().getZCoord() - VP.oilChunkProspectingBlockRadius));
-                for(OilFieldPosition oilFieldPosition : oilFieldPositions) {
-                    final int offsetOilfieldX = (Utils.mapToCornerOilFieldChunkCoord(oilFieldPosition.chunkX) - minOilFieldX) >> 3;
-                    final int offsetOilfieldZ = (Utils.mapToCornerOilFieldChunkCoord(oilFieldPosition.chunkZ) - minOilFieldZ) >> 3;
-                    final int oilFieldBookId = offsetOilfieldX + offsetOilfieldZ * 3;
-                    oilStrings[oilFieldBookId] =  "" + oilFieldBookId + ": " + oilFieldPosition.oilField.getMinProduction() + "-" + oilFieldPosition.oilField.getMaxProduction() + " " + Utils.getEnglishLocalization(oilFieldPosition.oilField.oil);
+                final List<UndergroundFluidPosition> undergroundFluidPositions = VP.serverCache.prospectUndergroundFluidBlockRadius(aPlayer.worldObj, getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord(), VP.undergroundFluidChunkProspectingBlockRadius);
+                String[] fluidStrings = new String[9];
+                final int minUndergroundFluidX = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(getBaseMetaTileEntity().getXCoord() - VP.undergroundFluidChunkProspectingBlockRadius));
+                final int minUndergroundFluidZ = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(getBaseMetaTileEntity().getZCoord() - VP.undergroundFluidChunkProspectingBlockRadius));
+                for(UndergroundFluidPosition undergroundFluidPosition : undergroundFluidPositions) {
+                    final int offsetUndergroundFluidX = (Utils.mapToCornerUndergroundFluidChunkCoord(undergroundFluidPosition.chunkX) - minUndergroundFluidX) >> 3;
+                    final int offsetUndergroundFluidZ = (Utils.mapToCornerUndergroundFluidChunkCoord(undergroundFluidPosition.chunkZ) - minUndergroundFluidZ) >> 3;
+                    final int undergroundFluidBookId = offsetUndergroundFluidX + offsetUndergroundFluidZ * 3;
+                    fluidStrings[undergroundFluidBookId] =  "" + undergroundFluidBookId + ": " + undergroundFluidPosition.undergroundFluid.getMinProduction() + "-" + undergroundFluidPosition.undergroundFluid.getMaxProduction() + " " + Utils.getEnglishLocalization(undergroundFluidPosition.undergroundFluid.fluid);
                 }
-                compound.setString(Tags.PROSPECTION_OILS, String.join("|", oilStrings));
+                compound.setString(Tags.PROSPECTION_FLUIDS, String.join("|", fluidStrings));
 
                 setNBT(aStack, compound);
             }

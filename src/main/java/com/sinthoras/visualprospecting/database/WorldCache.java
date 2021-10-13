@@ -15,7 +15,7 @@ public abstract class WorldCache {
     private HashMap<Integer, DimensionCache> dimensions = new HashMap<>();
     private boolean needsSaving = false;
     private File oreVeinCacheDirectory;
-    private File oilCacheDirectory;
+    private File undergroundFluidCacheDirectory;
     private String worldId = "";
 
     protected abstract File getStorageDirectory();
@@ -27,14 +27,14 @@ public abstract class WorldCache {
         this.worldId = worldId;
         final File worldCacheDirectory = new File(getStorageDirectory(), worldId);
         oreVeinCacheDirectory = new File(worldCacheDirectory, Tags.OREVEIN_DIR);
-        oilCacheDirectory = new File(worldCacheDirectory, Tags.OILFIELD_DIR);
+        undergroundFluidCacheDirectory = new File(worldCacheDirectory, Tags.UNDERGROUNDFLUID_DIR);
         oreVeinCacheDirectory.mkdirs();
-        oilCacheDirectory.mkdirs();
+        undergroundFluidCacheDirectory.mkdirs();
         final HashMap<Integer, ByteBuffer> oreVeinDimensionBuffers = Utils.getDIMFiles(oreVeinCacheDirectory);
-        final HashMap<Integer, ByteBuffer> oilFieldDimensionBuffers = Utils.getDIMFiles(oilCacheDirectory);
+        final HashMap<Integer, ByteBuffer> undergroundFluidDimensionBuffers = Utils.getDIMFiles(undergroundFluidCacheDirectory);
         final Set<Integer> dimensionsIds = new HashSet<>();
         dimensionsIds.addAll(oreVeinDimensionBuffers.keySet());
-        dimensionsIds.addAll(oilFieldDimensionBuffers.keySet());
+        dimensionsIds.addAll(undergroundFluidDimensionBuffers.keySet());
         if(dimensionsIds.isEmpty()) {
             return false;
         }
@@ -42,7 +42,7 @@ public abstract class WorldCache {
         dimensions.clear();
         for(int dimensionId : dimensionsIds) {
             final DimensionCache dimension = new DimensionCache(dimensionId);
-            dimension.loadCache(oreVeinDimensionBuffers.get(dimensionId), oilFieldDimensionBuffers.get(dimensionId));
+            dimension.loadCache(oreVeinDimensionBuffers.get(dimensionId), undergroundFluidDimensionBuffers.get(dimensionId));
             dimensions.put(dimensionId, dimension);
         }
         return true;
@@ -55,9 +55,9 @@ public abstract class WorldCache {
                 if (oreVeinBuffer != null) {
                     Utils.appendToFile(new File(oreVeinCacheDirectory.toPath() + "/DIM" + dimension.dimensionId), oreVeinBuffer);
                 }
-                final ByteBuffer oilFieldBuffer = dimension.saveOilFields();
-                if(oilFieldBuffer != null) {
-                    Utils.appendToFile(new File(oilCacheDirectory.toPath() + "/DIM" + dimension.dimensionId), oilFieldBuffer);
+                final ByteBuffer undergroundFluidBuffer = dimension.saveUndergroundFluids();
+                if(undergroundFluidBuffer != null) {
+                    Utils.appendToFile(new File(undergroundFluidCacheDirectory.toPath() + "/DIM" + dimension.dimensionId), undergroundFluidBuffer);
                 }
             }
             needsSaving = false;
@@ -91,20 +91,20 @@ public abstract class WorldCache {
         return dimension.getOreVein(chunkX, chunkZ);
     }
 
-    protected DimensionCache.UpdateResult putOilField(int dimensionId, int chunkX, int chunkZ, final OilField oilField) {
+    protected DimensionCache.UpdateResult putUndergroundFluids(int dimensionId, int chunkX, int chunkZ, final UndergroundFluid undergroundFluid) {
         DimensionCache dimension = dimensions.get(dimensionId);
         if(dimension == null) {
             dimension = new DimensionCache(dimensionId);
             dimensions.put(dimensionId, dimension);
         }
-        return updateSaveFlag(dimension.putOilField(chunkX, chunkZ, oilField));
+        return updateSaveFlag(dimension.putUndergroundFluid(chunkX, chunkZ, undergroundFluid));
     }
 
-    public OilField getOilField(int dimensionId, int chunkX, int chunkZ) {
+    public UndergroundFluid getUndergroundFluid(int dimensionId, int chunkX, int chunkZ) {
         DimensionCache dimension = dimensions.get(dimensionId);
         if(dimension == null) {
-            return OilField.NOT_PROSPECTED;
+            return UndergroundFluid.NOT_PROSPECTED;
         }
-        return dimension.getOilField(chunkX, chunkZ);
+        return dimension.getUndergroundFluid(chunkX, chunkZ);
     }
 }

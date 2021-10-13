@@ -47,7 +47,7 @@ public abstract class GT_MetaTileEntity_ScannerMixin extends GT_MetaTileEntity_B
 
             final String frontPage = "Prospector report\n"
                     + position + "\n\n"
-                    + "Oils: " + 0 + "\n\n"
+                    + "Fluids: " + 0 + "\n\n"
                     + "Ores within " + blockRadius + " blocks\n\n"
                     + "Location is center of orevein\n\n"
                     + "Results are synchronized to your map";
@@ -73,21 +73,21 @@ public abstract class GT_MetaTileEntity_ScannerMixin extends GT_MetaTileEntity_B
                 }
             }
 
-            if(compound.hasKey(Tags.PROSPECTION_OILS)) {
-                GT_Utility.ItemNBT.fillBookWithList(bookPages, "Oils%s\n\n", "\n", 9, compound.getString(Tags.PROSPECTION_OILS).split("\\|"));
+            if(compound.hasKey(Tags.PROSPECTION_FLUIDS)) {
+                GT_Utility.ItemNBT.fillBookWithList(bookPages, "Fluids%s\n\n", "\n", 9, compound.getString(Tags.PROSPECTION_FLUIDS).split("\\|"));
 
-                final String oilCoverPage = "Oil notes\n\n"
+                final String fluidCoverPage = "Fluid notes\n\n"
                         + "Prospects from NW to SE 576 chunks"
-                        + "(9 8x8 oilfields)\n around and gives min-max amount" + "\n\n"
+                        + "(9 8x8 fields)\n around and gives min-max amount" + "\n\n"
                         + "[1][2][3]" + "\n"
                         + "[4][5][6]" + "\n"
                         + "[7][8][9]" + "\n"
                         + "\n"
                         + "[5] - Prospector in this 8x8 area";
-                bookPages.appendTag(new NBTTagString(oilCoverPage));
+                bookPages.appendTag(new NBTTagString(fluidCoverPage));
 
 
-                String tOilsPosStr = "X: " + Math.floorDiv(blockX, 16 * 8) * 16 * 8 + " Z: " + Math.floorDiv(blockZ, 16 * 8) * 16 * 8 + "\n";
+                String tFluidsPosStr = "X: " + Math.floorDiv(blockX, 16 * 8) * 16 * 8 + " Z: " + Math.floorDiv(blockZ, 16 * 8) * 16 * 8 + "\n";
                 int xOff = blockX - Math.floorDiv(blockX, 16 * 8) * 16 * 8;
                 xOff = xOff / 16;
                 int xOffRemain = 7 - xOff;
@@ -97,26 +97,26 @@ public abstract class GT_MetaTileEntity_ScannerMixin extends GT_MetaTileEntity_B
                 int zOffRemain = 7 - zOff;
 
                 for (; zOff > 0; zOff--) {
-                    tOilsPosStr = tOilsPosStr.concat("--------\n");
+                    tFluidsPosStr = tFluidsPosStr.concat("--------\n");
                 }
                 for (; xOff > 0; xOff--) {
-                    tOilsPosStr = tOilsPosStr.concat("-");
+                    tFluidsPosStr = tFluidsPosStr.concat("-");
                 }
 
-                tOilsPosStr = tOilsPosStr.concat("P");
+                tFluidsPosStr = tFluidsPosStr.concat("P");
 
                 for (; xOffRemain > 0; xOffRemain--) {
-                    tOilsPosStr = tOilsPosStr.concat("-");
+                    tFluidsPosStr = tFluidsPosStr.concat("-");
                 }
-                tOilsPosStr = tOilsPosStr.concat("\n");
+                tFluidsPosStr = tFluidsPosStr.concat("\n");
                 for (; zOffRemain > 0; zOffRemain--) {
-                    tOilsPosStr = tOilsPosStr.concat("--------\n");
+                    tFluidsPosStr = tFluidsPosStr.concat("--------\n");
                 }
-                tOilsPosStr = tOilsPosStr.concat("            X: " + (Math.floorDiv(blockX, 16 * 8) + 1) * 16 * 8 + " Z: " + (Math.floorDiv(blockZ, 16 * 8) + 1) * 16 * 8); // +1 oilfied to find bottomright of [5]
-                final String oilsPage = "Corners of [5] are \n" +
-                        tOilsPosStr + "\n" +
+                tFluidsPosStr = tFluidsPosStr.concat("            X: " + (Math.floorDiv(blockX, 16 * 8) + 1) * 16 * 8 + " Z: " + (Math.floorDiv(blockZ, 16 * 8) + 1) * 16 * 8); // +1 field to find bottomright of [5]
+                final String fluidsPage = "Corners of [5] are \n" +
+                        tFluidsPosStr + "\n" +
                         "P - Prospector in 8x8 field";
-                bookPages.appendTag(new NBTTagString(oilsPage));
+                bookPages.appendTag(new NBTTagString(fluidsPage));
             }
 
             compound.setString("author", position);

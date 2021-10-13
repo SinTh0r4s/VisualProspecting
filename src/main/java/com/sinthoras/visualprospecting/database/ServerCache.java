@@ -52,35 +52,35 @@ public class ServerCache extends WorldCache {
         return prospectOreBlocks(dimensionId, blockX - blockRadius, blockZ - blockRadius, blockX + blockRadius, blockZ + blockRadius);
     }
 
-    public List<OilFieldPosition> prospectOilBlockRadius(World world, int blockX, int blockZ, int oilFieldBlockRadius) {
-        final int minChunkX = Utils.mapToCornerOilFieldChunkCoord(Utils.coordBlockToChunk(blockX - oilFieldBlockRadius));
-        final int minChunkZ = Utils.mapToCornerOilFieldChunkCoord(Utils.coordBlockToChunk(blockZ - oilFieldBlockRadius));
+    public List<UndergroundFluidPosition> prospectUndergroundFluidBlockRadius(World world, int blockX, int blockZ, int undergroundFluidBlockRadius) {
+        final int minChunkX = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(blockX - undergroundFluidBlockRadius));
+        final int minChunkZ = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(blockZ - undergroundFluidBlockRadius));
 
-        // Equals to ceil(oilFieldBlockRadius / (VP.oilFieldSizeChunkX * VP.chunkWidth))
-        final int oilFieldRadius = (oilFieldBlockRadius + VP.oilFieldSizeChunkX * VP.chunkWidth - 1) / (VP.oilFieldSizeChunkX * VP.chunkWidth);
+        // Equals to ceil(undergroundFluidBlockRadius / (VP.undergroundFluidFieldSizeChunkX * VP.chunkWidth))
+        final int undergroundFluidRadius = (undergroundFluidBlockRadius + VP.undergroundFluidSizeChunkX * VP.chunkWidth - 1) / (VP.undergroundFluidSizeChunkX * VP.chunkWidth);
 
-        List<OilFieldPosition> foundOilFields = new ArrayList<>((2 * oilFieldRadius + 1) * (2 * oilFieldRadius + 1));
+        List<UndergroundFluidPosition> foundUndergroundFluids = new ArrayList<>((2 * undergroundFluidRadius + 1) * (2 * undergroundFluidRadius + 1));
 
-        for(int oilFieldX = 0; oilFieldX < 2 * oilFieldRadius + 1; oilFieldX++) {
-            for (int oilFieldZ = 0; oilFieldZ < 2 * oilFieldRadius + 1; oilFieldZ++) {
-                final int chunkX = minChunkX + oilFieldX * VP.oilFieldSizeChunkX;
-                final int chunkZ = minChunkZ + oilFieldZ * VP.oilFieldSizeChunkZ;
-                final int[][] chunks = new int[VP.oilFieldSizeChunkX][VP.oilFieldSizeChunkZ];
-                Fluid oil = null;
-                for (int offsetChunkX = 0; offsetChunkX < VP.oilFieldSizeChunkX; offsetChunkX++) {
-                    for (int offsetChunkZ = 0; offsetChunkZ < VP.oilFieldSizeChunkZ; offsetChunkZ++) {
-                        final FluidStack prospectedOil = Utils.prospectOil(world, chunkX + offsetChunkX, chunkZ + offsetChunkZ);
-                        if (prospectedOil != null) {
-                            oil = prospectedOil.getFluid();
-                            chunks[offsetChunkX][offsetChunkZ] = prospectedOil.amount;
+        for(int undergroundFluidX = 0; undergroundFluidX < 2 * undergroundFluidRadius + 1; undergroundFluidX++) {
+            for (int undergroundFluidZ = 0; undergroundFluidZ < 2 * undergroundFluidRadius + 1; undergroundFluidZ++) {
+                final int chunkX = minChunkX + undergroundFluidX * VP.undergroundFluidSizeChunkX;
+                final int chunkZ = minChunkZ + undergroundFluidZ * VP.undergroundFluidSizeChunkZ;
+                final int[][] chunks = new int[VP.undergroundFluidSizeChunkX][VP.undergroundFluidSizeChunkZ];
+                Fluid fluid = null;
+                for (int offsetChunkX = 0; offsetChunkX < VP.undergroundFluidSizeChunkX; offsetChunkX++) {
+                    for (int offsetChunkZ = 0; offsetChunkZ < VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
+                        final FluidStack prospectedFluid = Utils.prospectFluid(world, chunkX + offsetChunkX, chunkZ + offsetChunkZ);
+                        if (prospectedFluid != null) {
+                            fluid = prospectedFluid.getFluid();
+                            chunks[offsetChunkX][offsetChunkZ] = prospectedFluid.amount;
                         }
                     }
                 }
-                if (oil != null) {
-                    foundOilFields.add(new OilFieldPosition(chunkX, chunkZ, new OilField(oil, chunks)));
+                if (fluid != null) {
+                    foundUndergroundFluids.add(new UndergroundFluidPosition(chunkX, chunkZ, new UndergroundFluid(fluid, chunks)));
                 }
             }
         }
-        return foundOilFields;
+        return foundUndergroundFluids;
     }
 }

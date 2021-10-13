@@ -14,7 +14,7 @@ public class Config {
         public static final boolean recacheVeins = false;
         public static final int minDelayBetweenVeinRequests = 2000;
         public static final int minZoomLevelForOreLabel = 1;
-        public static final int minZoomLevelForOilFieldDetails = 2;
+        public static final int minZoomLevelForUndergroundFluidDetails = 2;
     }
 
     private static class Categories {
@@ -26,7 +26,7 @@ public class Config {
     public static boolean recacheVeins = Defaults.recacheVeins;
     public static int minDelayBetweenVeinRequests = Defaults.minDelayBetweenVeinRequests;
     public static int minZoomLevelForOreLabel = Defaults.minZoomLevelForOreLabel;
-    public static int minZoomLevelForOilFieldDetails = Defaults.minZoomLevelForOilFieldDetails;
+    public static int minZoomLevelForUndergroundFluidDetails = Defaults.minZoomLevelForUndergroundFluidDetails;
 
     public static void syncronizeConfiguration(File configFile) {
         Configuration configuration = new Configuration(configFile);
@@ -50,9 +50,9 @@ public class Config {
                 "Minimum zoom level at which ore veins labels are displayed. Zoom starts at 0 and increments linearly.");
         minZoomLevelForOreLabel = minZoomLevelProperty.getInt();
 
-        Property minZoomLevelForOilFieldDetailsProperty = configuration.get(Categories.general, "minZoomLevelForOilFieldDetails",
-                Defaults.minZoomLevelForOilFieldDetails, "\"Minimum zoom level at which oil field details are displayed. Zoom starts at 0 and increments linearly.\"");
-        minZoomLevelForOilFieldDetails = minZoomLevelForOilFieldDetailsProperty.getInt();
+        Property minZoomLevelForUndergroundFluidDetailsProperty = configuration.get(Categories.general, "minZoomLevelForUndergroundFluidDetails",
+                Defaults.minZoomLevelForUndergroundFluidDetails, "\"Minimum zoom level at which underground fluid details are displayed. Zoom starts at 0 and increments linearly.\"");
+        minZoomLevelForUndergroundFluidDetails = minZoomLevelForUndergroundFluidDetailsProperty.getInt();
 
         Property recacheVeinsProperty = configuration.get(Categories.general, "recacheVeins", Defaults.recacheVeins,
                 "Redo GT ore vein caching if set to True. Will automatically be set back to False the next " +
