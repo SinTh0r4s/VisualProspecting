@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(GT_Block_Ores_Abstract.class)
+@Mixin(value = GT_Block_Ores_Abstract.class, remap = false)
 public class GT_Block_Ores_AbstractMixin extends GT_Generic_Block {
 
     protected GT_Block_Ores_AbstractMixin() {

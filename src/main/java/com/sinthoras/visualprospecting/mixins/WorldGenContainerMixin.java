@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Iterator;
 
-@Mixin(GT_Worldgenerator.WorldGenContainer.class)
+@Mixin(value = GT_Worldgenerator.WorldGenContainer.class, remap = false)
 public class WorldGenContainerMixin {
 
     @Final

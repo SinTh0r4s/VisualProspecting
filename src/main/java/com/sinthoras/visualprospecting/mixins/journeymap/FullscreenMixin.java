@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static com.sinthoras.visualprospecting.gui.journeymap.Reflection.getJourneyMapGridRenderer;
 
-@Mixin(Fullscreen.class)
+@Mixin(value = Fullscreen.class, remap = false)
 public class FullscreenMixin {
 
     private MapState mapState = new MapState();

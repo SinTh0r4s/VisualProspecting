@@ -20,7 +20,7 @@ import java.util.List;
 
 import static gregtech.api.util.GT_Utility.ItemNBT.setNBT;
 
-@Mixin(GT_MetaTileEntity_Scanner.class)
+@Mixin(value = GT_MetaTileEntity_Scanner.class, remap = false)
 public abstract class GT_MetaTileEntity_ScannerMixin extends GT_MetaTileEntity_BasicMachine {
 
     public GT_MetaTileEntity_ScannerMixin() {

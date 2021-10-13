@@ -26,7 +26,7 @@ import java.util.List;
 import static gregtech.api.util.GT_Utility.ItemNBT.getNBT;
 import static gregtech.api.util.GT_Utility.ItemNBT.setNBT;
 
-@Mixin(GT_MetaTileEntity_AdvSeismicProspector.class)
+@Mixin(value = GT_MetaTileEntity_AdvSeismicProspector.class, remap = false)
 public abstract class GT_MetaTileEntity_AdvSeismicProspectorMixin extends GT_MetaTileEntity_BasicMachine {
 
     @Shadow(remap = false)

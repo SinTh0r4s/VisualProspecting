@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
 
-@Mixin(ItemEditableBook.class)
+@Mixin(value = ItemEditableBook.class, remap = true)
 public class ItemEditableBookMixin {
 
     @Inject(method = "onItemRightClick", at = @At("HEAD"), remap = true, require = 1, locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = false)
