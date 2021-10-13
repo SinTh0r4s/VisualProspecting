@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import static com.sinthoras.visualprospecting.Utils.isNEIInstalled;
 import static com.sinthoras.visualprospecting.gui.journeymap.Reflection.getJourneyMapGridRenderer;
 
 @Mixin(value = Fullscreen.class, remap = false)
@@ -47,7 +48,9 @@ public class FullscreenMixin {
 
     @Inject(method = "<init>*", at = @At("RETURN"), remap = false, require = 1)
     private void onConstructed(CallbackInfo callbackInfo) {
-        VeinTypeCaching.recalculateNEISearch();
+        if(isNEIInstalled()) {
+            VeinTypeCaching.recalculateNEISearch();
+        }
     }
 
     @Inject(method = "drawMap",
