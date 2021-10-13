@@ -43,7 +43,7 @@ public class AnalysisProgressTracker {
             lastLogUpdate = timestamp;
             VP.info("Caching GT ore generation meta data - Dimension ("
                     + (dimensionsProcessed + 1) + "/" + numberOfDimensions + ")  "
-                    + (numberOfRegionFiles == 0 ? 0 : ((regionFilesProcessed * 100) / (numberOfRegionFiles * 100))) + "%");
+                    + (numberOfRegionFiles == 0 ? 0 : ((regionFilesProcessed * 100) / numberOfRegionFiles)) + "%");
         }
     }
 
