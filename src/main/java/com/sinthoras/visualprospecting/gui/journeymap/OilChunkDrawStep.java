@@ -37,8 +37,9 @@ public class OilChunkDrawStep implements DrawStep {
 
     @Override
     public void draw(double xOffset, double yOffset, GridRenderer gridRenderer, float drawScale, double fontScale, double rotation) {
-        if (oilAmount > 0) {
-            double blockSize = Math.pow(2, gridRenderer.getZoom());
+        final int zoom = gridRenderer.getZoom();
+        if (oilAmount > 0 && zoom >= Config.minZoomLevelForOilFieldDetails) {
+            double blockSize = Math.pow(2, zoom);
             final Point2D.Double blockAsPixel = gridRenderer.getBlockPixelInGrid(blockX, blockZ);
             final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + xOffset, blockAsPixel.getY() + yOffset);
             float alpha = ((float)(oilAmount - minAmountInField)) / (maxAmountInField - minAmountInField + 1);
@@ -54,9 +55,7 @@ public class OilChunkDrawStep implements DrawStep {
                 DrawUtil.drawRectangle(pixel.getX(), pixel.getY() + 1 * blockSize, blockSize, 15 * blockSize, borderColor, borderAlpha);
             }
 
-            if (gridRenderer.getZoom() >= Config.minZoomLevel) {
-                DrawUtil.drawLabel(getOilAmountFormatted(), pixel.getX() + 13 * blockSize, pixel.getY() + 13 * blockSize, DrawUtil.HAlign.Left, DrawUtil.VAlign.Above, 0, 180, 0x00FFFFFF, 255, fontScale, false, rotation);
-            }
+            DrawUtil.drawLabel(getOilAmountFormatted(), pixel.getX() + 13 * blockSize, pixel.getY() + 13 * blockSize, DrawUtil.HAlign.Left, DrawUtil.VAlign.Above, 0, 180, 0x00FFFFFF, 255, fontScale, false, rotation);
         }
     }
 }

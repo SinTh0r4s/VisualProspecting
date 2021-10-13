@@ -41,7 +41,7 @@ public class OreVeinDrawStep implements DrawStep {
         final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + xOffset, blockAsPixel.getY() + yOffset);
 
 
-        if(gridRenderer.getZoom() >= Config.minZoomLevel) {
+        if(gridRenderer.getZoom() >= Config.minZoomLevelForOreLabel) {
             final int fontColor = veinType.isHighlighted() ? 0xFFFFFF : 0x7F7F7F;
             DrawUtil.drawLabel(veinType.getNameReadable() + " Vein", pixel.getX(), pixel.getY() - textureSize, DrawUtil.HAlign.Center, DrawUtil.VAlign.Middle, 0, 180, fontColor, 255, fontScale, false, rotation);
         }
