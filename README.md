@@ -7,8 +7,8 @@ VisualProspecting tracks all ores that a player interacted with, by right or by 
 
 This mod is tailored to _GregTech: New Horizons 2_, but feel free to use it however you like. Even though this mod is build against the custom GT5U from GT:NH, it should still work fine with other GT5U versions.
 
-![Oil fields in JourneyMap overlay](https://i.ibb.co/crPhR1X/2021-10-12-15-45-25.png) \
-_Oil fields in JourneyMap overlay._
+![Underground fluids in JourneyMap overlay](https://i.ibb.co/crPhR1X/2021-10-12-15-45-25.png) \
+_Underground fluids in JourneyMap overlay._
 
 ![GregTech ore veins in JourneyMap overlay](https://i.ibb.co/cg7gH0P/2021-10-13-16-32-06.png) \
 _GregTech ore veins in JourneyMap overlay._
@@ -61,16 +61,16 @@ GregTech, JourneyMap and their respective dependencies will be loaded automatica
 All database access is channeled through the classes `ServerCache` and `ClientCache`. Database use is split up into logical sides.
 You need to determine whether your code is executed on the logical client or logical server. Dependent on your answer you need to use the according database: The client database only knows about ore veins the player has already prospected, while the server database will know about all veins. You may add or request the ore vein for a chunk:
 ```
-VP.clientCache.getVeinType(int dimensionId, int chunkX, int chunkZ);
-VP.clientCache.putVeinType(int dimensionId, int chunkX, int chunkZ, VPVeinType veinType);
+VP.serverCache.getVeinType(int dimensionId, int chunkX, int chunkZ);
+VP.serverCache.putVeinType(int dimensionId, int chunkX, int chunkZ, VPVeinType veinType);
 
 VP.clientCache.getVeinType(int dimensionId, int chunkX, int chunkZ);
 VP.clientCache.putOreVeins(int dimensionId, List<OreVeinPosition> oreVeinPositions);
 
-VP.clientCache.putOilFields(int dimensionId, List<OilFieldPosition> oilFields);
-VP.clientCache.getOilField(int dimensionId, int chunkX, int chunkZ);
+VP.clientCache.putUndergroundFluids(int dimensionId, List<UndergroundFluidPosition> undergroundFluids);
+VP.clientCache.getUndergroundFluid(int dimensionId, int chunkX, int chunkZ);
 ```
-The logical server does not store oil field information, because GregTech has its own database for it. Instead, it provides a wrapper to access said GT database. You may also use more sophisticated methods to prospect whole areas at once. Take a look at exposed methods in `ServerCache`.
+The logical server does not store underground fluid information, because GregTech has its own database for it. Instead, it provides a wrapper to access said GT database. You may also use more sophisticated methods to prospect whole areas at once. Take a look at exposed methods in `ServerCache`.
 
 Please keep in mind that chunk coordinates are block coordinates divided by 16! When in doubt you may fall back on:
 ```
@@ -95,15 +95,15 @@ final EntityPlayerMP entityPlayer;
 
 if(world.isRemote == false) {
     final List<OreVeinPosition> foundOreVeins = VP.serverCache.prospectOreBlockRadius(world.provider.dimensionId, blockX, blockZ, blockRadius);
-    final List<OilFieldPosition> foundOilFields = VP.serverCache.prospectOilBlockRadius(world, blockX, blockZ, VP.oilChunkProspectingBlockRadius);
+    final List<UndergroundFluidPosition> foundUndergroundFluids = VP.serverCache.prospectUndergroundFluidBlockRadius(world, blockX, blockZ, VP.undergroundFluidChunkProspectingBlockRadius);
 
     // Skip networking if in single player
     if(Utils.isLogicalClient()) {
         VP.clientCache.putOreVeins(dimensionId, foundOreVeins);
-        VP.clientCache.putOilFields(dimensionId, foundOilFields);
+        VP.clientCache.putUndergroundFluids(dimensionId, foundUndergroundFluids);
     }
     else {
-        VP.network.sendTo(new ProspectingNotification(dimensionId, foundOreVeins, foundOilFields), entityPlayer);
+        VP.network.sendTo(new ProspectingNotification(dimensionId, foundOreVeins, foundUndergroundFluids), entityPlayer);
     }
 }
 ```
