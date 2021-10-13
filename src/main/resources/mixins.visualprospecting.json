@@ -2,15 +2,8 @@
   "required": true,
   "minVersion": "0.7.11",
   "package": "com.sinthoras.visualprospecting.mixins",
+  "plugin": "com.sinthoras.visualprospecting.mixinplugin.MixinPlugin",
   "refmap": "mixins.visualprospecting.refmap.json",
   "target": "@env(DEFAULT)",
-  "compatibilityLevel": "JAVA_8",
-  "mixins": [
-    "journeymap.FullscreenMixin",
-    "GT_MetaTileEntity_ScannerMixin",
-    "GT_MetaTileEntity_AdvSeismicProspectorMixin",
-    "GT_Block_Ores_AbstractMixin",
-    "WorldGenContainerMixin",
-    "ItemEditableBookMixin"
-  ]
+  "compatibilityLevel": "JAVA_8"
 }

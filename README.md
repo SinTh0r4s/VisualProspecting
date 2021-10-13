@@ -16,6 +16,13 @@ This mod is tailored to _GregTech: New Horizons 2_, but feel free to use it howe
  - GregTech5-Unofficial
     - Injected classes: [_GT_Block_Ores_Abstract_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/GT_Block_Ores_AbstractMixin.java), [_GT_MetaTileEntity_AdvSeismicProspector_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/GT_MetaTileEntity_AdvSeismicProspectorMixin.java), [_GT_MetaTileEntity_Scanner_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/GT_MetaTileEntity_ScannerMixin.java), [_GT_Worldgenerator.WorldGenContainer_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/WorldGenContainerMixin.java)
  - SpongeMixin
+ - [Enklumne](https://github.com/Hugobros3/Enklume)
+    - Ensure you build it with added
+      ```
+      sourceCompatibility = 1.8
+      targetCompatibility = 1.8
+      ```
+      in `build.gradle` or use [my fork](https://github.com/SinTh0r4s/Enklume).
 #### Optional Mods:
  - JourneyMap: Visualizes prospected ore veins and oil fields on custom overlay, that can be toggled on and off.
     - Injected class: [_Fullscreen_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/FullscreenMixin.java)
