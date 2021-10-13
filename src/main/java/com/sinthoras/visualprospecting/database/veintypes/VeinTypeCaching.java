@@ -1,7 +1,5 @@
 package com.sinthoras.visualprospecting.database.veintypes;
 
-import codechicken.nei.NEIClientConfig;
-import codechicken.nei.SearchField;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.sinthoras.visualprospecting.Tags;
@@ -110,8 +108,8 @@ public class VeinTypeCaching implements Runnable {
     }
 
     public static void recalculateNEISearch() {
-        final boolean isSearchActive = SearchField.searchInventories();
-        final String searchString = NEIClientConfig.getSearchExpression().toLowerCase();
+        final boolean isSearchActive = getNEISearchActive();
+        final String searchString = getNEISearchString().toLowerCase();
 
         for(VeinType veinType : veinTypes) {
             if(veinType != VeinType.NO_VEIN) {

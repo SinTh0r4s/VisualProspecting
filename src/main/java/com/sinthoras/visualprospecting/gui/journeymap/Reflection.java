@@ -1,5 +1,6 @@
 package com.sinthoras.visualprospecting.gui.journeymap;
 
+import com.sinthoras.visualprospecting.VP;
 import journeymap.client.render.map.GridRenderer;
 import journeymap.client.ui.fullscreen.Fullscreen;
 
@@ -15,6 +16,7 @@ public class Reflection {
             gridRenderer.setAccessible(true);
         }
         catch (Exception e) {
+            VP.error("Failed to access private fields in JourneyMap!");
             e.printStackTrace();
         }
     }
