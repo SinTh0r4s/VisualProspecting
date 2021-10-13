@@ -63,7 +63,6 @@ public class HooksShared {
 			try {
 				WorldAnalysis world = new WorldAnalysis(minecraftServer.getEntityWorld().getSaveHandler().getWorldDirectory());
 				world.cacheVeins();
-				VP.serverCache.saveVeinCache();
 			}
 			catch (IOException | DataFormatException e) {
 				VP.info("Could not load world save files to build vein cache!");

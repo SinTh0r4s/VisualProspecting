@@ -27,5 +27,7 @@ public class WorldAnalysis {
             AnalysisProgressTracker.dimensionProcessed();
         }
         AnalysisProgressTracker.processingFinished();
+        VP.info("Saving ore vein cache...");
+        VP.serverCache.saveVeinCache();
     }
 }
