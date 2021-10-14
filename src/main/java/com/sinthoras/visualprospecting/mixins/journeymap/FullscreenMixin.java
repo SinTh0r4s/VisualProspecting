@@ -25,7 +25,7 @@ import static com.sinthoras.visualprospecting.gui.journeymap.Reflection.getJourn
 @Mixin(value = Fullscreen.class, remap = false)
 public class FullscreenMixin {
 
-    private MapState mapState = new MapState();
+    private static MapState mapState = new MapState();
     private ThemeButton buttonOreVeins;
     private ThemeButton buttonUndergroundFluids;
 
@@ -76,14 +76,14 @@ public class FullscreenMixin {
         final Theme theme = ThemeFileHandler.getCurrentTheme();
 
         buttonOreVeins = new ThemeToggle(theme, "visualprospecting.button.orevein", "oreveins");
-        buttonOreVeins.setToggled(true, false);
+        buttonOreVeins.setToggled(mapState.drawOreVeins, false);
         buttonOreVeins.addToggleListener((button, toggled) -> {
             mapState.drawOreVeins = toggled;
             return true;
         });
 
         buttonUndergroundFluids = new ThemeToggle(theme, "visualprospecting.button.undergroundfluid", "undergroundfluid");
-        buttonUndergroundFluids.setToggled(true, false);
+        buttonUndergroundFluids.setToggled(mapState.drawUndergroundFluids, false);
         buttonUndergroundFluids.addToggleListener((button, toggled) -> {
             mapState.drawUndergroundFluids = toggled;
             return true;
