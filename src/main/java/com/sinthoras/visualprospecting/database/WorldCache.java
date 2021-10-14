@@ -24,6 +24,8 @@ public abstract class WorldCache {
         if(this.worldId.equals(worldId)) {
             return true;
         }
+        dimensions.clear();
+
         this.worldId = worldId;
         final File worldCacheDirectory = new File(getStorageDirectory(), worldId);
         oreVeinCacheDirectory = new File(worldCacheDirectory, Tags.OREVEIN_DIR);
@@ -39,7 +41,6 @@ public abstract class WorldCache {
             return false;
         }
 
-        dimensions.clear();
         for(int dimensionId : dimensionsIds) {
             final DimensionCache dimension = new DimensionCache(dimensionId);
             dimension.loadCache(oreVeinDimensionBuffers.get(dimensionId), undergroundFluidDimensionBuffers.get(dimensionId));
