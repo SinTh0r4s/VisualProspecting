@@ -62,7 +62,7 @@ public class Utils {
     }
 
     public static int mapToCenterOreChunkCoord(final int chunkCoord) {
-        return chunkCoord - nonNegativeModulo(chunkCoord - 1, 3) + 1;
+        return chunkCoord - nonNegativeModulo(chunkCoord, 3) + 1;
     }
 
     public static int mapToCornerUndergroundFluidChunkCoord(final int chunkCoord) {
