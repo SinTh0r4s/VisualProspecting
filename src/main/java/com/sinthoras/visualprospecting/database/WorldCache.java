@@ -20,11 +20,6 @@ public abstract class WorldCache {
 
     protected abstract File getStorageDirectory();
 
-    public boolean forceLoadVeinCache(String worldId) {
-        dimensions.clear();
-        return loadVeinCache(worldId);
-    }
-
     public boolean loadVeinCache(String worldId) {
         if(this.worldId.equals(worldId)) {
             return true;
