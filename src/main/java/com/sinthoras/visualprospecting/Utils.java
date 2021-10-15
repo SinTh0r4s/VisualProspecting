@@ -53,16 +53,8 @@ public class Utils {
         return (((long)chunkX) << 32) | (chunkZ & 0xffffffffL);
     }
 
-    public static int nonNegativeModulo(final int value, final int divisor) {
-        final int rest = value % divisor;
-        if(rest < 0) {
-            return rest + divisor;
-        }
-        return rest;
-    }
-
     public static int mapToCenterOreChunkCoord(final int chunkCoord) {
-        return chunkCoord - nonNegativeModulo(chunkCoord, 3) + 1;
+        return chunkCoord - (chunkCoord % 3) + 1;
     }
 
     public static int mapToCornerUndergroundFluidChunkCoord(final int chunkCoord) {
