@@ -59,7 +59,7 @@ public class HooksShared {
 	public void fmlLifeCycleEvent(FMLServerStartingEvent event) {
 		final MinecraftServer minecraftServer = event.getServer();
 		WorldIdHandler.load(minecraftServer.worldServers[0]);
-		if(VP.serverCache.loadVeinCache(WorldIdHandler.getWorldId()) == false || Config.recacheVeins) {
+		if(VP.serverCache.forceLoadVeinCache(WorldIdHandler.getWorldId()) == false || Config.recacheVeins) {
 			try {
 				WorldAnalysis world = new WorldAnalysis(minecraftServer.getEntityWorld().getSaveHandler().getWorldDirectory());
 				world.cacheVeins();
