@@ -158,8 +158,10 @@ public abstract class FullscreenMixin extends JmUI {
             }
 
             if(tooltip == null && mapState.drawOreVeins) {
+                final int scaledMouseX = (mx * mc.displayWidth) / this.width;
+                final int scaledMouseY = (my * mc.displayHeight) / this.height;
                 for(OreVeinDrawStep oreVein : mapState.getOreVeinDrawSteps(gridRenderer)) {
-                    if(oreVein.mouseOver(mx, my)) {
+                    if(oreVein.mouseOver(scaledMouseX, scaledMouseY)) {
                         tooltip = oreVein.getTooltip();
                         break;
                     }
