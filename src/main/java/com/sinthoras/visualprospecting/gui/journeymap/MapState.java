@@ -43,8 +43,8 @@ public class MapState {
             oldMinOreChunkZ = minOreChunkZ;
             oldMaxOreChunkZ = maxOreChunkZ;
             oreChunkDrawSteps.clear();
-            for (int chunkX = minOreChunkX; chunkX <= maxOreChunkX; chunkX += VP.oreVeinSizeChunkX) {
-                for (int chunkZ = minOreChunkZ; chunkZ <= maxOreChunkZ; chunkZ += VP.oreVeinSizeChunkZ) {
+            for (int chunkX = minOreChunkX; chunkX <= maxOreChunkX; chunkX = Utils.mapToCenterOreChunkCoord(chunkX + 3)) {
+                for (int chunkZ = minOreChunkZ; chunkZ <= maxOreChunkZ; chunkZ = Utils.mapToCenterOreChunkCoord(chunkZ + 3)) {
                     final VeinType veinType = VP.clientCache.getOreVein(minecraft.thePlayer.dimension, chunkX, chunkZ);
                     if (veinType != VeinType.NO_VEIN) {
                         oreChunkDrawSteps.add(new OreVeinDrawStep(veinType, chunkX, chunkZ));
