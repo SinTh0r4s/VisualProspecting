@@ -16,7 +16,7 @@ import java.util.Random;
 @Mixin(GT_Worldgenerator.WorldGenContainer.class)
 public class WorldGenContainerMixin {
 
-    // Redirect both call to ensure that Bartworks ore veins are captured as well
+    // Redirect both calls to ensure that Bartworks ore veins are captured as well 
     @Redirect(method = "worldGenFindVein",
             at = @At(value = "INVOKE", target = "Lgregtech/common/GT_Worldgen_GT_Ore_Layer;executeWorldgenChunkified(Lnet/minecraft/world/World;Ljava/util/Random;Ljava/lang/String;IIIIILnet/minecraft/world/chunk/IChunkProvider;Lnet/minecraft/world/chunk/IChunkProvider;)I"),
             remap = false,
