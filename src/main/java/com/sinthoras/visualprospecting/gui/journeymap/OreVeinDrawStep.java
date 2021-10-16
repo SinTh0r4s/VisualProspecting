@@ -15,16 +15,24 @@ import journeymap.client.render.map.GridRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class OreVeinDrawStep implements DrawStep {
 
     private final int blockX;
     private final int blockZ;
     private final VeinType veinType;
+    private double iconX;
+    private double iconY;
+    private double iconSize;
 
 
     public OreVeinDrawStep(final VeinType veinType, int chunkX, int chunkZ) {
@@ -35,28 +43,41 @@ public class OreVeinDrawStep implements DrawStep {
 
     @Override
     public void draw(double xOffset, double yOffset, GridRenderer gridRenderer, float drawScale, double fontScale, double rotation) {
-        final double textureSize = 32 * fontScale;
-        final double textureSizeHalf = textureSize / 2;
+        iconSize = 32 * fontScale;
+        final double iconSizeHalf = iconSize / 2;
         final Point2D.Double blockAsPixel = gridRenderer.getBlockPixelInGrid(blockX, blockZ);
         final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + xOffset, blockAsPixel.getY() + yOffset);
 
 
         if(gridRenderer.getZoom() >= Config.minZoomLevelForOreLabel) {
             final int fontColor = veinType.isHighlighted() ? 0xFFFFFF : 0x7F7F7F;
-            DrawUtil.drawLabel(veinType.getNameReadable() + " Vein", pixel.getX(), pixel.getY() - textureSize, DrawUtil.HAlign.Center, DrawUtil.VAlign.Middle, 0, 180, fontColor, 255, fontScale, false, rotation);
+            DrawUtil.drawLabel(veinType.getNameReadable() + " Vein", pixel.getX(), pixel.getY() - iconSize, DrawUtil.HAlign.Center, DrawUtil.VAlign.Middle, 0, 180, fontColor, 255, fontScale, false, rotation);
         }
 
+        iconX = pixel.getX() - iconSizeHalf;
+        iconY = pixel.getY() - iconSizeHalf;
         final IIcon blockIcon = Blocks.stone.getIcon(0, 0);
-        drawQuad(blockIcon, pixel.getX() - textureSizeHalf, pixel.getY() - textureSizeHalf, textureSize, textureSize, 0.0, 0xFFFFFF, 255, false, GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, false);
+        drawQuad(blockIcon, iconX, iconY, iconSize, iconSize, 0.0, 0xFFFFFF, 255, false, GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, false);
 
         Materials aMaterial = GregTech_API.sGeneratedMaterials[veinType.primaryOreMeta];
         final int color = (aMaterial.mRGBa[0] << 16) | (aMaterial.mRGBa[1]) << 8 | aMaterial.mRGBa[2];
         final IIcon oreIcon = aMaterial.mIconSet.mTextures[OrePrefixes.ore.mTextureIndex].getIcon();
-        drawQuad(oreIcon, pixel.getX() - textureSizeHalf, pixel.getY() - textureSizeHalf, textureSize, textureSize, 0.0, color, 255, true, GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, false);
+        drawQuad(oreIcon, iconX, iconY, iconSize, iconSize, 0.0, color, 255, true, GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, false);
 
         if(veinType.isHighlighted() == false) {
-            DrawUtil.drawRectangle(pixel.getX() - textureSizeHalf, pixel.getY() - textureSizeHalf, textureSize, textureSize, 0x000000, 150);
+            DrawUtil.drawRectangle(iconX, iconY, iconSize, iconSize, 0x000000, 150);
         }
+    }
+
+    public boolean mouseOver(int mouseX, int mouseY) {
+        return mouseX >= iconX && mouseX <= iconX + iconSize && mouseY >= iconY && mouseY <= iconY + iconSize;
+    }
+
+    public List<String> getTooltip() {
+        final ArrayList<String> list = new ArrayList();
+        list.add(veinType.getNameReadable() + " Vein");
+        list.addAll(veinType.getOreMaterials().stream().filter(Objects::nonNull).map(material -> EnumChatFormatting.GRAY + material.mLocalizedName + " ore").collect(Collectors.toList()));
+        return list;
     }
 
     public static void drawQuad(IIcon icon, double x, double y, double width, double height, double rotation, Integer color, float alpha, boolean blend, int glBlendSfactor, int glBlendDFactor, boolean clampTexture) {
