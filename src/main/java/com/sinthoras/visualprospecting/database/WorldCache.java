@@ -2,6 +2,7 @@ package com.sinthoras.visualprospecting.database;
 
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.Utils;
+import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.database.veintypes.VeinType;
 
 import java.io.File;
@@ -16,15 +17,15 @@ public abstract class WorldCache {
     private boolean needsSaving = false;
     private File oreVeinCacheDirectory;
     private File undergroundFluidCacheDirectory;
-    private String worldId = "";
+    private boolean isLoaded = false;
 
     protected abstract File getStorageDirectory();
 
     public boolean loadVeinCache(String worldId) {
-        if(this.worldId.equals(worldId)) {
+        if(isLoaded ) {
             return true;
         }
-        this.worldId = worldId;
+        isLoaded = true;
         final File worldCacheDirectory = new File(getStorageDirectory(), worldId);
         oreVeinCacheDirectory = new File(worldCacheDirectory, Tags.OREVEIN_DIR);
         undergroundFluidCacheDirectory = new File(worldCacheDirectory, Tags.UNDERGROUNDFLUID_DIR);
@@ -39,7 +40,6 @@ public abstract class WorldCache {
             return false;
         }
 
-        dimensions.clear();
         for(int dimensionId : dimensionsIds) {
             final DimensionCache dimension = new DimensionCache(dimensionId);
             dimension.loadCache(oreVeinDimensionBuffers.get(dimensionId), undergroundFluidDimensionBuffers.get(dimensionId));
@@ -67,6 +67,7 @@ public abstract class WorldCache {
     public void reset() {
         dimensions = new HashMap<>();
         needsSaving = false;
+        isLoaded = false;
     }
 
     private DimensionCache.UpdateResult updateSaveFlag(DimensionCache.UpdateResult updateResult) {

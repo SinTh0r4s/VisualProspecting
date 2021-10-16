@@ -9,6 +9,7 @@ import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import com.sinthoras.visualprospecting.network.ProspectingNotification;
 import com.sinthoras.visualprospecting.network.ProspectingRequest;
 import com.sinthoras.visualprospecting.network.WorldIdNotification;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -44,6 +45,7 @@ public class HooksShared {
 	// load "Do your mod setup. Build whatever data structures you care about. Register recipes."
 	public void fmlLifeCycleEvent(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(new HooksEventBus());
+		FMLCommonHandler.instance().bus().register(new HooksFML());
 	}
 	
 	// postInit "Handle interaction with other mods, complete your setup based on this."
@@ -77,6 +79,7 @@ public class HooksShared {
 	
 	public void fmlLifeCycleEvent(FMLServerStoppingEvent event) {
 		VP.serverCache.saveVeinCache();
+		VP.serverCache.reset();
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerStoppedEvent event) {
