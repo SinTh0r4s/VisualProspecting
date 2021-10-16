@@ -30,7 +30,7 @@ public class ServerCache extends WorldCache {
 
         List<OreVeinPosition> oreVeinPositions = new ArrayList<>();
         for(int chunkX = minChunkX; chunkX <= maxChunkX; chunkX = Utils.mapToCenterOreChunkCoord(chunkX + 3)) {
-            for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkX = Utils.mapToCenterOreChunkCoord(chunkZ + 3)) {
+            for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ = Utils.mapToCenterOreChunkCoord(chunkZ + 3)) {
                 final VeinType veinType = getOreVein(dimensionId, chunkX, chunkZ);
                 if (veinType != VeinType.NO_VEIN) {
                     oreVeinPositions.add(new OreVeinPosition(chunkX, chunkZ, veinType));
