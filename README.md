@@ -110,7 +110,3 @@ if(world.isRemote == false) {
 
 Thank you and happy coding,\
 SinTh0r4s
-
-### Warnings
-
-If you look closely, you will find a block of warnings regarding Mixins: ``Injection warning: LVT in gregtech/common/GT_Worldgenerator$WorldGenContainer::worldGenFindVein(II)V has incompatible[...]``. These can be safely ignored.
