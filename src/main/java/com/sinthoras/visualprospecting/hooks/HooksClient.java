@@ -1,5 +1,6 @@
 package com.sinthoras.visualprospecting.hooks;
 
+import com.sinthoras.visualprospecting.database.ResetClientCacheCommand;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -8,6 +9,7 @@ import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.client.ClientCommandHandler;
 
 public class HooksClient extends HooksShared {
 
@@ -27,6 +29,7 @@ public class HooksClient extends HooksShared {
 	// postInit "Handle interaction with other mods, complete your setup based on this."
 	public void fmlLifeCycleEvent(FMLPostInitializationEvent event) {
 		super.fmlLifeCycleEvent(event);
+		ClientCommandHandler.instance.registerCommand(new ResetClientCacheCommand());
 	}
 	@Override
 	public void fmlLifeCycleEvent(FMLServerAboutToStartEvent event) {

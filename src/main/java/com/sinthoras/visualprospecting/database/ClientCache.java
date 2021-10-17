@@ -114,4 +114,12 @@ public class ClientCache extends WorldCache {
             }
         }
     }
+
+    public void resetPlayerProgression() {
+        Utils.deleteDirectoryRecursively(oreVeinCacheDirectory);
+        Utils.deleteDirectoryRecursively(undergroundFluidCacheDirectory);
+        oreVeinCacheDirectory.mkdirs();
+        undergroundFluidCacheDirectory.mkdirs();
+        reset();
+    }
 }

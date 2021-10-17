@@ -20,7 +20,9 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,6 +158,18 @@ public class Utils {
 
     public static File getSubDirectory(final String subdirectory) {
         return new File(getMinecraftDirectory(), subdirectory);
+    }
+
+    public static void deleteDirectoryRecursively(final File targetDirectory) {
+        try {
+            Files.walk(targetDirectory.toPath())
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static ByteBuffer readFileToBuffer(File file) {

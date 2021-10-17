@@ -44,7 +44,8 @@ public class MixinPlugin implements IMixinConfigPlugin {
                     "GT_MetaTileEntity_ScannerMixin",
                     "ItemEditableBookMixin",
                     "WorldGenContainerMixin",
-                    "journeymap.FullscreenMixin"
+                    "journeymap.FullscreenMixin",
+                    "journeymap.FullscreenActionsMixin"
             );
         }
         else {
@@ -62,6 +63,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
             if (loadJar("journeymap-1.7.10")) {
                 VP.info("Found JourneyMap! Integrating now...");
                 mixins.add("journeymap.FullscreenMixin");
+                mixins.add("journeymap.FullscreenActionsMixin");
             } else {
                 VP.info("Could not find JourneyMap! Skipping integration....");
             }
