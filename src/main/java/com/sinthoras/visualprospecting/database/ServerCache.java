@@ -4,6 +4,7 @@ import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.database.veintypes.VeinType;
+import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -18,8 +19,12 @@ public class ServerCache extends WorldCache {
         return Utils.getSubDirectory(Tags.SERVER_DIR);
     }
 
-    public DimensionCache.UpdateResult putOreVein(int dimensionId, int chunkX, int chunkZ, final VeinType veinType) {
+    public DimensionCache.UpdateResult notifyOreVeinGeneration(int dimensionId, int chunkX, int chunkZ, final VeinType veinType) {
         return super.putOreVein(dimensionId, chunkX, chunkZ, veinType);
+    }
+
+    public DimensionCache.UpdateResult notifyOreVeinGeneration(int dimensionId, int chunkX, int chunkZ, final String veinName) {
+        return super.putOreVein(dimensionId, chunkX, chunkZ, VeinTypeCaching.getVeinType(veinName));
     }
 
     public List<OreVeinPosition> prospectOreChunks(int dimensionId, int minChunkX, int minChunkZ, int maxChunkX, int maxChunkZ) {
