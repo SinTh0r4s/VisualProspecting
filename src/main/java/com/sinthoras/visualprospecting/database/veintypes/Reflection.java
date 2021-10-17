@@ -8,8 +8,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sinthoras.visualprospecting.Utils.isBartworksInstalled;
-import static com.sinthoras.visualprospecting.Utils.isNEIInstalled;
+import static com.sinthoras.visualprospecting.Utils.*;
 
 public class Reflection {
 
@@ -41,7 +40,7 @@ public class Reflection {
                 e.printStackTrace();
             }
         }
-        if(isNEIInstalled()) {
+        if(isNEIInstalled() && isLogicalClient()) {
             try {
                 final Class<?> SearchField = Class.forName("codechicken.nei.SearchField");
                 searchInventories = SearchField.getDeclaredMethod("searchInventories");
