@@ -114,4 +114,8 @@ public class ClientCache extends WorldCache {
             }
         }
     }
+
+    public void resetClientCache() {
+        // TODO
+    }
 }
