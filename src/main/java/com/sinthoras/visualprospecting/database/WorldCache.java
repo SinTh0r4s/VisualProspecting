@@ -2,7 +2,6 @@ package com.sinthoras.visualprospecting.database;
 
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.Utils;
-import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.database.veintypes.VeinType;
 
 import java.io.File;
