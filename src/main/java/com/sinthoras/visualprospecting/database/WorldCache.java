@@ -15,8 +15,8 @@ public abstract class WorldCache {
 
     private HashMap<Integer, DimensionCache> dimensions = new HashMap<>();
     private boolean needsSaving = false;
-    private File oreVeinCacheDirectory;
-    private File undergroundFluidCacheDirectory;
+    protected File oreVeinCacheDirectory;
+    protected File undergroundFluidCacheDirectory;
     private boolean isLoaded = false;
 
     protected abstract File getStorageDirectory();

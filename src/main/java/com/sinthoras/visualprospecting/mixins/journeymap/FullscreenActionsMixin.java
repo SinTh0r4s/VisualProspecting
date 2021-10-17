@@ -32,8 +32,8 @@ public abstract class FullscreenActionsMixin extends JmUI {
             remap = false,
             require = 1)
     private void onInitGui(CallbackInfo callbackInfo) {
-        resetVisualProspectingCacheButton = new Button(I18n.format("visualprospecting.button.resetcache"));
-        resetVisualProspectingCacheButton.setTooltip(I18n.format("visualprospecting.button.resetcache.tooltip"));
+        resetVisualProspectingCacheButton = new Button(I18n.format("visualprospecting.button.resetprogress"));
+        resetVisualProspectingCacheButton.setTooltip(I18n.format("visualprospecting.button.resetprogress.tooltip"));
         buttonList.add(resetVisualProspectingCacheButton);
     }
 

@@ -13,13 +13,13 @@ public class ResetClientCacheConfirmation extends JmUI {
     private Button cancelButton;
 
     public ResetClientCacheConfirmation() {
-        super(I18n.format("visualprospecting.resetcache.title"));
+        super(I18n.format("visualprospecting.resetprogress.title"));
     }
 
     public void func_73866_w_() {
         buttonList.clear();
-        confirmButton = new Button(I18n.format("visualprospecting.resetcache.confirm"));
-        cancelButton = new Button(I18n.format("visualprospecting.resetcache.cancel"));
+        confirmButton = new Button(I18n.format("visualprospecting.resetprogress.confirm"));
+        cancelButton = new Button(I18n.format("visualprospecting.resetprogress.cancel"));
         buttonList.add(confirmButton);
         buttonList.add(cancelButton);
     }
@@ -30,14 +30,14 @@ public class ResetClientCacheConfirmation extends JmUI {
         }
         final int x = width / 2;
         final int y = height / 2;
-        drawCenteredString(getFontRenderer(), I18n.format("visualprospecting.resetcache.prompt"), x, y, 0xFFFFFF);
+        drawCenteredString(getFontRenderer(), I18n.format("visualprospecting.resetprogress.prompt"), x, y, 0xFFFFFF);
         final ButtonList row = new ButtonList(confirmButton, cancelButton);
         row.layoutCenteredHorizontal(x, y + 18, true, 4);
     }
 
     protected void func_146284_a(GuiButton guibutton) {
         if(guibutton == confirmButton) {
-            VP.clientCache.resetClientCache();
+            VP.clientCache.resetPlayerProgression();
             UIManager.getInstance().openFullscreenMap();
         }
         else if(guibutton == cancelButton) {

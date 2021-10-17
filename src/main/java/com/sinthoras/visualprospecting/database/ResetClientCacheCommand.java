@@ -9,17 +9,17 @@ public class ResetClientCacheCommand extends CommandBase {
 
     @Override
     public String getCommandName() {
-        return "visualprospectingresetcache";
+        return "visualprospectingresetprogress";
     }
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return I18n.format("visualprospecting.resetcache.command");
+        return I18n.format("visualprospecting.resetprogress.command");
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] parameters) {
-        VP.clientCache.resetClientCache();
+        VP.clientCache.resetPlayerProgression();
     }
 
     @Override
