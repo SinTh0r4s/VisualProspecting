@@ -13,6 +13,10 @@ _Underground fluids in JourneyMap overlay._
 ![GregTech ore veins in JourneyMap overlay](https://i.ibb.co/cg7gH0P/2021-10-13-16-32-06.png) \
 _GregTech ore veins in JourneyMap overlay._
 
+### Reset Progress
+
+You may use JourneyMap's Actions Menu to achieve this or type `/visualprospectingresetprogress` in chat. Beware, there are no backups! Please use at your own risk.
+
 ### Dependencies
 
 #### Required Mods:
