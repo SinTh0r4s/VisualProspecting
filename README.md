@@ -66,7 +66,8 @@ All database access is channeled through the classes `ServerCache` and `ClientCa
 You need to determine whether your code is executed on the logical client or logical server. Dependent on your answer you need to use the according database: The client database only knows about ore veins the player has already prospected, while the server database will know about all veins. You may add or request the ore vein for a chunk:
 ```
 VP.serverCache.getVeinType(int dimensionId, int chunkX, int chunkZ);
-VP.serverCache.putVeinType(int dimensionId, int chunkX, int chunkZ, VPVeinType veinType);
+VP.serverCache.notifyOreVeinGeneration(int dimensionId, int chunkX, int chunkZ, final VPVeinType veinType);
+VP.serverCache.notifyOreVeinGeneration(int dimensionId, int chunkX, int chunkZ, final String veinName)
 
 VP.clientCache.getVeinType(int dimensionId, int chunkX, int chunkZ);
 VP.clientCache.putOreVeins(int dimensionId, List<OreVeinPosition> oreVeinPositions);
