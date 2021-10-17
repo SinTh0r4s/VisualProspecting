@@ -13,3 +13,4 @@ visualprospecting.resetprogress.confirm=Yes, i am sure!
 visualprospecting.resetprogress.cancel=Cancel
 visualprospecting.resetprogress.prompt=Delete player progress on ore veins and underground fluids?
 visualprospecting.resetprogress.command=Deletes all your progress on ore veins and undergrond fluids
+visualprospecting.resetprogress.confirmation=Progress deleted!

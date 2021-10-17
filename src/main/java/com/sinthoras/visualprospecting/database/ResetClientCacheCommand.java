@@ -4,6 +4,8 @@ import com.sinthoras.visualprospecting.VP;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 
 public class ResetClientCacheCommand extends CommandBase {
 
@@ -20,6 +22,9 @@ public class ResetClientCacheCommand extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] parameters) {
         VP.clientCache.resetPlayerProgression();
+        final IChatComponent confirmation = new ChatComponentTranslation("visualprospecting.resetprogress.confirmation");
+        confirmation.getChatStyle().setItalic(true);
+        sender.addChatMessage(confirmation);
     }
 
     @Override
