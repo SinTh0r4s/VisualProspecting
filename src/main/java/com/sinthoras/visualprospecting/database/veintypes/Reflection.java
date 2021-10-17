@@ -47,7 +47,7 @@ public class Reflection {
                 final Class<?> NEIClientConfig = Class.forName("codechicken.nei.NEIClientConfig");
                 getSearchExpression = NEIClientConfig.getDeclaredMethod("getSearchExpression");
             }
-            catch (ClassNotFoundException | NoSuchMethodException e) {
+            catch (Exception e) {
                 VP.error("Failed to integrate NEI search!");
                 e.printStackTrace();
             }
