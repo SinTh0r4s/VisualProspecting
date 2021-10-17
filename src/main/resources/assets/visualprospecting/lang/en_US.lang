@@ -12,3 +12,4 @@ visualprospecting.resetcache.title=Delete VisualProspecting Cache
 visualprospecting.resetcache.confirm=Yes, i am sure!
 visualprospecting.resetcache.cancel=Cancel
 visualprospecting.resetcache.prompt=Delete player progress on ore veins and underground fluids?
+visualprospecting.resetcache.command=Deletes all your progress on ore veins and undergrond fluids
