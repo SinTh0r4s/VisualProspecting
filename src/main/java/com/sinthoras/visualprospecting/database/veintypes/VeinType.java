@@ -65,8 +65,7 @@ public class VeinType {
     }
 
     public String getNameReadable() {
-        final String[] fragments = name.split("\\.");
-        final String veinName = fragments[fragments.length - 1];
+        final String veinName = name.replace("ore.mix.custom.", "").replace("ore.mix.", "");
         return veinName.substring(0, 1).toUpperCase() + veinName.substring(1);
     }
 
