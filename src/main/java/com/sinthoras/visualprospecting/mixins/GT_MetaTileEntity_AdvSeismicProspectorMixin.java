@@ -67,6 +67,7 @@ public abstract class GT_MetaTileEntity_AdvSeismicProspectorMixin extends GT_Met
                 compound.setString(Tags.BOOK_TITLE, "Raw Prospection Data");
                 compound.setBoolean(Tags.VISUALPROSPECTING_FLAG, true);
                 compound.setByte(Tags.PROSPECTION_TIER, mTier);
+                compound.setInteger(Tags.PROSPECTION_DIMENSION_ID, getBaseMetaTileEntity().getWorld().provider.dimensionId);
                 compound.setInteger(Tags.PROSPECTION_BLOCK_X, getBaseMetaTileEntity().getXCoord());
                 compound.setInteger(Tags.PROSPECTION_BLOCK_Y, getBaseMetaTileEntity().getYCoord());
                 compound.setInteger(Tags.PROSPECTION_BLOCK_Z, getBaseMetaTileEntity().getZCoord());
