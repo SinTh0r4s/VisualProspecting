@@ -25,7 +25,7 @@ public class MapState {
     private int oldMaxUndergroundFluidZ = 0;
 
     public boolean drawOreVeins = true;
-    public boolean drawUndergroundFluids = true;
+    public boolean drawUndergroundFluids = false;
 
     public List<OreVeinDrawStep> getOreVeinDrawSteps(final GridRenderer gridRenderer) {
         final Minecraft minecraft = Minecraft.getMinecraft();
