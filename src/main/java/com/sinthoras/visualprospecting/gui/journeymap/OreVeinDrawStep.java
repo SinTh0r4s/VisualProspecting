@@ -88,7 +88,7 @@ public class OreVeinDrawStep implements DrawStep {
         if(oreVeinPosition.isDepleted() == false) {
             list.addAll(oreVeinPosition.veinType.getOreMaterialNames().stream().map(materialName -> EnumChatFormatting.GRAY + materialName).collect(Collectors.toList()));
         }
-        list.add(EnumChatFormatting.DARK_GRAY + I18n.format("visualprospecting.depleted.toggle", Keyboard.getKeyName(Keyboard.KEY_DELETE)));
+        list.add(EnumChatFormatting.DARK_GRAY + I18n.format("visualprospecting.depleted.toggle", Keyboard.getKeyName(VP.keyDelete.getKeyCode())));
         return list;
     }
 
