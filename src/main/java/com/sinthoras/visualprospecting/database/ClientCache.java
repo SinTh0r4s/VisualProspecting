@@ -23,7 +23,7 @@ public class ClientCache extends WorldCache {
     }
 
     private void notifyNewOreVein(OreVeinPosition oreVeinPosition) {
-        final String location = "(" + oreVeinPosition.getBlockX() + "," + oreVeinPosition.getBlockZ() + ")";
+        final String location = "(" + (oreVeinPosition.getBlockX() + 8) + "," + (oreVeinPosition.getBlockZ() + 8) + ")";
         final IChatComponent veinNotification = new ChatComponentTranslation("visualprospecting.vein.prospected", oreVeinPosition.veinType.getNameReadable(), location);
         veinNotification.getChatStyle().setItalic(true);
         veinNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
