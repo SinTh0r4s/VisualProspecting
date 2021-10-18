@@ -7,11 +7,19 @@ public class OreVeinPosition {
     public final int chunkX;
     public final int chunkZ;
     public final VeinType veinType;
+    private boolean depleted = false;
 
     public OreVeinPosition(int chunkX, int chunkZ, VeinType veinType) {
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
         this.veinType = veinType;
+    }
+
+    public OreVeinPosition(int chunkX, int chunkZ, VeinType veinType, boolean depleted) {
+        this.chunkX = chunkX;
+        this.chunkZ = chunkZ;
+        this.veinType = veinType;
+        this.depleted = depleted;
     }
 
     public int getBlockX() {
@@ -20,5 +28,18 @@ public class OreVeinPosition {
 
     public int getBlockZ() {
         return Utils.coordChunkToBlock(chunkZ) + 8;
+    }
+
+    public boolean isDepleted() {
+        return  depleted;
+    }
+
+    public void toggleDepleted() {
+        depleted = !depleted;
+    }
+
+    public OreVeinPosition joinDepletedState(final OreVeinPosition other) {
+        depleted = depleted || other.depleted;
+        return this;
     }
 }

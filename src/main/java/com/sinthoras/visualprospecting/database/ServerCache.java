@@ -20,11 +20,11 @@ public class ServerCache extends WorldCache {
     }
 
     public DimensionCache.UpdateResult notifyOreVeinGeneration(int dimensionId, int chunkX, int chunkZ, final VeinType veinType) {
-        return super.putOreVein(dimensionId, chunkX, chunkZ, veinType);
+        return super.putOreVein(dimensionId, new OreVeinPosition(chunkX, chunkZ, veinType));
     }
 
     public DimensionCache.UpdateResult notifyOreVeinGeneration(int dimensionId, int chunkX, int chunkZ, final String veinName) {
-        return super.putOreVein(dimensionId, chunkX, chunkZ, VeinTypeCaching.getVeinType(veinName));
+        return super.putOreVein(dimensionId, new OreVeinPosition(chunkX, chunkZ, VeinTypeCaching.getVeinType(veinName)));
     }
 
     public List<OreVeinPosition> prospectOreChunks(int dimensionId, int minChunkX, int minChunkZ, int maxChunkX, int maxChunkZ) {
@@ -36,9 +36,9 @@ public class ServerCache extends WorldCache {
         List<OreVeinPosition> oreVeinPositions = new ArrayList<>();
         for(int chunkX = minChunkX; chunkX <= maxChunkX; chunkX = Utils.mapToCenterOreChunkCoord(chunkX + 3)) {
             for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ = Utils.mapToCenterOreChunkCoord(chunkZ + 3)) {
-                final VeinType veinType = getOreVein(dimensionId, chunkX, chunkZ);
-                if (veinType != VeinType.NO_VEIN) {
-                    oreVeinPositions.add(new OreVeinPosition(chunkX, chunkZ, veinType));
+                final OreVeinPosition oreVeinPosition = getOreVein(dimensionId, chunkX, chunkZ);
+                if (oreVeinPosition.veinType != VeinType.NO_VEIN) {
+                    oreVeinPositions.add(oreVeinPosition);
                 }
             }
         }

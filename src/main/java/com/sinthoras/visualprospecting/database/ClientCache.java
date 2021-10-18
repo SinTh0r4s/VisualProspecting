@@ -1,7 +1,6 @@
 package com.sinthoras.visualprospecting.database;
 
 import com.sinthoras.visualprospecting.*;
-import com.sinthoras.visualprospecting.database.veintypes.VeinType;
 import com.sinthoras.visualprospecting.network.ProspectingRequest;
 import gregtech.common.blocks.GT_TileEntity_Ores;
 import net.minecraft.client.Minecraft;
@@ -41,14 +40,14 @@ public class ClientCache extends WorldCache {
     public void putOreVeins(int dimensionId, List<OreVeinPosition> oreVeinPositions) {
         if(oreVeinPositions.size() == 1) {
             final OreVeinPosition oreVeinPosition = oreVeinPositions.get(0);
-            if(putOreVein(dimensionId, oreVeinPosition.chunkX, oreVeinPosition.chunkZ, oreVeinPosition.veinType) != DimensionCache.UpdateResult.AlreadyKnown) {
+            if(putOreVein(dimensionId, oreVeinPosition) != DimensionCache.UpdateResult.AlreadyKnown) {
                 notifyNewOreVein(oreVeinPosition);
             }
         }
         else if(oreVeinPositions.size() > 1) {
             int newOreVeins = 0;
             for(OreVeinPosition oreVeinPosition : oreVeinPositions) {
-                if(putOreVein(dimensionId, oreVeinPosition.chunkX, oreVeinPosition.chunkZ, oreVeinPosition.veinType) != DimensionCache.UpdateResult.AlreadyKnown) {
+                if(putOreVein(dimensionId, oreVeinPosition) != DimensionCache.UpdateResult.AlreadyKnown) {
                     newOreVeins++;
                 }
             }
@@ -59,6 +58,10 @@ public class ClientCache extends WorldCache {
                 Minecraft.getMinecraft().thePlayer.addChatMessage(oreVeinNotification);
             }
         }
+    }
+
+    public void toggleOreVein(int dimensionId, int chunkX, int chunkZ) {
+        super.toggleOreVein(dimensionId, chunkX, chunkZ);
     }
 
     public void putUndergroundFluids(int dimensionId, List<UndergroundFluidPosition> undergroundFluids) {
@@ -105,9 +108,9 @@ public class ClientCache extends WorldCache {
                         && oreMetaData != 0) {
                     final int chunkX = Utils.coordBlockToChunk(blockX);
                     final int chunkZ = Utils.coordBlockToChunk(blockZ);
-                    final VeinType veinType = getOreVein(entityPlayer.dimension, chunkX, chunkZ);
+                    final OreVeinPosition oreVeinPosition = getOreVein(entityPlayer.dimension, chunkX, chunkZ);
                     final short materialId = Utils.oreIdToMaterialId(oreMetaData);
-                    if(veinType.containsOre(materialId) == false && ProspectingRequest.canSendRequest()) {
+                    if(oreVeinPosition.veinType.containsOre(materialId) == false && ProspectingRequest.canSendRequest()) {
                         VP.network.sendToServer(new ProspectingRequest(entityPlayer.dimension, blockX, blockY, blockZ, materialId));
                     }
                 }

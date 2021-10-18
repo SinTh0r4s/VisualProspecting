@@ -2,6 +2,7 @@ package com.sinthoras.visualprospecting.database.cachebuilder;
 
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Utils;
+import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.database.veintypes.VeinType;
 import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import io.xol.enklume.nbt.*;
@@ -39,7 +40,7 @@ public class DetailedChunkAnalysis {
     }
 
     public void cleanUpWithNeighbors(final HashMap<Long, Integer> veinChunkY) {
-        final VeinType[] neighbors = new VeinType[] {
+        final OreVeinPosition[] neighbors = new OreVeinPosition[] {
                 VP.serverCache.getOreVein(dimensionId, chunkX - 3, chunkZ + 3),
                 VP.serverCache.getOreVein(dimensionId, chunkX, chunkZ + 3),
                 VP.serverCache.getOreVein(dimensionId, chunkX + 3, chunkZ + 3),
@@ -63,7 +64,7 @@ public class DetailedChunkAnalysis {
         // Remove all generated ores from neighbors. They could also be generated in the same chunk,
         // but that case is rare and therefore, neglected
         for(int neighborId=0;neighborId<neighbors.length;neighborId++) {
-            final VeinType neighbor = neighbors[neighborId];
+            final VeinType neighbor = neighbors[neighborId].veinType;
             if (neighbor != null && neighbor.canOverlapIntoNeighborOreChunk()) {
                 final int veinBlockY = neighborVeinBlockY[neighborId];
                 for (int layerBlockY = 0; layerBlockY< VeinType.veinHeight; layerBlockY++) {

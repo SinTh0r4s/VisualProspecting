@@ -1,8 +1,7 @@
 package com.sinthoras.visualprospecting.gui.journeymap;
 
 import com.sinthoras.visualprospecting.Config;
-import com.sinthoras.visualprospecting.Utils;
-import com.sinthoras.visualprospecting.database.veintypes.VeinType;
+import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
@@ -27,31 +26,27 @@ import java.util.stream.Collectors;
 
 public class OreVeinDrawStep implements DrawStep {
 
-    private final int blockX;
-    private final int blockZ;
-    private final VeinType veinType;
+    private final OreVeinPosition oreVeinPosition;
     private double iconX;
     private double iconY;
     private double iconSize;
 
 
-    public OreVeinDrawStep(final VeinType veinType, int chunkX, int chunkZ) {
-        blockX = Utils.coordChunkToBlock(chunkX) + 8;
-        blockZ = Utils.coordChunkToBlock(chunkZ) + 8;
-        this.veinType = veinType;
+    public OreVeinDrawStep(final OreVeinPosition oreVeinPosition) {
+        this.oreVeinPosition = oreVeinPosition;
     }
 
     @Override
     public void draw(double xOffset, double yOffset, GridRenderer gridRenderer, float drawScale, double fontScale, double rotation) {
         iconSize = 32 * fontScale;
         final double iconSizeHalf = iconSize / 2;
-        final Point2D.Double blockAsPixel = gridRenderer.getBlockPixelInGrid(blockX, blockZ);
+        final Point2D.Double blockAsPixel = gridRenderer.getBlockPixelInGrid(oreVeinPosition.getBlockX(), oreVeinPosition.getBlockZ());
         final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + xOffset, blockAsPixel.getY() + yOffset);
 
 
         if(gridRenderer.getZoom() >= Config.minZoomLevelForOreLabel) {
-            final int fontColor = veinType.isHighlighted() ? 0xFFFFFF : 0x7F7F7F;
-            DrawUtil.drawLabel(veinType.getNameReadable() + " Vein", pixel.getX(), pixel.getY() - iconSize, DrawUtil.HAlign.Center, DrawUtil.VAlign.Middle, 0, 180, fontColor, 255, fontScale, false, rotation);
+            final int fontColor = oreVeinPosition.veinType.isHighlighted() ? 0xFFFFFF : 0x7F7F7F;
+            DrawUtil.drawLabel(oreVeinPosition.veinType.getNameReadable() + " Vein", pixel.getX(), pixel.getY() - iconSize, DrawUtil.HAlign.Center, DrawUtil.VAlign.Middle, 0, 180, fontColor, 255, fontScale, false, rotation);
         }
 
         iconX = pixel.getX() - iconSizeHalf;
@@ -59,12 +54,12 @@ public class OreVeinDrawStep implements DrawStep {
         final IIcon blockIcon = Blocks.stone.getIcon(0, 0);
         drawQuad(blockIcon, iconX, iconY, iconSize, iconSize, 0.0, 0xFFFFFF, 255, false, GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, false);
 
-        Materials aMaterial = GregTech_API.sGeneratedMaterials[veinType.primaryOreMeta];
+        Materials aMaterial = GregTech_API.sGeneratedMaterials[oreVeinPosition.veinType.primaryOreMeta];
         final int color = (aMaterial.mRGBa[0] << 16) | (aMaterial.mRGBa[1]) << 8 | aMaterial.mRGBa[2];
         final IIcon oreIcon = aMaterial.mIconSet.mTextures[OrePrefixes.ore.mTextureIndex].getIcon();
         drawQuad(oreIcon, iconX, iconY, iconSize, iconSize, 0.0, color, 255, true, GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, false);
 
-        if(veinType.isHighlighted() == false) {
+        if(oreVeinPosition.veinType.isHighlighted() == false) {
             DrawUtil.drawRectangle(iconX, iconY, iconSize, iconSize, 0x000000, 150);
         }
     }
@@ -75,8 +70,8 @@ public class OreVeinDrawStep implements DrawStep {
 
     public List<String> getTooltip() {
         final ArrayList<String> list = new ArrayList();
-        list.add(veinType.getNameReadable() + " Vein");
-        list.addAll(veinType.getOreMaterials().stream().filter(Objects::nonNull).map(material -> EnumChatFormatting.GRAY + material.mLocalizedName + " ore").collect(Collectors.toList()));
+        list.add(oreVeinPosition.veinType.getNameReadable() + " Vein");
+        list.addAll(oreVeinPosition.veinType.getOreMaterials().stream().filter(Objects::nonNull).map(material -> EnumChatFormatting.GRAY + material.mLocalizedName + " ore").collect(Collectors.toList()));
         return list;
     }
 
