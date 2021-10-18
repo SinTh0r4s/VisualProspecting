@@ -98,7 +98,7 @@ public class ProspectingRequest implements IMessage {
                             // Prioritise center vein
                             final OreVeinPosition centerOreVeinPosition = VP.serverCache.getOreVein(message.dimensionId, chunkX, chunkZ);
                             if(centerOreVeinPosition.veinType.containsOre(message.foundOreMetaData)) {
-                                return new ProspectingNotification(message.dimensionId, centerOreVeinPosition);
+                                return new ProspectingNotification(centerOreVeinPosition);
                             }
 
                             // Check if neighboring veins could fit
@@ -113,7 +113,7 @@ public class ProspectingRequest implements IMessage {
                                         final OreVeinPosition neighborOreVeinPosition = VP.serverCache.getOreVein(message.dimensionId, neighborChunkX, neighborChunkZ);
                                         final int maxDistance = ((neighborOreVeinPosition.veinType.blockSize + 16) >> 4) + 1;  // Equals to: ceil(blockSize / 16.0) + 1
                                         if (neighborOreVeinPosition.veinType.containsOre(message.foundOreMetaData) && distanceBlocks <= maxDistance) {
-                                            return new ProspectingNotification(message.dimensionId, neighborOreVeinPosition);
+                                            return new ProspectingNotification(neighborOreVeinPosition);
                                         }
                                     }
                                 }

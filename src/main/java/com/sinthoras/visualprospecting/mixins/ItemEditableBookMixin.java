@@ -35,11 +35,11 @@ public class ItemEditableBookMixin {
                 final List<OreVeinPosition> foundOreVeins = VP.serverCache.prospectOreBlockRadius(dimensionId, blockX, blockZ, blockRadius);
                 final List<UndergroundFluidPosition> foundUndergroundFluids = VP.serverCache.prospectUndergroundFluidBlockRadius(world, blockX, blockZ, VP.undergroundFluidChunkProspectingBlockRadius);
                 if(Utils.isLogicalClient()) {
-                    VP.clientCache.putOreVeins(dimensionId, foundOreVeins);
-                    VP.clientCache.putUndergroundFluids(dimensionId, foundUndergroundFluids);
+                    VP.clientCache.putOreVeins(foundOreVeins);
+                    VP.clientCache.putUndergroundFluids(foundUndergroundFluids);
                 }
                 else {
-                    VP.network.sendTo(new ProspectingNotification(dimensionId, foundOreVeins, foundUndergroundFluids), (EntityPlayerMP) entityPlayer);
+                    VP.network.sendTo(new ProspectingNotification(foundOreVeins, foundUndergroundFluids), (EntityPlayerMP) entityPlayer);
                 }
             }
         }

@@ -65,14 +65,15 @@ GregTech, JourneyMap and their respective dependencies will be loaded automatica
 All database access is channeled through the classes `ServerCache` and `ClientCache`. Database use is split up into logical sides.
 You need to determine whether your code is executed on the logical client or logical server. Dependent on your answer you need to use the according database: The client database only knows about ore veins the player has already prospected, while the server database will know about all veins. You may add or request the ore vein for a chunk:
 ```
-VP.serverCache.getVeinType(int dimensionId, int chunkX, int chunkZ);
+VP.serverCache.getOreVein(int dimensionId, int chunkX, int chunkZ);
 VP.serverCache.notifyOreVeinGeneration(int dimensionId, int chunkX, int chunkZ, final VPVeinType veinType);
 VP.serverCache.notifyOreVeinGeneration(int dimensionId, int chunkX, int chunkZ, final String veinName)
 
-VP.clientCache.getVeinType(int dimensionId, int chunkX, int chunkZ);
-VP.clientCache.putOreVeins(int dimensionId, List<OreVeinPosition> oreVeinPositions);
+VP.clientCache.getOreVein(int dimensionId, int chunkX, int chunkZ);
+VP.clientCache.putOreVeins(List<OreVeinPosition> oreVeinPositions);
+VP.clientCache.toggleOreVein(int dimensionId, int chunkX, int chunkZ);
 
-VP.clientCache.putUndergroundFluids(int dimensionId, List<UndergroundFluidPosition> undergroundFluids);
+VP.clientCache.putUndergroundFluids(List<UndergroundFluidPosition> undergroundFluids);
 VP.clientCache.getUndergroundFluid(int dimensionId, int chunkX, int chunkZ);
 ```
 The logical server does not store underground fluid information, because GregTech has its own database for it. Instead, it provides a wrapper to access said GT database. You may also use more sophisticated methods to prospect whole areas at once. Take a look at exposed methods in `ServerCache`.
@@ -104,11 +105,11 @@ if(world.isRemote == false) {
 
     // Skip networking if in single player
     if(Utils.isLogicalClient()) {
-        VP.clientCache.putOreVeins(dimensionId, foundOreVeins);
-        VP.clientCache.putUndergroundFluids(dimensionId, foundUndergroundFluids);
+        VP.clientCache.putOreVeins(foundOreVeins);
+        VP.clientCache.putUndergroundFluids(foundUndergroundFluids);
     }
     else {
-        VP.network.sendTo(new ProspectingNotification(dimensionId, foundOreVeins, foundUndergroundFluids), entityPlayer);
+        VP.network.sendTo(new ProspectingNotification(foundOreVeins, foundUndergroundFluids), entityPlayer);
     }
 }
 ```

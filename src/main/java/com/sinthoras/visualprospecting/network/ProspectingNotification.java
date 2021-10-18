@@ -21,7 +21,6 @@ public class ProspectingNotification implements IMessage {
 
     private static List<UndergroundFluidPosition> emptyUndergroundFluidPositions = new ArrayList<>(0);
 
-    private int dimensionId;
     private List<OreVeinPosition> oreVeinPositions;
     private List<UndergroundFluidPosition> undergroundFluidPositions;
 
@@ -29,24 +28,22 @@ public class ProspectingNotification implements IMessage {
 
     }
 
-    public ProspectingNotification(int dimensionId, OreVeinPosition oreVeinPosition) {
-        this.dimensionId = dimensionId;
+    public ProspectingNotification(OreVeinPosition oreVeinPosition) {
         oreVeinPositions = Collections.singletonList(oreVeinPosition);
         undergroundFluidPositions = emptyUndergroundFluidPositions;
     }
 
-    public ProspectingNotification(int dimensionId, List<OreVeinPosition> oreVeinPositions, List<UndergroundFluidPosition> undergroundFluidPositions) {
-        this.dimensionId = dimensionId;
+    public ProspectingNotification(List<OreVeinPosition> oreVeinPositions, List<UndergroundFluidPosition> undergroundFluidPositions) {
         this.oreVeinPositions = oreVeinPositions;
         this.undergroundFluidPositions = undergroundFluidPositions;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        dimensionId = buf.readInt();
         final int numberOfOreVeins = buf.readInt();
         oreVeinPositions = new ArrayList<>(numberOfOreVeins);
         for(int i=0;i<numberOfOreVeins;i++) {
+            final int dimensionId = buf.readInt();
             final int chunkX = buf.readInt();
             final int chunkZ = buf.readInt();
             final String oreVeinName = ByteBufUtils.readUTF8String(buf);
@@ -55,6 +52,7 @@ public class ProspectingNotification implements IMessage {
         final int numberOfUndergroundFluids = buf.readInt();
         undergroundFluidPositions = new ArrayList<>(numberOfUndergroundFluids);
         for(int i=0;i<numberOfUndergroundFluids;i++) {
+            final int dimensionId = buf.readInt();
             final int chunkX = buf.readInt();
             final int chunkZ = buf.readInt();
             final Fluid fluid = FluidRegistry.getFluid(buf.readInt());
@@ -63,21 +61,22 @@ public class ProspectingNotification implements IMessage {
                 for(int offsetChunkZ = 0; offsetChunkZ< VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
                     chunks[offsetChunkX][offsetChunkZ] = buf.readInt();
                 }
-            undergroundFluidPositions.add(new UndergroundFluidPosition(chunkX, chunkZ, new UndergroundFluid(fluid, chunks)));
+            undergroundFluidPositions.add(new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, new UndergroundFluid(fluid, chunks)));
         }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(dimensionId);
         buf.writeInt(oreVeinPositions.size());
         for(OreVeinPosition oreVeinPosition : oreVeinPositions) {
+            buf.writeInt(oreVeinPosition.dimensionId);
             buf.writeInt(oreVeinPosition.chunkX);
             buf.writeInt(oreVeinPosition.chunkZ);
             ByteBufUtils.writeUTF8String(buf, oreVeinPosition.veinType.name);
         }
         buf.writeInt(undergroundFluidPositions.size());
         for(UndergroundFluidPosition undergroundFluidPosition : undergroundFluidPositions) {
+            buf.writeInt(undergroundFluidPosition.dimensionId);
             buf.writeInt(undergroundFluidPosition.chunkX);
             buf.writeInt(undergroundFluidPosition.chunkZ);
             buf.writeInt(undergroundFluidPosition.undergroundFluid.fluid.getID());
@@ -93,8 +92,8 @@ public class ProspectingNotification implements IMessage {
 
         @Override
         public IMessage onMessage(ProspectingNotification message, MessageContext ctx) {
-            VP.clientCache.putOreVeins(message.dimensionId, message.oreVeinPositions);
-            VP.clientCache.putUndergroundFluids(message.dimensionId, message.undergroundFluidPositions);
+            VP.clientCache.putOreVeins(message.oreVeinPositions);
+            VP.clientCache.putUndergroundFluids(message.undergroundFluidPositions);
             return null;
         }
     }

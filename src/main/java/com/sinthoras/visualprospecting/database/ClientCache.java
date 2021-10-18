@@ -14,7 +14,6 @@ import net.minecraft.world.World;
 
 import java.io.File;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ClientCache extends WorldCache {
 
@@ -37,7 +36,7 @@ public class ClientCache extends WorldCache {
         Minecraft.getMinecraft().thePlayer.addChatMessage(oresNotification);
     }
 
-    public void putOreVeins(int dimensionId, List<OreVeinPosition> oreVeinPositions) {
+    public void putOreVeins(List<OreVeinPosition> oreVeinPositions) {
         if(oreVeinPositions.size() == 1) {
             final OreVeinPosition oreVeinPosition = oreVeinPositions.get(0);
             if(putOreVein(oreVeinPosition) != DimensionCache.UpdateResult.AlreadyKnown) {
@@ -64,11 +63,11 @@ public class ClientCache extends WorldCache {
         super.toggleOreVein(dimensionId, chunkX, chunkZ);
     }
 
-    public void putUndergroundFluids(int dimensionId, List<UndergroundFluidPosition> undergroundFluids) {
+    public void putUndergroundFluids(List<UndergroundFluidPosition> undergroundFluids) {
         int newUndergroundFluids = 0;
         int updatedUndergroundFluids = 0;
         for(UndergroundFluidPosition undergroundFluidPosition : undergroundFluids) {
-            DimensionCache.UpdateResult updateResult = putUndergroundFluids(dimensionId, undergroundFluidPosition.chunkX, undergroundFluidPosition.chunkZ, undergroundFluidPosition.undergroundFluid);
+            DimensionCache.UpdateResult updateResult = putUndergroundFluids(undergroundFluidPosition.dimensionId, undergroundFluidPosition.chunkX, undergroundFluidPosition.chunkZ, undergroundFluidPosition.undergroundFluid);
             if(updateResult == DimensionCache.UpdateResult.New) {
                 newUndergroundFluids++;
             }

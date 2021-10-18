@@ -82,7 +82,7 @@ public class ServerCache extends WorldCache {
                     }
                 }
                 if (fluid != null) {
-                    foundUndergroundFluids.add(new UndergroundFluidPosition(chunkX, chunkZ, new UndergroundFluid(fluid, chunks)));
+                    foundUndergroundFluids.add(new UndergroundFluidPosition(world.provider.dimensionId, chunkX, chunkZ, new UndergroundFluid(fluid, chunks)));
                 }
             }
         }
