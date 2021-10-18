@@ -49,6 +49,9 @@ archivesBaseName = modId
 minecraft {
     version = "${minecraftVersion}-${forgeVersion}-${minecraftVersion}"
     runDir = "run"
+
+    replaceIn "src/main/java/com/sinthoras/visualprospecting/Tags.java"
+    replace "GRADLETOKEN_VERSION", modVersion
 }
 
 repositories {
