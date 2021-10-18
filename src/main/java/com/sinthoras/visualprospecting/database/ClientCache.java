@@ -98,7 +98,7 @@ public class ClientCache extends WorldCache {
     }
 
     public void onOreInteracted(World world, int blockX, int blockY, int blockZ, EntityPlayer entityPlayer) {
-        if(Config.enableProspecting
+        if(world.isRemote && Config.enableProspecting
                 && Minecraft.getMinecraft().thePlayer == entityPlayer) {
             final TileEntity tTileEntity = world.getTileEntity(blockX, blockY, blockZ);
             if (tTileEntity instanceof GT_TileEntity_Ores) {
