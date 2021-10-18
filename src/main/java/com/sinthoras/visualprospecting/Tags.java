@@ -22,4 +22,5 @@ public class Tags {
     public static final String PROSPECTION_BLOCK_Z = "prospection_block_z";
     public static final String PROSPECTION_ORE_RADIUS = "prospection_ore_radius";
     public static final String PROSPECTION_FLUIDS = "prospection_fluids";
+    public static final String PROSPECTION_NUMBER_OF_UNDERGROUND_FLUID = "prospection_num_fluids";
 }

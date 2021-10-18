@@ -74,6 +74,8 @@ public abstract class GT_MetaTileEntity_AdvSeismicProspectorMixin extends GT_Met
                 compound.setInteger(Tags.PROSPECTION_ORE_RADIUS, radius);
 
                 final List<UndergroundFluidPosition> undergroundFluidPositions = VP.serverCache.prospectUndergroundFluidBlockRadius(aPlayer.worldObj, getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord(), VP.undergroundFluidChunkProspectingBlockRadius);
+                compound.setInteger(Tags.PROSPECTION_NUMBER_OF_UNDERGROUND_FLUID, undergroundFluidPositions.size());
+
                 String[] fluidStrings = new String[9];
                 final int minUndergroundFluidX = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(getBaseMetaTileEntity().getXCoord() - VP.undergroundFluidChunkProspectingBlockRadius));
                 final int minUndergroundFluidZ = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(getBaseMetaTileEntity().getZCoord() - VP.undergroundFluidChunkProspectingBlockRadius));
