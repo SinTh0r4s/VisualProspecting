@@ -80,12 +80,14 @@ public class OreVeinDrawStep implements DrawStep {
     }
 
     public List<String> getTooltip() {
-        final ArrayList<String> list = new ArrayList();
+        final ArrayList<String> list = new ArrayList<>();
         if(oreVeinPosition.isDepleted()) {
             list.add(EnumChatFormatting.RED + I18n.format("visualprospecting.depleted"));
         }
         list.add(EnumChatFormatting.WHITE + oreVeinPosition.veinType.getNameReadable() + " Vein");
-        list.addAll(oreVeinPosition.veinType.getOreMaterialNames().stream().map(materialName -> EnumChatFormatting.GRAY + materialName).collect(Collectors.toList()));
+        if(oreVeinPosition.isDepleted() == false) {
+            list.addAll(oreVeinPosition.veinType.getOreMaterialNames().stream().map(materialName -> EnumChatFormatting.GRAY + materialName).collect(Collectors.toList()));
+        }
         list.add(EnumChatFormatting.DARK_GRAY + I18n.format("visualprospecting.depleted.toggle", Keyboard.getKeyName(Keyboard.KEY_DELETE)));
         return list;
     }
