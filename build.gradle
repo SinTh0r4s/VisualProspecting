@@ -43,7 +43,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 version = modVersion
-group= modGroup
+group = modGroup
 archivesBaseName = modId
 
 minecraft {
