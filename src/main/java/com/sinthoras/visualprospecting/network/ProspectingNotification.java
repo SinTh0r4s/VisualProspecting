@@ -50,7 +50,7 @@ public class ProspectingNotification implements IMessage {
             final int chunkX = buf.readInt();
             final int chunkZ = buf.readInt();
             final String oreVeinName = ByteBufUtils.readUTF8String(buf);
-            oreVeinPositions.add(new OreVeinPosition(chunkX, chunkZ, VeinTypeCaching.getVeinType(oreVeinName)));
+            oreVeinPositions.add(new OreVeinPosition(dimensionId, chunkX, chunkZ, VeinTypeCaching.getVeinType(oreVeinName)));
         }
         final int numberOfUndergroundFluids = buf.readInt();
         undergroundFluidPositions = new ArrayList<>(numberOfUndergroundFluids);

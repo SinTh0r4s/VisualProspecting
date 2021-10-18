@@ -4,6 +4,7 @@ import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import com.sinthoras.visualprospecting.gui.journeymap.MapState;
 import com.sinthoras.visualprospecting.gui.journeymap.OreVeinDrawStep;
+import journeymap.client.Constants;
 import journeymap.client.io.ThemeFileHandler;
 import journeymap.client.log.LogFormatter;
 import journeymap.client.log.StatTimer;
@@ -13,7 +14,6 @@ import journeymap.client.ui.component.Button;
 import journeymap.client.ui.component.JmUI;
 import journeymap.client.ui.fullscreen.Fullscreen;
 import journeymap.client.ui.fullscreen.MapChat;
-import journeymap.client.ui.fullscreen.layer.LayerDelegate;
 import journeymap.client.ui.theme.Theme;
 import journeymap.client.ui.theme.ThemeButton;
 import journeymap.client.ui.theme.ThemeToggle;
@@ -187,5 +187,17 @@ public abstract class FullscreenMixin extends JmUI {
             drawScreenTimer.stop();
         }
 
+    }
+
+    @Inject(method = "func_73869_a",
+            at = @At(value = "HEAD"),
+            remap = false,
+            require = 1,
+            cancellable = true)
+    private void onKeyPress(CallbackInfo callbackInfo) {
+        if((chat == null || chat.isHidden()) && Constants.isPressed(VP.keyDelete)) {
+            mapState.onToggleOreVein();
+            callbackInfo.cancel();
+        }
     }
 }

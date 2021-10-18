@@ -2,6 +2,7 @@ package com.sinthoras.visualprospecting;
 
 import com.sinthoras.visualprospecting.database.ClientCache;
 import com.sinthoras.visualprospecting.database.ServerCache;
+import net.minecraft.client.settings.KeyBinding;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,6 +11,7 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 public class VP {
 
     public static SimpleNetworkWrapper network;
+    public static KeyBinding keyDelete;
 
     public static ServerCache serverCache = new ServerCache();
     public static ClientCache clientCache = new ClientCache();

@@ -1,6 +1,8 @@
 package com.sinthoras.visualprospecting.hooks;
 
+import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.database.ResetClientCacheCommand;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -9,7 +11,9 @@ import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.ClientCommandHandler;
+import org.lwjgl.input.Keyboard;
 
 public class HooksClient extends HooksShared {
 
@@ -17,6 +21,9 @@ public class HooksClient extends HooksShared {
 	// load "Do your mod setup. Build whatever data structures you care about. Register recipes."
 	public void fmlLifeCycleEvent(FMLPreInitializationEvent event) {
 		super.fmlLifeCycleEvent(event);
+
+		VP.keyDelete = new KeyBinding("visualprospecting.key.delete.name", Keyboard.KEY_DELETE, "visualprospecting.key.delete.category");
+		ClientRegistry.registerKeyBinding(VP.keyDelete);
 	}
 	
 	@Override

@@ -74,11 +74,11 @@ public abstract class WorldCache {
         return updateResult;
     }
 
-    protected DimensionCache.UpdateResult putOreVein(int dimensionId, final OreVeinPosition oreVeinPosition) {
-        DimensionCache dimension = dimensions.get(dimensionId);
+    protected DimensionCache.UpdateResult putOreVein(final OreVeinPosition oreVeinPosition) {
+        DimensionCache dimension = dimensions.get(oreVeinPosition.dimensionId);
         if(dimension == null) {
-            dimension = new DimensionCache(dimensionId);
-            dimensions.put(dimensionId, dimension);
+            dimension = new DimensionCache(oreVeinPosition.dimensionId);
+            dimensions.put(oreVeinPosition.dimensionId, dimension);
         }
         return updateSaveFlag(dimension.putOreVein(oreVeinPosition));
     }
@@ -88,12 +88,13 @@ public abstract class WorldCache {
         if(dimension != null) {
             dimension.toggleOreVein(chunkX, chunkZ);
         }
+        needsSaving = true;
     }
 
     public OreVeinPosition getOreVein(int dimensionId, int chunkX, int chunkZ) {
         DimensionCache dimension = dimensions.get(dimensionId);
         if(dimension == null) {
-            return new OreVeinPosition(chunkX, chunkZ, VeinType.NO_VEIN, true);
+            return new OreVeinPosition(dimensionId, chunkX, chunkZ, VeinType.NO_VEIN, true);
         }
         return dimension.getOreVein(chunkX, chunkZ);
     }

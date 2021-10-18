@@ -30,7 +30,7 @@ public class ClientCache extends WorldCache {
         veinNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
         Minecraft.getMinecraft().thePlayer.addChatMessage(veinNotification);
 
-        final String oreNames = oreVeinPosition.veinType.getOreMaterials().stream().map(material -> material.mLocalizedName).collect(Collectors.joining(", "));
+        final String oreNames = String.join(", ", oreVeinPosition.veinType.getOreMaterialNames());
         final IChatComponent oresNotification = new ChatComponentTranslation("visualprospecting.vein.contents", oreNames);
         oresNotification.getChatStyle().setItalic(true);
         oresNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
@@ -40,14 +40,14 @@ public class ClientCache extends WorldCache {
     public void putOreVeins(int dimensionId, List<OreVeinPosition> oreVeinPositions) {
         if(oreVeinPositions.size() == 1) {
             final OreVeinPosition oreVeinPosition = oreVeinPositions.get(0);
-            if(putOreVein(dimensionId, oreVeinPosition) != DimensionCache.UpdateResult.AlreadyKnown) {
+            if(putOreVein(oreVeinPosition) != DimensionCache.UpdateResult.AlreadyKnown) {
                 notifyNewOreVein(oreVeinPosition);
             }
         }
         else if(oreVeinPositions.size() > 1) {
             int newOreVeins = 0;
             for(OreVeinPosition oreVeinPosition : oreVeinPositions) {
-                if(putOreVein(dimensionId, oreVeinPosition) != DimensionCache.UpdateResult.AlreadyKnown) {
+                if(putOreVein(oreVeinPosition) != DimensionCache.UpdateResult.AlreadyKnown) {
                     newOreVeins++;
                 }
             }

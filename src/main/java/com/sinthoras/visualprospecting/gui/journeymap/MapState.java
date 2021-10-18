@@ -109,4 +109,10 @@ public class MapState {
         updateUndergroundFluidRelatedDrawSteps(gridRenderer);
         return undergroundFluidsDrawSteps;
     }
+
+    public void onToggleOreVein() {
+        for(OreVeinDrawStep oreVeinDrawStep : oreChunkDrawSteps) {
+            oreVeinDrawStep.toggleDepletedIfMouseOver();
+        }
+    }
 }

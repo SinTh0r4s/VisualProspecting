@@ -81,7 +81,7 @@ public class DimensionCache {
                 final short veinTypeId = oreChunksBuffer.getShort();
                 final boolean depleted = (veinTypeId & 0x8000) > 0;
                 final VeinType veinType = VeinTypeCaching.getVeinType((short)(veinTypeId & 0x7FFF));
-                oreChunks.put(key, new OreVeinPosition(chunkX, chunkZ, veinType, depleted));
+                oreChunks.put(key, new OreVeinPosition(dimensionId, chunkX, chunkZ, veinType, depleted));
             }
         }
         if(undergroundFluidsBuffer != null) {
@@ -106,15 +106,15 @@ public class DimensionCache {
     public UpdateResult putOreVein(final OreVeinPosition oreVeinPosition) {
         final long key = getOreVeinKey(oreVeinPosition.chunkX, oreVeinPosition.chunkZ);
         if(oreChunks.containsKey(key) == false) {
-            changedOrNewOreChunks.add(key);
             oreChunks.put(key, oreVeinPosition);
+            changedOrNewOreChunks.add(key);
             oreChunksNeedsSaving = true;
             return UpdateResult.New;
         }
         final OreVeinPosition storedOreVeinPosition = oreChunks.get(key);
         if(storedOreVeinPosition.veinType != oreVeinPosition.veinType) {
-            changedOrNewOreChunks.add(key);
             oreChunks.put(key, oreVeinPosition.joinDepletedState(storedOreVeinPosition));
+            changedOrNewOreChunks.add(key);
             oreChunksNeedsSaving = true;
             return UpdateResult.New;
         }
@@ -126,11 +126,13 @@ public class DimensionCache {
         if(oreChunks.containsKey(key)) {
             oreChunks.get(key).toggleDepleted();
         }
+        changedOrNewOreChunks.add(key);
+        oreChunksNeedsSaving = true;
     }
 
     public OreVeinPosition getOreVein(int chunkX, int chunkZ) {
         final long key = getOreVeinKey(chunkX, chunkZ);
-        return oreChunks.getOrDefault(key, new OreVeinPosition(chunkX, chunkZ, VeinType.NO_VEIN, true));
+        return oreChunks.getOrDefault(key, new OreVeinPosition(dimensionId, chunkX, chunkZ, VeinType.NO_VEIN, true));
     }
 
     private long getUndergroundFluidKey(int chunkX, int chunkZ) {

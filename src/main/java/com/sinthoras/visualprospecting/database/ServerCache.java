@@ -20,11 +20,11 @@ public class ServerCache extends WorldCache {
     }
 
     public DimensionCache.UpdateResult notifyOreVeinGeneration(int dimensionId, int chunkX, int chunkZ, final VeinType veinType) {
-        return super.putOreVein(dimensionId, new OreVeinPosition(chunkX, chunkZ, veinType));
+        return super.putOreVein(new OreVeinPosition(dimensionId, chunkX, chunkZ, veinType));
     }
 
     public DimensionCache.UpdateResult notifyOreVeinGeneration(int dimensionId, int chunkX, int chunkZ, final String veinName) {
-        return super.putOreVein(dimensionId, new OreVeinPosition(chunkX, chunkZ, VeinTypeCaching.getVeinType(veinName)));
+        return super.putOreVein(new OreVeinPosition(dimensionId, chunkX, chunkZ, VeinTypeCaching.getVeinType(veinName)));
     }
 
     public List<OreVeinPosition> prospectOreChunks(int dimensionId, int minChunkX, int minChunkZ, int maxChunkX, int maxChunkZ) {

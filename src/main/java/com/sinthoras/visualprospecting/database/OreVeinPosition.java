@@ -4,18 +4,23 @@ import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.database.veintypes.VeinType;
 
 public class OreVeinPosition {
+
+    public final int dimensionId;
     public final int chunkX;
     public final int chunkZ;
     public final VeinType veinType;
+
     private boolean depleted = false;
 
-    public OreVeinPosition(int chunkX, int chunkZ, VeinType veinType) {
+    public OreVeinPosition(int dimensionId, int chunkX, int chunkZ, VeinType veinType) {
+        this.dimensionId = dimensionId;
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
         this.veinType = veinType;
     }
 
-    public OreVeinPosition(int chunkX, int chunkZ, VeinType veinType, boolean depleted) {
+    public OreVeinPosition(int dimensionId, int chunkX, int chunkZ, VeinType veinType, boolean depleted) {
+        this.dimensionId = dimensionId;
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
         this.veinType = veinType;

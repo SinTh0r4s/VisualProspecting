@@ -3,9 +3,12 @@ package com.sinthoras.visualprospecting.database.veintypes;
 import com.sinthoras.visualprospecting.Tags;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -60,8 +63,12 @@ public class VeinType {
                 || sporadicOreMeta == oreMetaData;
     }
 
-    public List<Materials> getOreMaterials() {
-        return oresAsHashSet.stream().map(metaData -> GregTech_API.sGeneratedMaterials[metaData]).collect(Collectors.toList());
+    public List<String> getOreMaterialNames() {
+        return oresAsHashSet.stream()
+                .map(metaData -> GregTech_API.sGeneratedMaterials[metaData])
+                .filter(Objects::nonNull)
+                .map(material -> EnumChatFormatting.GRAY + material.mLocalizedName)
+                .collect(Collectors.toList());
     }
 
     public String getNameReadable() {

@@ -114,7 +114,7 @@ public class VeinTypeCaching implements Runnable {
         for(VeinType veinType : veinTypes) {
             if(veinType != VeinType.NO_VEIN) {
                 if (isSearchActive) {
-                    List<String> searchableStrings = veinType.getOreMaterials().stream().filter(Objects::nonNull).map(material -> material.mLocalizedName + " ore").collect(Collectors.toList());
+                    List<String> searchableStrings = veinType.getOreMaterialNames();
                     searchableStrings.add(veinType.getNameReadable() + " Vein");
                     searchableStrings = searchableStrings.stream().map(String::toLowerCase).filter(searchableString -> searchableString.contains(searchString)).collect(Collectors.toList());
                     veinType.setNEISearchHeighlight(searchableStrings.isEmpty() == false);
