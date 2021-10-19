@@ -28,7 +28,8 @@ public abstract class FullscreenActionsMixin extends JmUI {
     }
 
     @Inject(method = "func_73866_w_",
-            at = @At(value = "INVOKE", target = "Ljourneymap/client/ui/component/Button;setDrawFrame(Z)V"),
+            at = @At(value = "INVOKE",
+                    target = "Ljourneymap/client/ui/component/Button;setDrawFrame(Z)V"),
             remap = false,
             require = 1)
     private void onInitGui(CallbackInfo callbackInfo) {

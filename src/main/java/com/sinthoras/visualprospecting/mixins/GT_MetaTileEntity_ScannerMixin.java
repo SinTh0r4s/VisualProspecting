@@ -28,7 +28,8 @@ public abstract class GT_MetaTileEntity_ScannerMixin extends GT_MetaTileEntity_B
     }
 
     @Inject(method = "checkRecipe",
-            at = @At(value = "INVOKE", target = "Lgregtech/api/util/GT_Utility$ItemNBT;convertProspectionData(Lnet/minecraft/item/ItemStack;)V"),
+            at = @At(value = "INVOKE",
+                    target = "Lgregtech/api/util/GT_Utility$ItemNBT;convertProspectionData(Lnet/minecraft/item/ItemStack;)V"),
             remap = false,
             require = 1,
             cancellable = true)

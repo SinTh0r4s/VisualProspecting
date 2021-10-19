@@ -100,7 +100,8 @@ public abstract class FullscreenMixin extends JmUI {
     }
 
     @Inject(method = "drawMap",
-            at = @At(value = "INVOKE", target = "Ljourneymap/client/model/MapState;getDrawWaypointSteps()Ljava/util/List;"),
+            at = @At(value = "INVOKE",
+                    target = "Ljourneymap/client/model/MapState;getDrawWaypointSteps()Ljava/util/List;"),
             remap = false,
             require = 1,
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
@@ -117,7 +118,9 @@ public abstract class FullscreenMixin extends JmUI {
     }
 
     @Redirect(method = "initButtons",
-            at = @At(value = "FIELD", target = "Ljourneymap/client/ui/fullscreen/Fullscreen;mapTypeToolbar:Ljourneymap/client/ui/theme/ThemeToolbar;", opcode = Opcodes.PUTFIELD),
+            at = @At(value = "FIELD",
+                    target = "Ljourneymap/client/ui/fullscreen/Fullscreen;mapTypeToolbar:Ljourneymap/client/ui/theme/ThemeToolbar;",
+                    opcode = Opcodes.PUTFIELD),
             remap = false,
             require = 1)
     private void OnCreateMapTypeToolbar(Fullscreen owner, ThemeToolbar value) {
