@@ -1,3 +1,5 @@
+
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 import java.util.concurrent.TimeUnit
 
 buildscript {
@@ -22,6 +24,7 @@ buildscript {
 
 plugins {
     id("org.ajoberstar.grgit") version("3.1.1")
+    id("com.github.johnrengelman.shadow") version("4.0.4")
 }
 
 apply plugin: 'forge'
@@ -91,6 +94,10 @@ repositories {
     }
 }
 
+configurations {
+    implementation.extendsFrom(shadowImplementation)
+}
+
 dependencies {
     annotationProcessor("org.ow2.asm:asm-debug-all:5.0.3")
     annotationProcessor("com.google.guava:guava:24.1.1-jre")
@@ -106,11 +113,16 @@ dependencies {
     }
     compile "com.github.GTNewHorizons:SpongeMixins:1.3.3:dev"
 
-    compile("com.github.Hugobros3:Enklume:master-SNAPSHOT")
+    shadowImplementation("com.github.Hugobros3:Enklume:master-SNAPSHOT")
     compile("com.github.GTNewHorizons:GT5-Unofficial:experimental-SNAPSHOT:dev") {
         setChanging(true)
     }
     compile("curse.maven:journeymap-32274:2367915")
+}
+
+task relocateShadowJar(type: ConfigureShadowRelocation) {
+    target = tasks.shadowJar
+    prefix = "com.sinthoras.visualprospecting.shadow"
 }
 
 def mixinConfigJson = "mixins." + modId + ".json"
@@ -118,8 +130,7 @@ def mixingConfigRefMap = "mixins." + modId + ".refmap.json"
 def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + mixingConfigRefMap
 def mixinSrg = "${tasks.reobf.temporaryDir}" + File.separator + "mixins.srg"
 
-
-jar {
+shadowJar {
     from refMap
     manifest {
         attributes([
@@ -129,8 +140,14 @@ jar {
                 "ForceLoadAsMod"             : true
         ])
     }
-    getArchiveAppendix().value("${minecraft.version}")
-    getArchiveVersion().value("${project.version}")
+    minimize()
+    configurations = [project.configurations.shadowImplementation]
+    dependsOn(relocateShadowJar)
+}
+
+jar {
+    dependsOn(shadowJar)
+    enabled = false
 }
 
 reobf {
