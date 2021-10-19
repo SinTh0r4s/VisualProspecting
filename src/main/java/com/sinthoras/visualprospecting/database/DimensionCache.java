@@ -58,10 +58,10 @@ public class DimensionCache {
             for (long key : changedOrNewUndergroundFluids) {
                 byteBuffer.putLong(key);
                 final UndergroundFluidPosition undergroundFluid = undergroundFluids.get(key);
-                byteBuffer.putInt(undergroundFluid.undergroundFluid.fluid.getID());
+                byteBuffer.putInt(undergroundFluid.fluid.getID());
                 for(int offsetChunkX = 0; offsetChunkX < VP.undergroundFluidSizeChunkX; offsetChunkX++) {
                     for (int offsetChunkZ = 0; offsetChunkZ < VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
-                        byteBuffer.putInt(undergroundFluid.undergroundFluid.chunks[offsetChunkX][offsetChunkZ]);
+                        byteBuffer.putInt(undergroundFluid.chunks[offsetChunkX][offsetChunkZ]);
                     }
                 }
             }
@@ -97,7 +97,7 @@ public class DimensionCache {
                         chunks[offsetChunkX][offsetChunkZ] = undergroundFluidsBuffer.getInt();
                     }
                 }
-                undergroundFluids.put(key, new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, new UndergroundFluid(fluid, chunks)));
+                undergroundFluids.put(key, new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, fluid, chunks));
             }
         }
     }
@@ -161,7 +161,7 @@ public class DimensionCache {
 
     public UndergroundFluidPosition getUndergroundFluid(int chunkX, int chunkZ) {
         final long key = getUndergroundFluidKey(chunkX, chunkZ);
-        return undergroundFluids.getOrDefault(key, new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, UndergroundFluid.NOT_PROSPECTED));
+        return undergroundFluids.getOrDefault(key, UndergroundFluidPosition.getNotProspected(dimensionId, chunkX, chunkZ));
     }
 
     public Collection<OreVeinPosition> getAllOreVeins() {

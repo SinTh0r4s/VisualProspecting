@@ -1,7 +1,6 @@
 package com.sinthoras.visualprospecting.network;
 
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.database.UndergroundFluid;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
@@ -62,7 +61,7 @@ public class ProspectingNotification implements IMessage {
                 for(int offsetChunkZ = 0; offsetChunkZ< VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
                     chunks[offsetChunkX][offsetChunkZ] = buf.readInt();
                 }
-            undergroundFluids.add(new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, new UndergroundFluid(fluid, chunks)));
+            undergroundFluids.add(new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, fluid, chunks));
         }
     }
 
@@ -81,10 +80,10 @@ public class ProspectingNotification implements IMessage {
             buf.writeInt(undergroundFluid.dimensionId);
             buf.writeInt(undergroundFluid.chunkX);
             buf.writeInt(undergroundFluid.chunkZ);
-            buf.writeInt(undergroundFluid.undergroundFluid.fluid.getID());
+            buf.writeInt(undergroundFluid.fluid.getID());
             for(int offsetChunkX = 0; offsetChunkX < VP.undergroundFluidSizeChunkX; offsetChunkX++) {
                 for (int offsetChunkZ = 0; offsetChunkZ < VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
-                    buf.writeInt(undergroundFluid.undergroundFluid.chunks[offsetChunkX][offsetChunkZ]);
+                    buf.writeInt(undergroundFluid.chunks[offsetChunkX][offsetChunkZ]);
                 }
             }
         }

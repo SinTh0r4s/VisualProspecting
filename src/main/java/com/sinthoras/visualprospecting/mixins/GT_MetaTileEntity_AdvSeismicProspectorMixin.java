@@ -83,7 +83,7 @@ public abstract class GT_MetaTileEntity_AdvSeismicProspectorMixin extends GT_Met
                     final int offsetUndergroundFluidX = (Utils.mapToCornerUndergroundFluidChunkCoord(undergroundFluidPosition.chunkX) - minUndergroundFluidX) >> 3;
                     final int offsetUndergroundFluidZ = (Utils.mapToCornerUndergroundFluidChunkCoord(undergroundFluidPosition.chunkZ) - minUndergroundFluidZ) >> 3;
                     final int undergroundFluidBookId = offsetUndergroundFluidX + offsetUndergroundFluidZ * 3;
-                    fluidStrings[undergroundFluidBookId] =  "" + undergroundFluidBookId + ": " + undergroundFluidPosition.undergroundFluid.getMinProduction() + "-" + undergroundFluidPosition.undergroundFluid.getMaxProduction() + " " + Utils.getEnglishLocalization(undergroundFluidPosition.undergroundFluid.fluid);
+                    fluidStrings[undergroundFluidBookId] =  "" + undergroundFluidBookId + ": " + undergroundFluidPosition.getMinProduction() + "-" + undergroundFluidPosition.getMaxProduction() + " " + Utils.getEnglishLocalization(undergroundFluidPosition.fluid);
                 }
                 compound.setString(Tags.PROSPECTION_FLUIDS, String.join("|", fluidStrings));
 

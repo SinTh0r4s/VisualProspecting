@@ -3,7 +3,6 @@ package com.sinthoras.visualprospecting.gui.journeymap;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
-import com.sinthoras.visualprospecting.database.UndergroundFluid;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import com.sinthoras.visualprospecting.database.veintypes.VeinType;
 import journeymap.client.render.map.GridRenderer;
@@ -77,12 +76,12 @@ public class MapState {
             for (int chunkX = minUndergroundFluidX; chunkX <= maxUndergroundFluidX; chunkX += VP.undergroundFluidSizeChunkX) {
                 for (int chunkZ = minUndergroundFluidZ; chunkZ <= maxUndergroundFluidZ; chunkZ += VP.undergroundFluidSizeChunkZ) {
                     final UndergroundFluidPosition undergroundFluid = VP.clientCache.getUndergroundFluid(minecraft.thePlayer.dimension, chunkX, chunkZ);
-                    if (undergroundFluid.undergroundFluid != UndergroundFluid.NOT_PROSPECTED) {
-                        final int minAmountInField = undergroundFluid.undergroundFluid.getMinProduction();
-                        final int maxAmountInField = undergroundFluid.undergroundFluid.getMaxProduction();
+                    if (undergroundFluid.isProspected()) {
+                        final int minAmountInField = undergroundFluid.getMinProduction();
+                        final int maxAmountInField = undergroundFluid.getMaxProduction();
                         for (int offsetChunkX = 0; offsetChunkX < VP.undergroundFluidSizeChunkX; offsetChunkX++) {
                             for (int offsetChunkZ = 0; offsetChunkZ < VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
-                                undergroundFluidChunksDrawSteps.add(new UndergroundFluidChunkDrawStep(chunkX + offsetChunkX, chunkZ + offsetChunkZ, undergroundFluid.undergroundFluid.fluid, undergroundFluid.undergroundFluid.chunks[offsetChunkX][offsetChunkZ], minAmountInField, maxAmountInField));
+                                undergroundFluidChunksDrawSteps.add(new UndergroundFluidChunkDrawStep(chunkX + offsetChunkX, chunkZ + offsetChunkZ, undergroundFluid.fluid, undergroundFluid.chunks[offsetChunkX][offsetChunkZ], minAmountInField, maxAmountInField));
                             }
                         }
                     }
@@ -93,8 +92,8 @@ public class MapState {
             for (int chunkX = minUndergroundFluidX; chunkX <= maxUndergroundFluidX; chunkX += VP.undergroundFluidSizeChunkX) {
                 for (int chunkZ = minUndergroundFluidZ; chunkZ <= maxUndergroundFluidZ; chunkZ += VP.undergroundFluidSizeChunkZ) {
                     final UndergroundFluidPosition undergroundFluid = VP.clientCache.getUndergroundFluid(minecraft.thePlayer.dimension, chunkX, chunkZ);
-                    if (undergroundFluid.undergroundFluid != UndergroundFluid.NOT_PROSPECTED) {
-                        undergroundFluidsDrawSteps.add(new UndergroundFluidDrawStep(chunkX, chunkZ, undergroundFluid.undergroundFluid.fluid, undergroundFluid.undergroundFluid.getMinProduction(), undergroundFluid.undergroundFluid.getMaxProduction()));
+                    if (undergroundFluid.isProspected()) {
+                        undergroundFluidsDrawSteps.add(new UndergroundFluidDrawStep(undergroundFluid));
                     }
                 }
             }

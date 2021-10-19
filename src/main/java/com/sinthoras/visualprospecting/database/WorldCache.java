@@ -111,7 +111,7 @@ public abstract class WorldCache {
     public UndergroundFluidPosition getUndergroundFluid(int dimensionId, int chunkX, int chunkZ) {
         DimensionCache dimension = dimensions.get(dimensionId);
         if(dimension == null) {
-            return new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, UndergroundFluid.NOT_PROSPECTED);
+            return UndergroundFluidPosition.getNotProspected(dimensionId, chunkX, chunkZ);
         }
         return dimension.getUndergroundFluid(chunkX, chunkZ);
     }
