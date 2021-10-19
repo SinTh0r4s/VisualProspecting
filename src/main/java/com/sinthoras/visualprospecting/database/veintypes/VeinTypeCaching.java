@@ -20,6 +20,7 @@ public class VeinTypeCaching implements Runnable {
     private static Map<String, Short> veinTypeStorageInfo;
     public static List<VeinType> veinTypes;
     public static HashSet<Short> largeVeinOres;
+    private static int longesOreName = 0;
 
     // BartWorks initializes veins in FML preInit
     // GalacticGreg initializes veins in FML postInit, but only copies all base game veins to make them available on all planets
@@ -79,6 +80,16 @@ public class VeinTypeCaching implements Runnable {
             }
         }
         saveVeinTypeStorageInfo();
+
+        for(VeinType veinType : veinTypes) {
+            if(veinType.name.length() > longesOreName) {
+                longesOreName = veinType.name.length();
+            }
+        }
+    }
+
+    public static int getLongesOreNameLength() {
+        return longesOreName;
     }
 
     public static short getVeinTypeId(VeinType veinType) {

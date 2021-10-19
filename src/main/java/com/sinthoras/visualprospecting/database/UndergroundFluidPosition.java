@@ -1,8 +1,11 @@
 package com.sinthoras.visualprospecting.database;
 
 import com.sinthoras.visualprospecting.Utils;
+import com.sinthoras.visualprospecting.VP;
 
 public class UndergroundFluidPosition {
+
+    public static final int BYTES = (3 + 1 + VP.undergroundFluidSizeChunkX * VP.undergroundFluidSizeChunkZ) * Integer.BYTES;
 
     public final int dimensionId;
     public final int chunkX;

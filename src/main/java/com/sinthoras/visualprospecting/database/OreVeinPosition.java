@@ -2,8 +2,11 @@ package com.sinthoras.visualprospecting.database;
 
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.database.veintypes.VeinType;
+import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 
 public class OreVeinPosition {
+
+    private static final int MAX_BYTES = 3 * Integer.BYTES + Byte.BYTES;
 
     public final int dimensionId;
     public final int chunkX;
@@ -46,5 +49,9 @@ public class OreVeinPosition {
     public OreVeinPosition joinDepletedState(final OreVeinPosition other) {
         depleted = depleted || other.depleted;
         return this;
+    }
+
+    public static int getMaxBytes() {
+        return MAX_BYTES + VeinTypeCaching.getLongesOreNameLength();
     }
 }

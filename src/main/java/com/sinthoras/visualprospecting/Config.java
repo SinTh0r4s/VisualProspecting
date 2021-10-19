@@ -15,11 +15,15 @@ public class Config {
         public static final int minDelayBetweenVeinRequests = 2000;
         public static final int minZoomLevelForOreLabel = 1;
         public static final int minZoomLevelForUndergroundFluidDetails = 2;
+        public static final double uploadBandwidthMegaBytes = 0.2;
     }
 
     private static class Categories {
         public static final String general = "general";
+        public static final String network = "network";
     }
+
+    public final static int uploadPacketsPerSecond = 10;
 
     public static boolean enableProspecting = Defaults.enableProspecting;
     public static int cacheGenerationLogUpdateMinTime = Defaults.cacheGenerationLogUpdateMinTime;
@@ -27,6 +31,9 @@ public class Config {
     public static int minDelayBetweenVeinRequests = Defaults.minDelayBetweenVeinRequests;
     public static int minZoomLevelForOreLabel = Defaults.minZoomLevelForOreLabel;
     public static int minZoomLevelForUndergroundFluidDetails = Defaults.minZoomLevelForUndergroundFluidDetails;
+    public static double uploadBandwidthMegaBytes = Defaults.uploadBandwidthMegaBytes;
+    public static int uploadSizePerPacket = (int)(uploadBandwidthMegaBytes / uploadPacketsPerSecond);
+
 
     public static void syncronizeConfiguration(File configFile) {
         Configuration configuration = new Configuration(configFile);
@@ -41,7 +48,7 @@ public class Config {
                         "caching save files. This happens only ONCE!");
         cacheGenerationLogUpdateMinTime = cacheGenerationLogUpdateMinTimeProperty.getInt();
 
-        Property minDelayBetweenVeinRequestsProperty = configuration.get(Categories.general, "minDelayBetweenVeinRequests",
+        Property minDelayBetweenVeinRequestsProperty = configuration.get(Categories.network, "minDelayBetweenVeinRequests",
                 Defaults.minDelayBetweenVeinRequests, "Anti spam mechanic: What is the minimum delay (in milliseconds)" +
                         " a player is allowed to request ore vein information.");
         minDelayBetweenVeinRequests = minDelayBetweenVeinRequestsProperty.getInt();
@@ -53,6 +60,11 @@ public class Config {
         Property minZoomLevelForUndergroundFluidDetailsProperty = configuration.get(Categories.general, "minZoomLevelForUndergroundFluidDetails",
                 Defaults.minZoomLevelForUndergroundFluidDetails, "\"Minimum zoom level at which underground fluid details are displayed. Zoom starts at 0 and increments linearly.\"");
         minZoomLevelForUndergroundFluidDetails = minZoomLevelForUndergroundFluidDetailsProperty.getInt();
+
+        Property uploadBandwidthProperty = configuration.get(Categories.network, "uploadBandwidth", Defaults.uploadBandwidthMegaBytes,
+                "Limit the bandwidth (in mB/s) a client is allowed to transmit when uploading its prospection data." +
+                        " If exceeded, the client will be kicked!");
+        uploadBandwidthMegaBytes = uploadBandwidthProperty.getDouble();
 
         Property recacheVeinsProperty = configuration.get(Categories.general, "recacheVeins", Defaults.recacheVeins,
                 "Redo GT ore vein caching if set to True. Will automatically be set back to False the next " +

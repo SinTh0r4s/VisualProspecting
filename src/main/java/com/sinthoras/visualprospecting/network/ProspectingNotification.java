@@ -19,38 +19,39 @@ import java.util.List;
 
 public class ProspectingNotification implements IMessage {
 
-    private static List<UndergroundFluidPosition> emptyUndergroundFluidPositions = new ArrayList<>(0);
+    private static final List<UndergroundFluidPosition> emptyUndergroundFluids = new ArrayList<>(0);
 
-    private List<OreVeinPosition> oreVeinPositions;
-    private List<UndergroundFluidPosition> undergroundFluidPositions;
+    private List<OreVeinPosition> oreVeins;
+    private List<UndergroundFluidPosition> undergroundFluids;
 
     public ProspectingNotification() {
 
     }
 
     public ProspectingNotification(OreVeinPosition oreVeinPosition) {
-        oreVeinPositions = Collections.singletonList(oreVeinPosition);
-        undergroundFluidPositions = emptyUndergroundFluidPositions;
+        oreVeins = Collections.singletonList(oreVeinPosition);
+        undergroundFluids = emptyUndergroundFluids;
     }
 
-    public ProspectingNotification(List<OreVeinPosition> oreVeinPositions, List<UndergroundFluidPosition> undergroundFluidPositions) {
-        this.oreVeinPositions = oreVeinPositions;
-        this.undergroundFluidPositions = undergroundFluidPositions;
+    public ProspectingNotification(List<OreVeinPosition> oreVeins, List<UndergroundFluidPosition> undergroundFluids) {
+        this.oreVeins = oreVeins;
+        this.undergroundFluids = undergroundFluids;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         final int numberOfOreVeins = buf.readInt();
-        oreVeinPositions = new ArrayList<>(numberOfOreVeins);
+        oreVeins = new ArrayList<>(numberOfOreVeins);
         for(int i=0;i<numberOfOreVeins;i++) {
             final int dimensionId = buf.readInt();
             final int chunkX = buf.readInt();
             final int chunkZ = buf.readInt();
             final String oreVeinName = ByteBufUtils.readUTF8String(buf);
-            oreVeinPositions.add(new OreVeinPosition(dimensionId, chunkX, chunkZ, VeinTypeCaching.getVeinType(oreVeinName)));
+            oreVeins.add(new OreVeinPosition(dimensionId, chunkX, chunkZ, VeinTypeCaching.getVeinType(oreVeinName)));
         }
+
         final int numberOfUndergroundFluids = buf.readInt();
-        undergroundFluidPositions = new ArrayList<>(numberOfUndergroundFluids);
+        undergroundFluids = new ArrayList<>(numberOfUndergroundFluids);
         for(int i=0;i<numberOfUndergroundFluids;i++) {
             final int dimensionId = buf.readInt();
             final int chunkX = buf.readInt();
@@ -61,28 +62,29 @@ public class ProspectingNotification implements IMessage {
                 for(int offsetChunkZ = 0; offsetChunkZ< VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
                     chunks[offsetChunkX][offsetChunkZ] = buf.readInt();
                 }
-            undergroundFluidPositions.add(new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, new UndergroundFluid(fluid, chunks)));
+            undergroundFluids.add(new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, new UndergroundFluid(fluid, chunks)));
         }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(oreVeinPositions.size());
-        for(OreVeinPosition oreVeinPosition : oreVeinPositions) {
-            buf.writeInt(oreVeinPosition.dimensionId);
-            buf.writeInt(oreVeinPosition.chunkX);
-            buf.writeInt(oreVeinPosition.chunkZ);
-            ByteBufUtils.writeUTF8String(buf, oreVeinPosition.veinType.name);
+        buf.writeInt(oreVeins.size());
+        for(OreVeinPosition oreVein : oreVeins) {
+            buf.writeInt(oreVein.dimensionId);
+            buf.writeInt(oreVein.chunkX);
+            buf.writeInt(oreVein.chunkZ);
+            ByteBufUtils.writeUTF8String(buf, oreVein.veinType.name);
         }
-        buf.writeInt(undergroundFluidPositions.size());
-        for(UndergroundFluidPosition undergroundFluidPosition : undergroundFluidPositions) {
-            buf.writeInt(undergroundFluidPosition.dimensionId);
-            buf.writeInt(undergroundFluidPosition.chunkX);
-            buf.writeInt(undergroundFluidPosition.chunkZ);
-            buf.writeInt(undergroundFluidPosition.undergroundFluid.fluid.getID());
+
+        buf.writeInt(undergroundFluids.size());
+        for(UndergroundFluidPosition undergroundFluid : undergroundFluids) {
+            buf.writeInt(undergroundFluid.dimensionId);
+            buf.writeInt(undergroundFluid.chunkX);
+            buf.writeInt(undergroundFluid.chunkZ);
+            buf.writeInt(undergroundFluid.undergroundFluid.fluid.getID());
             for(int offsetChunkX = 0; offsetChunkX < VP.undergroundFluidSizeChunkX; offsetChunkX++) {
                 for (int offsetChunkZ = 0; offsetChunkZ < VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
-                    buf.writeInt(undergroundFluidPosition.undergroundFluid.chunks[offsetChunkX][offsetChunkZ]);
+                    buf.writeInt(undergroundFluid.undergroundFluid.chunks[offsetChunkX][offsetChunkZ]);
                 }
             }
         }
@@ -92,8 +94,8 @@ public class ProspectingNotification implements IMessage {
 
         @Override
         public IMessage onMessage(ProspectingNotification message, MessageContext ctx) {
-            VP.clientCache.putOreVeins(message.oreVeinPositions);
-            VP.clientCache.putUndergroundFluids(message.undergroundFluidPositions);
+            VP.clientCache.putOreVeins(message.oreVeins);
+            VP.clientCache.putUndergroundFluids(message.undergroundFluids);
             return null;
         }
     }
