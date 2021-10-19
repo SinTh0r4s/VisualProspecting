@@ -12,7 +12,7 @@ import java.util.Set;
 
 public abstract class WorldCache {
 
-    private HashMap<Integer, DimensionCache> dimensions = new HashMap<>();
+    protected HashMap<Integer, DimensionCache> dimensions = new HashMap<>();
     private boolean needsSaving = false;
     protected File oreVeinCacheDirectory;
     protected File undergroundFluidCacheDirectory;
@@ -99,19 +99,19 @@ public abstract class WorldCache {
         return dimension.getOreVein(chunkX, chunkZ);
     }
 
-    protected DimensionCache.UpdateResult putUndergroundFluids(int dimensionId, int chunkX, int chunkZ, final UndergroundFluid undergroundFluid) {
-        DimensionCache dimension = dimensions.get(dimensionId);
+    protected DimensionCache.UpdateResult putUndergroundFluids(final UndergroundFluidPosition undergroundFluid) {
+        DimensionCache dimension = dimensions.get(undergroundFluid.dimensionId);
         if(dimension == null) {
-            dimension = new DimensionCache(dimensionId);
-            dimensions.put(dimensionId, dimension);
+            dimension = new DimensionCache(undergroundFluid.dimensionId);
+            dimensions.put(undergroundFluid.dimensionId, dimension);
         }
-        return updateSaveFlag(dimension.putUndergroundFluid(chunkX, chunkZ, undergroundFluid));
+        return updateSaveFlag(dimension.putUndergroundFluid(undergroundFluid));
     }
 
-    public UndergroundFluid getUndergroundFluid(int dimensionId, int chunkX, int chunkZ) {
+    public UndergroundFluidPosition getUndergroundFluid(int dimensionId, int chunkX, int chunkZ) {
         DimensionCache dimension = dimensions.get(dimensionId);
         if(dimension == null) {
-            return UndergroundFluid.NOT_PROSPECTED;
+            return new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, UndergroundFluid.NOT_PROSPECTED);
         }
         return dimension.getUndergroundFluid(chunkX, chunkZ);
     }

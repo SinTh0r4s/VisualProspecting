@@ -15,7 +15,7 @@ public class Config {
         public static final int minDelayBetweenVeinRequests = 2000;
         public static final int minZoomLevelForOreLabel = 1;
         public static final int minZoomLevelForUndergroundFluidDetails = 2;
-        public static final double uploadBandwidthMegaBytes = 0.2;
+        public static final int uploadBandwidthBytes = 2000000;
     }
 
     private static class Categories {
@@ -31,8 +31,8 @@ public class Config {
     public static int minDelayBetweenVeinRequests = Defaults.minDelayBetweenVeinRequests;
     public static int minZoomLevelForOreLabel = Defaults.minZoomLevelForOreLabel;
     public static int minZoomLevelForUndergroundFluidDetails = Defaults.minZoomLevelForUndergroundFluidDetails;
-    public static double uploadBandwidthMegaBytes = Defaults.uploadBandwidthMegaBytes;
-    public static int uploadSizePerPacket = (int)(uploadBandwidthMegaBytes / uploadPacketsPerSecond);
+    public static double uploadBandwidthBytes = Defaults.uploadBandwidthBytes;
+    public static int uploadSizePerPacket = (int)(uploadBandwidthBytes / uploadPacketsPerSecond);
 
 
     public static void syncronizeConfiguration(File configFile) {
@@ -61,10 +61,11 @@ public class Config {
                 Defaults.minZoomLevelForUndergroundFluidDetails, "\"Minimum zoom level at which underground fluid details are displayed. Zoom starts at 0 and increments linearly.\"");
         minZoomLevelForUndergroundFluidDetails = minZoomLevelForUndergroundFluidDetailsProperty.getInt();
 
-        Property uploadBandwidthProperty = configuration.get(Categories.network, "uploadBandwidth", Defaults.uploadBandwidthMegaBytes,
-                "Limit the bandwidth (in mB/s) a client is allowed to transmit when uploading its prospection data." +
+        Property uploadBandwidthProperty = configuration.get(Categories.network, "uploadBandwidth", Defaults.uploadBandwidthBytes,
+                "Limit the bandwidth (in B/s) a client is allowed to transmit when uploading its prospection data." +
                         " If exceeded, the client will be kicked!");
-        uploadBandwidthMegaBytes = uploadBandwidthProperty.getDouble();
+        uploadBandwidthBytes = uploadBandwidthProperty.getDouble();
+        uploadSizePerPacket = (int)(uploadBandwidthBytes / uploadPacketsPerSecond);
 
         Property recacheVeinsProperty = configuration.get(Categories.general, "recacheVeins", Defaults.recacheVeins,
                 "Redo GT ore vein caching if set to True. Will automatically be set back to False the next " +

@@ -13,6 +13,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientCache extends WorldCache {
@@ -67,7 +68,7 @@ public class ClientCache extends WorldCache {
         int newUndergroundFluids = 0;
         int updatedUndergroundFluids = 0;
         for(UndergroundFluidPosition undergroundFluidPosition : undergroundFluids) {
-            DimensionCache.UpdateResult updateResult = putUndergroundFluids(undergroundFluidPosition.dimensionId, undergroundFluidPosition.chunkX, undergroundFluidPosition.chunkZ, undergroundFluidPosition.undergroundFluid);
+            DimensionCache.UpdateResult updateResult = putUndergroundFluids(undergroundFluidPosition);
             if(updateResult == DimensionCache.UpdateResult.New) {
                 newUndergroundFluids++;
             }
@@ -123,5 +124,21 @@ public class ClientCache extends WorldCache {
         oreVeinCacheDirectory.mkdirs();
         undergroundFluidCacheDirectory.mkdirs();
         reset();
+    }
+
+    public List<OreVeinPosition> getAllOreVeins() {
+        List<OreVeinPosition> allOreVeins = new ArrayList<>();
+        for(DimensionCache dimension : dimensions.values()) {
+            allOreVeins.addAll(dimension.getAllOreVeins());
+        }
+        return allOreVeins;
+    }
+
+    public List<UndergroundFluidPosition> getAllUndergroundFluids() {
+        List<UndergroundFluidPosition> allUndergroundFluids = new ArrayList<>();
+        for(DimensionCache dimension : dimensions.values()) {
+            allUndergroundFluids.addAll(dimension.getAllUndergroundFluids());
+        }
+        return allUndergroundFluids;
     }
 }

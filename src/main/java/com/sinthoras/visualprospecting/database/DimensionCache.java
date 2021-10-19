@@ -8,6 +8,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import java.nio.ByteBuffer;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -20,7 +21,7 @@ public class DimensionCache {
     }
 
     private final HashMap<Long, OreVeinPosition> oreChunks = new HashMap<>();
-    private final HashMap<Long, UndergroundFluid> undergroundFluids = new HashMap<>();
+    private final HashMap<Long, UndergroundFluidPosition> undergroundFluids = new HashMap<>();
     private final HashSet<Long> changedOrNewOreChunks = new HashSet<>();
     private final HashSet<Long> changedOrNewUndergroundFluids = new HashSet<>();
     private boolean oreChunksNeedsSaving = false;
@@ -56,11 +57,11 @@ public class DimensionCache {
             final ByteBuffer byteBuffer = ByteBuffer.allocate(changedOrNewUndergroundFluids.size() * (Long.BYTES + Integer.BYTES * (1 + VP.undergroundFluidSizeChunkX * VP.undergroundFluidSizeChunkZ)));
             for (long key : changedOrNewUndergroundFluids) {
                 byteBuffer.putLong(key);
-                final UndergroundFluid undergroundFluid = undergroundFluids.get(key);
-                byteBuffer.putInt(undergroundFluid.fluid.getID());
+                final UndergroundFluidPosition undergroundFluid = undergroundFluids.get(key);
+                byteBuffer.putInt(undergroundFluid.undergroundFluid.fluid.getID());
                 for(int offsetChunkX = 0; offsetChunkX < VP.undergroundFluidSizeChunkX; offsetChunkX++) {
                     for (int offsetChunkZ = 0; offsetChunkZ < VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
-                        byteBuffer.putInt(undergroundFluid.chunks[offsetChunkX][offsetChunkZ]);
+                        byteBuffer.putInt(undergroundFluid.undergroundFluid.chunks[offsetChunkX][offsetChunkZ]);
                     }
                 }
             }
@@ -87,6 +88,8 @@ public class DimensionCache {
         if(undergroundFluidsBuffer != null) {
             while (undergroundFluidsBuffer.remaining() >= Long.BYTES + Integer.BYTES * (1 + VP.undergroundFluidSizeChunkX * VP.undergroundFluidSizeChunkZ)) {
                 final long key = undergroundFluidsBuffer.getLong();
+                final int chunkX = (int)(key >> 32);
+                final int chunkZ = (int)key;
                 final Fluid fluid = FluidRegistry.getFluid(undergroundFluidsBuffer.getInt());
                 final int[][] chunks = new int[VP.undergroundFluidSizeChunkX][VP.undergroundFluidSizeChunkZ];
                 for(int offsetChunkX = 0; offsetChunkX < VP.undergroundFluidSizeChunkX; offsetChunkX++) {
@@ -94,7 +97,7 @@ public class DimensionCache {
                         chunks[offsetChunkX][offsetChunkZ] = undergroundFluidsBuffer.getInt();
                     }
                 }
-                undergroundFluids.put(key, new UndergroundFluid(fluid, chunks));
+                undergroundFluids.put(key, new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, new UndergroundFluid(fluid, chunks)));
             }
         }
     }
@@ -139,8 +142,8 @@ public class DimensionCache {
         return Utils.chunkCoordsToKey(Utils.mapToCornerUndergroundFluidChunkCoord(chunkX), Utils.mapToCornerUndergroundFluidChunkCoord(chunkZ));
     }
 
-    public UpdateResult putUndergroundFluid(int chunkX, int chunkZ, final UndergroundFluid undergroundFluid) {
-        final long key = getUndergroundFluidKey(chunkX, chunkZ);
+    public UpdateResult putUndergroundFluid(final UndergroundFluidPosition undergroundFluid) {
+        final long key = getUndergroundFluidKey(undergroundFluid.chunkX, undergroundFluid.chunkZ);
         if(undergroundFluids.containsKey(key) == false) {
             changedOrNewUndergroundFluids.add(key);
             undergroundFluids.put(key, undergroundFluid);
@@ -156,8 +159,16 @@ public class DimensionCache {
         return UpdateResult.AlreadyKnown;
     }
 
-    public UndergroundFluid getUndergroundFluid(int chunkX, int chunkZ) {
+    public UndergroundFluidPosition getUndergroundFluid(int chunkX, int chunkZ) {
         final long key = getUndergroundFluidKey(chunkX, chunkZ);
-        return undergroundFluids.getOrDefault(key, UndergroundFluid.NOT_PROSPECTED);
+        return undergroundFluids.getOrDefault(key, new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, UndergroundFluid.NOT_PROSPECTED));
+    }
+
+    public Collection<OreVeinPosition> getAllOreVeins() {
+        return oreChunks.values();
+    }
+
+    public Collection<UndergroundFluidPosition> getAllUndergroundFluids() {
+        return undergroundFluids.values();
     }
 }

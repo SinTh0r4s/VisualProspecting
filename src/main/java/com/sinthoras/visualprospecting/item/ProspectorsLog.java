@@ -2,6 +2,7 @@ package com.sinthoras.visualprospecting.item;
 
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.task.SnapshotTask;
 import gregtech.api.GregTech_API;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,6 +29,7 @@ public class ProspectorsLog extends Item {
             compound.setString(Tags.PROSPECTORSLOG_AUTHOR_ID, player.getUniqueID().toString());
             item.setTagCompound(compound);
             if (world.isRemote) {
+                VP.taskManager.addTask(new SnapshotTask());
             }
             return true;
         }
