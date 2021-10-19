@@ -6,6 +6,7 @@ import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.database.WorldIdHandler;
 import com.sinthoras.visualprospecting.database.cachebuilder.WorldAnalysis;
 import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
+import com.sinthoras.visualprospecting.item.ProspectorsLog;
 import com.sinthoras.visualprospecting.network.ProspectingNotification;
 import com.sinthoras.visualprospecting.network.ProspectingRequest;
 import com.sinthoras.visualprospecting.network.WorldIdNotification;
@@ -19,6 +20,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import gregtech.api.GregTech_API;
 import net.minecraft.server.MinecraftServer;
@@ -40,6 +42,9 @@ public class HooksShared {
 		VP.network.registerMessage(ProspectingRequest.Handler.class, ProspectingRequest.class, networkId++, Side.SERVER);
 		VP.network.registerMessage(ProspectingNotification.Handler.class, ProspectingNotification.class, networkId++, Side.CLIENT);
 		VP.network.registerMessage(WorldIdNotification.Handler.class, WorldIdNotification.class, networkId++, Side.CLIENT);
+
+		ProspectorsLog.instance = new ProspectorsLog();
+		GameRegistry.registerItem(ProspectorsLog.instance, ProspectorsLog.instance.getUnlocalizedName());
 	}
 	
 	// load "Do your mod setup. Build whatever data structures you care about. Register recipes."

@@ -18,3 +18,5 @@ visualprospecting.depleted=DEPLETED
 visualprospecting.depleted.toggle=Toggle depleted with %s
 visualprospecting.key.delete.name=Toggle depleted
 visualprospecting.key.delete.category=VisualProspecting
+visualprospecting.prospectorslog.empty=Empty Prospector's Log
+visualprospecting.prospectorslog.owned=Prospector's Log from %s

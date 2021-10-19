@@ -23,4 +23,6 @@ public class Tags {
     public static final String PROSPECTION_ORE_RADIUS = "prospection_ore_radius";
     public static final String PROSPECTION_FLUIDS = "prospection_fluids";
     public static final String PROSPECTION_NUMBER_OF_UNDERGROUND_FLUID = "prospection_num_fluids";
+    public static final String PROSPECTORSLOG_AUTHOR = "log_author";
+    public static final String PROSPECTORSLOG_AUTHOR_ID = "log_author_id";
 }
