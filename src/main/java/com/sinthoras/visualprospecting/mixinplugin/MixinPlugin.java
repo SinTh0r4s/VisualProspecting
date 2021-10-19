@@ -45,7 +45,8 @@ public class MixinPlugin implements IMixinConfigPlugin {
                     "ItemEditableBookMixin",
                     "WorldGenContainerMixin",
                     "journeymap.FullscreenMixin",
-                    "journeymap.FullscreenActionsMixin"
+                    "journeymap.FullscreenActionsMixin",
+                    "journeymap.RenderWaypointBeaconMixin"
             );
         }
         else {
@@ -64,6 +65,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
                 VP.info("Found JourneyMap! Integrating now...");
                 mixins.add("journeymap.FullscreenMixin");
                 mixins.add("journeymap.FullscreenActionsMixin");
+                mixins.add("journeymap.RenderWaypointBeaconMixin");
             } else {
                 VP.info("Could not find JourneyMap! Skipping integration....");
             }
