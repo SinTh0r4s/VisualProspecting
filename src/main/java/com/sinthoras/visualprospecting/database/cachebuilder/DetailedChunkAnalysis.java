@@ -16,7 +16,7 @@ public class DetailedChunkAnalysis {
     public final int chunkX;
     public final int chunkZ;
     // For each height we count how often a ore (short) has occured
-    private final HashMap<Short, Integer>[] oresPerY = new HashMap[VP.minecraftWorldHeight];
+    private final Map<Short, Integer>[] oresPerY = new HashMap[VP.minecraftWorldHeight];
 
     public DetailedChunkAnalysis(int dimensionId, int chunkX, int chunkZ) {
         this.dimensionId = dimensionId;
@@ -39,7 +39,7 @@ public class DetailedChunkAnalysis {
         }
     }
 
-    public void cleanUpWithNeighbors(final HashMap<Long, Integer> veinChunkY) {
+    public void cleanUpWithNeighbors(final Map<Long, Integer> veinChunkY) {
         final OreVeinPosition[] neighbors = new OreVeinPosition[] {
                 VP.serverCache.getOreVein(dimensionId, chunkX - 3, chunkZ + 3),
                 VP.serverCache.getOreVein(dimensionId, chunkX, chunkZ + 3),
@@ -63,11 +63,11 @@ public class DetailedChunkAnalysis {
 
         // Remove all generated ores from neighbors. They could also be generated in the same chunk,
         // but that case is rare and therefore, neglected
-        for(int neighborId=0;neighborId<neighbors.length;neighborId++) {
+        for(int neighborId = 0; neighborId < neighbors.length; neighborId++) {
             final VeinType neighbor = neighbors[neighborId].veinType;
             if (neighbor != null && neighbor.canOverlapIntoNeighborOreChunk()) {
                 final int veinBlockY = neighborVeinBlockY[neighborId];
-                for (int layerBlockY = 0; layerBlockY< VeinType.veinHeight; layerBlockY++) {
+                for (int layerBlockY = 0; layerBlockY < VeinType.veinHeight; layerBlockY++) {
                     final int blockY = veinBlockY + layerBlockY;
                     if(blockY > 255) {
                         break;
@@ -83,10 +83,10 @@ public class DetailedChunkAnalysis {
     }
 
     public VeinType getMatchedVein() {
-        final HashSet<VeinType> matchedVeins = new HashSet<>();
+        final Set<VeinType> matchedVeins = new HashSet<>();
 
-        final HashMap<Short, Integer> allOres = new HashMap<>();
-        for(HashMap<Short, Integer> oreLevel : oresPerY) {
+        final Map<Short, Integer> allOres = new HashMap<>();
+        for(Map<Short, Integer> oreLevel : oresPerY) {
             if (oreLevel != null) {
                 oreLevel.forEach((metaData, numberOfBlocks) -> allOres.merge(metaData, numberOfBlocks, Integer::sum));
             }

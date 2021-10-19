@@ -70,7 +70,7 @@ public class ProspectingRequest implements IMessage {
 
     public static class Handler implements IMessageHandler<ProspectingRequest, IMessage> {
 
-        private static final HashMap<UUID, Long> lastRequestPerPlayer = new HashMap<>();
+        private static final Map<UUID, Long> lastRequestPerPlayer = new HashMap<>();
 
         @Override
         public IMessage onMessage(ProspectingRequest message, MessageContext ctx) {

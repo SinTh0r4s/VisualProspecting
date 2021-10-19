@@ -9,9 +9,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import java.io.Serializable;
 import java.nio.ByteBuffer;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 public class DimensionCache implements Serializable {
 
@@ -21,10 +19,10 @@ public class DimensionCache implements Serializable {
         New
     }
 
-    private final HashMap<Long, OreVeinPosition> oreChunks = new HashMap<>();
-    private final HashMap<Long, UndergroundFluidPosition> undergroundFluids = new HashMap<>();
-    private final transient HashSet<Long> changedOrNewOreChunks = new HashSet<>();
-    private final transient HashSet<Long> changedOrNewUndergroundFluids = new HashSet<>();
+    private final Map<Long, OreVeinPosition> oreChunks = new HashMap<>();
+    private final Map<Long, UndergroundFluidPosition> undergroundFluids = new HashMap<>();
+    private final transient Set<Long> changedOrNewOreChunks = new HashSet<>();
+    private final transient Set<Long> changedOrNewUndergroundFluids = new HashSet<>();
     private transient boolean oreChunksNeedsSaving = false;
     private transient boolean undergroundFluidsNeedsSaving = false;
     public final int dimensionId;

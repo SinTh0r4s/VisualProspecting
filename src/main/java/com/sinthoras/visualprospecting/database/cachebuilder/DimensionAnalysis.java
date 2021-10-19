@@ -10,19 +10,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.DataFormatException;
 
 public class DimensionAnalysis {
 
     public final int dimensionId;
-    private final HashMap<Long, DetailedChunkAnalysis> chunksForSecondIdentificationPass = new HashMap<>();
+    private final Map<Long, DetailedChunkAnalysis> chunksForSecondIdentificationPass = new HashMap<>();
 
     public DimensionAnalysis(int dimensionId) {
         this.dimensionId = dimensionId;
     }
 
     public void processMinecraftWorld(MinecraftWorld world) throws IOException, DataFormatException {
-        final HashMap<Long, Integer> veinBlockY = new HashMap<>();
+        final Map<Long, Integer> veinBlockY = new HashMap<>();
         final List<File> regionFiles = world.getAllRegionFiles(dimensionId);
         AnalysisProgressTracker.setNumberOfRegionFiles(regionFiles.size());
         for (File regionFile : regionFiles) {

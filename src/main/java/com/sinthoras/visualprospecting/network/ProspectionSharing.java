@@ -71,7 +71,7 @@ public class ProspectionSharing implements IMessage {
         isLastMessage = buf.readByte() > 0;
 
         final int numberOfOreVeins = buf.readInt();
-        for(int i=0;i<numberOfOreVeins;i++) {
+        for(int i = 0; i < numberOfOreVeins; i++) {
             final int dimensionId = buf.readInt();
             final int chunkX = buf.readInt();
             final int chunkZ = buf.readInt();
@@ -81,7 +81,7 @@ public class ProspectionSharing implements IMessage {
         }
 
         final int numberOfUndergroundFluids = buf.readInt();
-        for(int i=0;i<numberOfUndergroundFluids;i++) {
+        for(int i = 0; i < numberOfUndergroundFluids; i++) {
             final int dimensionId = buf.readInt();
             final int chunkX = buf.readInt();
             final int chunkZ = buf.readInt();

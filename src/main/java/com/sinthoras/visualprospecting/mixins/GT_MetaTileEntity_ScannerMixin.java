@@ -60,9 +60,9 @@ public abstract class GT_MetaTileEntity_ScannerMixin extends GT_MetaTileEntity_B
                 final int pageSize = 7;
                 final int numberOfPages = (foundOreVeins.size() + pageSize) / pageSize;  // Equals to ceil((foundOreVeins.size())
 
-                for(int pageNumber=0;pageNumber < numberOfPages;pageNumber++) {
+                for(int pageNumber = 0; pageNumber < numberOfPages; pageNumber++) {
                     final StringBuilder pageString = new StringBuilder();
-                    for (int i = 0; i < pageSize; i++) {
+                    for(int i = 0; i < pageSize; i++) {
                         final int veinId = pageNumber * pageSize + i;
                         if(veinId < foundOreVeins.size()) {
                             final OreVeinPosition oreVein = foundOreVeins.get(veinId);
