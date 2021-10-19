@@ -8,12 +8,14 @@ import journeymap.client.Constants;
 import journeymap.client.io.ThemeFileHandler;
 import journeymap.client.log.LogFormatter;
 import journeymap.client.log.StatTimer;
+import journeymap.client.model.BlockCoordIntPair;
 import journeymap.client.render.map.GridRenderer;
 import journeymap.client.ui.UIManager;
 import journeymap.client.ui.component.Button;
 import journeymap.client.ui.component.JmUI;
 import journeymap.client.ui.fullscreen.Fullscreen;
 import journeymap.client.ui.fullscreen.MapChat;
+import journeymap.client.ui.fullscreen.layer.LayerDelegate;
 import journeymap.client.ui.theme.Theme;
 import journeymap.client.ui.theme.ThemeButton;
 import journeymap.client.ui.theme.ThemeToggle;
@@ -21,6 +23,7 @@ import journeymap.client.ui.theme.ThemeToolbar;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import org.apache.logging.log4j.Level;
+import org.lwjgl.input.Mouse;
 import org.spongepowered.asm.lib.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,7 +42,6 @@ import static com.sinthoras.visualprospecting.gui.journeymap.Reflection.getJourn
 @Mixin(value = Fullscreen.class, remap = false)
 public abstract class FullscreenMixin extends JmUI {
 
-    private static MapState mapState = new MapState();
     private ThemeButton buttonOreVeins;
     private ThemeButton buttonUndergroundFluids;
 
@@ -60,6 +62,10 @@ public abstract class FullscreenMixin extends JmUI {
 
     @Shadow(remap = false)
     MapChat chat;
+
+    @Final
+    @Shadow(remap = false)
+    LayerDelegate layerDelegate;
 
     @Shadow(remap = false)
     boolean firstLayoutPass;
@@ -94,40 +100,43 @@ public abstract class FullscreenMixin extends JmUI {
     }
 
     @Inject(method = "drawMap",
-            at = @At(value = "INVOKE", target = "Ljourneymap/client/model/MapState;getDrawWaypointSteps()Ljava/util/List;"),
+            at = @At(value = "INVOKE",
+                    target = "Ljourneymap/client/model/MapState;getDrawWaypointSteps()Ljava/util/List;"),
             remap = false,
             require = 1,
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void onBeforeDrawWaypoints(CallbackInfo callbackInfo, boolean refreshReady, StatTimer timer, int xOffset, int yOffset, float drawScale) {
         final GridRenderer gridRenderer = getJourneyMapGridRenderer();
         assert (gridRenderer != null);
-        if(mapState.drawUndergroundFluids) {
-            gridRenderer.draw(mapState.getUndergroundFluidChunksDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
-            gridRenderer.draw(mapState.getUndergroundFluidsDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
+        if(MapState.instance.drawUndergroundFluids) {
+            gridRenderer.draw(MapState.instance.getUndergroundFluidChunksDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
+            gridRenderer.draw(MapState.instance.getUndergroundFluidsDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
         }
-        if(mapState.drawOreVeins) {
-            gridRenderer.draw(mapState.getOreVeinDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
+        if(MapState.instance.drawOreVeins) {
+            gridRenderer.draw(MapState.instance.getOreVeinDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
         }
     }
 
     @Redirect(method = "initButtons",
-            at = @At(value = "FIELD", target = "Ljourneymap/client/ui/fullscreen/Fullscreen;mapTypeToolbar:Ljourneymap/client/ui/theme/ThemeToolbar;", opcode = Opcodes.PUTFIELD),
+            at = @At(value = "FIELD",
+                    target = "Ljourneymap/client/ui/fullscreen/Fullscreen;mapTypeToolbar:Ljourneymap/client/ui/theme/ThemeToolbar;",
+                    opcode = Opcodes.PUTFIELD),
             remap = false,
             require = 1)
     private void OnCreateMapTypeToolbar(Fullscreen owner, ThemeToolbar value) {
         final Theme theme = ThemeFileHandler.getCurrentTheme();
 
         buttonOreVeins = new ThemeToggle(theme, "visualprospecting.button.orevein", "oreveins");
-        buttonOreVeins.setToggled(mapState.drawOreVeins, false);
+        buttonOreVeins.setToggled(MapState.instance.drawOreVeins, false);
         buttonOreVeins.addToggleListener((button, toggled) -> {
-            mapState.drawOreVeins = toggled;
+            MapState.instance.drawOreVeins = toggled;
             return true;
         });
 
         buttonUndergroundFluids = new ThemeToggle(theme, "visualprospecting.button.undergroundfluid", "undergroundfluid");
-        buttonUndergroundFluids.setToggled(mapState.drawUndergroundFluids, false);
+        buttonUndergroundFluids.setToggled(MapState.instance.drawUndergroundFluids, false);
         buttonUndergroundFluids.addToggleListener((button, toggled) -> {
-            mapState.drawUndergroundFluids = toggled;
+            MapState.instance.drawUndergroundFluids = toggled;
             return true;
         });
 
@@ -159,10 +168,10 @@ public abstract class FullscreenMixin extends JmUI {
                 }
             }
 
-            if(tooltip == null && mapState.drawOreVeins) {
+            if(tooltip == null && MapState.instance.drawOreVeins) {
                 final int scaledMouseX = (mx * mc.displayWidth) / this.width;
                 final int scaledMouseY = (my * mc.displayHeight) / this.height;
-                for(OreVeinDrawStep oreVein : mapState.getOreVeinDrawSteps(gridRenderer)) {
+                for(OreVeinDrawStep oreVein : MapState.instance.getOreVeinDrawSteps(gridRenderer)) {
                     if(oreVein.mouseOver(scaledMouseX, scaledMouseY)) {
                         tooltip = oreVein.getTooltip();
                         break;
@@ -196,8 +205,26 @@ public abstract class FullscreenMixin extends JmUI {
             cancellable = true)
     private void onKeyPress(CallbackInfo callbackInfo) {
         if((chat == null || chat.isHidden()) && Constants.isPressed(VP.keyDelete)) {
-            mapState.onToggleOreVein();
+            MapState.instance.onToggleOreVein();
             callbackInfo.cancel();
+        }
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+        if (chat != null && !chat.isHidden()) {
+            chat.func_73864_a(mouseX, mouseY, mouseButton);
+        }
+
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        if (!this.isMouseOverButton(mouseX, mouseY)) {
+            final int scaledMouseX = mx * mc.displayWidth / this.width;
+            final int scaledMouseY = my * mc.displayHeight / this.height;
+            final double blockSize = Math.pow(2.0D, gridRenderer.getZoom());
+            if(MapState.instance.onMapClicked(mouseButton, scaledMouseX, scaledMouseY, blockSize) == false) {
+                BlockCoordIntPair blockCoord = gridRenderer.getBlockUnderMouse(Mouse.getEventX(), Mouse.getEventY(), mc.displayWidth, mc.displayHeight);
+                layerDelegate.onMouseClicked(mc, Mouse.getEventX(), Mouse.getEventY(), gridRenderer.getWidth(), gridRenderer.getHeight(), blockCoord, mouseButton);
+            }
         }
     }
 }

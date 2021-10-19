@@ -10,6 +10,7 @@ import gregtech.api.enums.OrePrefixes;
 import journeymap.client.cartography.RGB;
 import journeymap.client.forge.helper.ForgeHelper;
 import journeymap.client.forge.helper.IRenderHelper;
+import journeymap.client.model.Waypoint;
 import journeymap.client.render.draw.DrawStep;
 import journeymap.client.render.draw.DrawUtil;
 import journeymap.client.render.map.GridRenderer;
@@ -23,6 +24,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,16 +63,23 @@ public class OreVeinDrawStep implements DrawStep {
         final IIcon blockIcon = Blocks.stone.getIcon(0, 0);
         drawQuad(blockIcon, iconX, iconY, iconSize, iconSize, 0xFFFFFF, 255, false);
 
-        Materials aMaterial = GregTech_API.sGeneratedMaterials[oreVeinPosition.veinType.primaryOreMeta];
-        final int color = (aMaterial.mRGBa[0] << 16) | (aMaterial.mRGBa[1]) << 8 | aMaterial.mRGBa[2];
-        final IIcon oreIcon = aMaterial.mIconSet.mTextures[OrePrefixes.ore.mTextureIndex].getIcon();
-        drawQuad(oreIcon, iconX, iconY, iconSize, iconSize, color, 255, true);
+        drawQuad(getIconFromPrimaryOre(), iconX, iconY, iconSize, iconSize, getColor(), 255, true);
 
         if(oreVeinPosition.veinType.isHighlighted() == false || oreVeinPosition.isDepleted()) {
             DrawUtil.drawRectangle(iconX, iconY, iconSize, iconSize, 0x000000, 150);
             if(oreVeinPosition.isDepleted()) {
                 drawQuad(depletedTextureLocation, iconX, iconY, iconSize, iconSize, 0xFFFFFF, 255);
             }
+        }
+
+        if(oreVeinPosition.isAsWaypointActive()) {
+            final double thickness = iconSize / 8;
+            final int borderAlpha = 204;
+            final int color = 0xFFD700;
+            DrawUtil.drawRectangle(iconX - thickness, iconY - thickness, iconSize + thickness, thickness, color, borderAlpha);
+            DrawUtil.drawRectangle(iconX + iconSize, iconY - thickness, thickness, iconSize + thickness, color, borderAlpha);
+            DrawUtil.drawRectangle(iconX, iconY + iconSize, iconSize + thickness, thickness, color, borderAlpha);
+            DrawUtil.drawRectangle(iconX - thickness, iconY, thickness, iconSize + thickness, color, borderAlpha);
         }
     }
 
@@ -84,6 +93,9 @@ public class OreVeinDrawStep implements DrawStep {
         if(oreVeinPosition.isDepleted()) {
             list.add(EnumChatFormatting.RED + I18n.format("visualprospecting.depleted"));
         }
+        if(oreVeinPosition.isAsWaypointActive()) {
+            list.add(EnumChatFormatting.GOLD + I18n.format("visualprospecting.iswaypoint"));
+        }
         list.add(EnumChatFormatting.WHITE + oreVeinPosition.veinType.getNameReadable() + " Vein");
         if(oreVeinPosition.isDepleted() == false) {
             list.addAll(oreVeinPosition.veinType.getOreMaterialNames().stream().map(materialName -> EnumChatFormatting.GRAY + materialName).collect(Collectors.toList()));
@@ -96,6 +108,35 @@ public class OreVeinDrawStep implements DrawStep {
         if(mouseOver) {
             VP.clientCache.toggleOreVein(oreVeinPosition.dimensionId, oreVeinPosition.chunkX, oreVeinPosition.chunkZ);
         }
+    }
+
+    private int getColor() {
+        Materials aMaterial = GregTech_API.sGeneratedMaterials[oreVeinPosition.veinType.primaryOreMeta];
+        return (aMaterial.mRGBa[0] << 16) | (aMaterial.mRGBa[1]) << 8 | aMaterial.mRGBa[2];
+    }
+
+    private IIcon getIconFromPrimaryOre() {
+        Materials aMaterial = GregTech_API.sGeneratedMaterials[oreVeinPosition.veinType.primaryOreMeta];
+        return aMaterial.mIconSet.mTextures[OrePrefixes.ore.mTextureIndex].getIcon();
+    }
+
+    public boolean onMouseClick(int mouseX, int mouseY, double blockSize, boolean isDoubleClick) {
+        final boolean clickMouseOver = mouseX >= iconX - blockSize && mouseX <= iconX + iconSize + blockSize && mouseY >= iconY - blockSize && mouseY <= iconY + iconSize + blockSize;
+        if(isDoubleClick) {
+            oreVeinPosition.triggerAsWaypointActive(clickMouseOver);
+        }
+        return clickMouseOver;
+    }
+
+    public void disableWaypoint() {
+        oreVeinPosition.triggerAsWaypointActive(false);
+    }
+
+    public Waypoint toWaypoint() {
+        if(oreVeinPosition.isAsWaypointActive()) {
+            return new Waypoint(oreVeinPosition.veinType.getNameReadable(), oreVeinPosition.getBlockX(), 65, oreVeinPosition.getBlockZ(), new Color(getColor()), Waypoint.Type.Normal, oreVeinPosition.dimensionId);
+        }
+        return null;
     }
 
     public static void drawQuad(ResourceLocation texture, double x, double y, double width, double height, int color, float alpha) {

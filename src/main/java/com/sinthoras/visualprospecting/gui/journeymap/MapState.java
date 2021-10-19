@@ -5,6 +5,7 @@ import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import com.sinthoras.visualprospecting.database.veintypes.VeinType;
+import journeymap.client.model.Waypoint;
 import journeymap.client.render.map.GridRenderer;
 import net.minecraft.client.Minecraft;
 
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapState {
+    public static final MapState instance = new MapState();
+
     private final List<OreVeinDrawStep> oreChunkDrawSteps = new ArrayList<>();
     private int oldMinOreChunkX = 0;
     private int oldMaxOreChunkX = 0;
@@ -23,6 +26,11 @@ public class MapState {
     private int oldMaxUndergroundFluidX = 0;
     private int oldMinUndergroundFluidZ = 0;
     private int oldMaxUndergroundFluidZ = 0;
+
+    private Waypoint activeOreVeinPosition = null;
+    private int oldMouseX = 0;
+    private int oldMouseY = 0;
+    private long timeLastClick = 0;
 
     public boolean drawOreVeins = true;
     public boolean drawUndergroundFluids = false;
@@ -114,5 +122,36 @@ public class MapState {
         for(OreVeinDrawStep oreVeinDrawStep : oreChunkDrawSteps) {
             oreVeinDrawStep.toggleDepletedIfMouseOver();
         }
+    }
+
+    public boolean onMapClicked(int mouseButton, int mouseX, int mouseY, double blockSize) {
+        if(mouseButton != 0) {
+            return false;
+        }
+        final long timestamp = System.currentTimeMillis();
+        final boolean isDoubleClick = mouseX == oldMouseX && mouseY == oldMouseY && timestamp - timeLastClick < 500;
+        oldMouseX = mouseX;
+        oldMouseY = mouseY;
+        timeLastClick = timestamp;
+
+        boolean hitOreIcon = false;
+        activeOreVeinPosition = null;
+        for(OreVeinDrawStep oreVeinDrawStep : oreChunkDrawSteps) {
+            if(oreVeinDrawStep.onMouseClick(mouseX, mouseY, blockSize, isDoubleClick)) {
+                activeOreVeinPosition = oreVeinDrawStep.toWaypoint();
+                hitOreIcon = true;
+            }
+        }
+        return hitOreIcon;
+    }
+
+    public void disableWaypoint() {
+        for(OreVeinDrawStep oreVeinDrawStep : oreChunkDrawSteps) {
+            oreVeinDrawStep.disableWaypoint();
+        }
+    }
+
+    public Waypoint getActiveOreVein() {
+        return activeOreVeinPosition;
     }
 }

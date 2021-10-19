@@ -17,7 +17,8 @@ public class OreVeinPosition implements Serializable {
     public final int chunkZ;
     public transient VeinType veinType;
 
-    private boolean depleted = false;
+    private transient boolean depleted = false;
+    private transient boolean asWaypointActive = false;
 
     public OreVeinPosition(int dimensionId, int chunkX, int chunkZ, VeinType veinType) {
         this.dimensionId = dimensionId;
@@ -57,6 +58,14 @@ public class OreVeinPosition implements Serializable {
 
     public static int getMaxBytes() {
         return MAX_BYTES + VeinTypeCaching.getLongesOreNameLength();
+    }
+    
+    public void triggerAsWaypointActive(boolean isActive) {
+        asWaypointActive = isActive && asWaypointActive == false;
+    }
+
+    public boolean isAsWaypointActive() {
+        return asWaypointActive;
     }
 
     private void writeObject(ObjectOutputStream objectOutputStream) throws Exception {
