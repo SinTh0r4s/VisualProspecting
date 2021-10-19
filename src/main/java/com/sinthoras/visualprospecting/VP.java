@@ -9,6 +9,8 @@ import org.apache.logging.log4j.Logger;
 
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
+import java.util.Random;
+
 public class VP {
 
     public static SimpleNetworkWrapper network;
@@ -17,6 +19,7 @@ public class VP {
     public final static TaskManager taskManager = new TaskManager();
     public final static ServerCache serverCache = new ServerCache();
     public final static ClientCache clientCache = new ClientCache();
+    public final static Random randomGeneration = new Random();
 
     private static Logger LOG = LogManager.getLogger(Tags.MODID);
     public static final int gregTechSmallOreMinimumMeta = 16000;

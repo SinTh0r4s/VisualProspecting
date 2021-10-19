@@ -9,6 +9,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
 public class ProspectorsLog extends Item {
@@ -30,6 +33,17 @@ public class ProspectorsLog extends Item {
             item.setTagCompound(compound);
             if (world.isRemote) {
                 VP.taskManager.addTask(new SnapshotTask());
+            }
+            else {
+                final int random = VP.randomGeneration.nextInt(100);
+                if(random < 10) {
+                    final String localizationKey = "visualprospecting.prospectorslog.creation.fail" + (random / 2);
+                    final IChatComponent notification = new ChatComponentTranslation(localizationKey);
+                    notification.getChatStyle().setItalic(true);
+                    notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
+                    player.addChatMessage(notification);
+                    player.destroyCurrentEquippedItem();
+                }
             }
             return true;
         }
