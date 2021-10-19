@@ -2,10 +2,12 @@ package com.sinthoras.visualprospecting.item;
 
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.task.SnapshotTask;
+import com.sinthoras.visualprospecting.task.SnapshotDownloadTask;
+import com.sinthoras.visualprospecting.task.SnapshotUploadTask;
 import gregtech.api.GregTech_API;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,10 +31,10 @@ public class ProspectorsLog extends Item {
         if(isFilledLog(item) == false) {
             final NBTTagCompound compound = new NBTTagCompound();
             compound.setString(Tags.PROSPECTORSLOG_AUTHOR, player.getDisplayName());
-            compound.setString(Tags.PROSPECTORSLOG_AUTHOR_ID, player.getUniqueID().toString());
+            compound.setString(Tags.PROSPECTORSLOG_AUTHOR_ID, player.getPersistentID().toString());
             item.setTagCompound(compound);
             if (world.isRemote) {
-                VP.taskManager.addTask(new SnapshotTask());
+                VP.taskManager.addTask(new SnapshotUploadTask());
             }
             else {
                 final int random = VP.randomGeneration.nextInt(100);
@@ -43,9 +45,31 @@ public class ProspectorsLog extends Item {
                     notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
                     player.addChatMessage(notification);
                     player.destroyCurrentEquippedItem();
+                    return false;
                 }
             }
             return true;
+        }
+        else if(world.isRemote == false){
+            final NBTTagCompound compound = item.getTagCompound();
+            final String authorUuid = compound.getString(Tags.PROSPECTORSLOG_AUTHOR_ID);
+            if(authorUuid.equals(player.getPersistentID().toString()) == false) {
+                final int random = VP.randomGeneration.nextInt(VP.transferCache.isClientDataAvailable(authorUuid) ? 100 : 10);
+                if(random < 10) {
+                    final String localizationKey = "visualprospecting.prospectorslog.reading.fail" + (random / 2);
+                    final IChatComponent notification = new ChatComponentTranslation(localizationKey);
+                    notification.getChatStyle().setItalic(true);
+                    notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
+                    player.addChatMessage(notification);
+                    player.destroyCurrentEquippedItem();
+                    return false;
+                }
+                final IChatComponent notification = new ChatComponentTranslation("visualprospecting.prospectorslog.reading.begin");
+                notification.getChatStyle().setItalic(true);
+                notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
+                player.addChatMessage(notification);
+                VP.taskManager.addTask(new SnapshotDownloadTask(authorUuid, (EntityPlayerMP) player));
+            }
         }
         return false;
     }

@@ -9,7 +9,7 @@ import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import com.sinthoras.visualprospecting.item.ProspectorsLog;
 import com.sinthoras.visualprospecting.network.ProspectingNotification;
 import com.sinthoras.visualprospecting.network.ProspectingRequest;
-import com.sinthoras.visualprospecting.network.ProspectionUpload;
+import com.sinthoras.visualprospecting.network.ProspectionSharing;
 import com.sinthoras.visualprospecting.network.WorldIdNotification;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -43,7 +43,8 @@ public class HooksShared {
 		VP.network.registerMessage(ProspectingRequest.Handler.class, ProspectingRequest.class, networkId++, Side.SERVER);
 		VP.network.registerMessage(ProspectingNotification.Handler.class, ProspectingNotification.class, networkId++, Side.CLIENT);
 		VP.network.registerMessage(WorldIdNotification.Handler.class, WorldIdNotification.class, networkId++, Side.CLIENT);
-		VP.network.registerMessage(ProspectionUpload.Handler.class, ProspectionUpload.class, networkId++, Side.SERVER);
+		VP.network.registerMessage(ProspectionSharing.ServerHandler.class, ProspectionSharing.class, networkId++, Side.SERVER);
+		VP.network.registerMessage(ProspectionSharing.ClientHandler.class, ProspectionSharing.class, networkId++, Side.CLIENT);
 
 		ProspectorsLog.instance = new ProspectorsLog();
 		GameRegistry.registerItem(ProspectorsLog.instance, ProspectorsLog.instance.getUnlocalizedName());

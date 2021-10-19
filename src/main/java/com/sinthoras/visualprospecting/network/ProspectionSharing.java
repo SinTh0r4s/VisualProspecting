@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProspectionUpload implements IMessage {
+public class ProspectionSharing implements IMessage {
 
     private static final int BYTES_OVERHEAD = 2 * Byte.BYTES + 2 * Integer.BYTES;
 
@@ -30,7 +30,7 @@ public class ProspectionUpload implements IMessage {
     boolean isFirstMessage = false;
     boolean isLastMessage = false;
 
-    public ProspectionUpload() {
+    public ProspectionSharing() {
 
     }
 
@@ -124,13 +124,13 @@ public class ProspectionUpload implements IMessage {
         }
     }
 
-    public static class Handler implements IMessageHandler<ProspectionUpload, IMessage> {
+    public static class ServerHandler implements IMessageHandler<ProspectionSharing, IMessage> {
 
         private static Map<EntityPlayerMP, List<OreVeinPosition>> oreVeins = new HashMap<>();
         private static Map<EntityPlayerMP, List<UndergroundFluidPosition>> undergroundFluids = new HashMap<>();
 
         @Override
-        public IMessage onMessage(ProspectionUpload message, MessageContext ctx) {
+        public IMessage onMessage(ProspectionSharing message, MessageContext ctx) {
             final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 
             // Optional todo: Integrate over time for proper checking
@@ -150,6 +150,30 @@ public class ProspectionUpload implements IMessage {
                 VP.transferCache.addClientProspectionData(player.getPersistentID().toString(), oreVeins.get(player), undergroundFluids.get(player));
                 oreVeins.remove(player);
                 undergroundFluids.remove(player);
+            }
+            return null;
+        }
+    }
+
+    public static class ClientHandler implements IMessageHandler<ProspectionSharing, IMessage> {
+
+        private static List<OreVeinPosition> oreVeins;
+        private static List<UndergroundFluidPosition> undergroundFluids;
+
+        @Override
+        public IMessage onMessage(ProspectionSharing message, MessageContext ctx) {
+            if(message.isFirstMessage) {
+                oreVeins= new ArrayList<>();
+                undergroundFluids= new ArrayList<>();
+            }
+            if(oreVeins == null || undergroundFluids == null) {
+                return null;
+            }
+            oreVeins.addAll(message.oreVeins);
+            undergroundFluids.addAll(message.undergroundFluids);
+            if(message.isLastMessage) {
+                VP.clientCache.putOreVeins(oreVeins);
+                VP.clientCache.putUndergroundFluids(undergroundFluids);
             }
             return null;
         }

@@ -4,18 +4,18 @@ import com.sinthoras.visualprospecting.Config;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
-import com.sinthoras.visualprospecting.network.ProspectionUpload;
+import com.sinthoras.visualprospecting.network.ProspectionSharing;
 
 import java.util.List;
 
-public class SnapshotTask implements ITask {
+public class SnapshotUploadTask implements ITask {
 
     private final List<OreVeinPosition> oreVeins;
     private final List<UndergroundFluidPosition> undergroundFluids;
     private long lastUpload = 0;
     private boolean firstMessage = true;
 
-    public SnapshotTask() {
+    public SnapshotUploadTask() {
         oreVeins = VP.clientCache.getAllOreVeins();
         undergroundFluids = VP.clientCache.getAllUndergroundFluids();
     }
@@ -23,10 +23,9 @@ public class SnapshotTask implements ITask {
     @Override
     public boolean process() {
         final long timestamp = System.currentTimeMillis();
-        if(timestamp - lastUpload > 1000 / Config.uploadPacketsPerSecond
-                && (oreVeins.isEmpty() == false || undergroundFluids.isEmpty() == false)) {
+        if(timestamp - lastUpload > 1000 / Config.uploadPacketsPerSecond && listsEmpty() == false) {
             lastUpload = timestamp;
-            final ProspectionUpload packet = new ProspectionUpload();
+            final ProspectionSharing packet = new ProspectionSharing();
 
             final int addedOreVeins = packet.putOreVeins(oreVeins);
             oreVeins.subList(0, addedOreVeins).clear();
@@ -37,10 +36,14 @@ public class SnapshotTask implements ITask {
             packet.setFirstMessage(firstMessage);
             firstMessage = false;
 
-            packet.setLastMessage(oreVeins.isEmpty() && undergroundFluids.isEmpty());
+            packet.setLastMessage(listsEmpty());
 
             VP.network.sendToServer(packet);
         }
+        return listsEmpty();
+    }
+
+    private boolean listsEmpty() {
         return oreVeins.isEmpty() && undergroundFluids.isEmpty();
     }
 }
