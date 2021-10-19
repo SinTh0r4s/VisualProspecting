@@ -16,6 +16,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class ProspectorsLog extends Item {
 
     public static ProspectorsLog instance;
@@ -24,10 +26,11 @@ public class ProspectorsLog extends Item {
         maxStackSize = 1;
         setUnlocalizedName("visualprospecting.prospectorslog");
         setCreativeTab(GregTech_API.TAB_GREGTECH);
+        setTextureName(Tags.MODID + ":prospectorslog");
     }
 
     @Override
-    public boolean onItemUse(ItemStack item, EntityPlayer player, World world, int blockX, int blockY, int blockZ, int side, float offsetX, float offsetY, float offsetZ) {
+    public ItemStack onItemRightClick(ItemStack item, World world, EntityPlayer player) {
         if(isFilledLog(item) == false) {
             final NBTTagCompound compound = new NBTTagCompound();
             compound.setString(Tags.PROSPECTORSLOG_AUTHOR, player.getDisplayName());
@@ -45,10 +48,8 @@ public class ProspectorsLog extends Item {
                     notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
                     player.addChatMessage(notification);
                     player.destroyCurrentEquippedItem();
-                    return false;
                 }
             }
-            return true;
         }
         else if(world.isRemote == false){
             final NBTTagCompound compound = item.getTagCompound();
@@ -62,25 +63,33 @@ public class ProspectorsLog extends Item {
                     notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
                     player.addChatMessage(notification);
                     player.destroyCurrentEquippedItem();
-                    return false;
                 }
-                final IChatComponent notification = new ChatComponentTranslation("visualprospecting.prospectorslog.reading.begin");
-                notification.getChatStyle().setItalic(true);
-                notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
-                player.addChatMessage(notification);
-                VP.taskManager.addTask(new SnapshotDownloadTask(authorUuid, (EntityPlayerMP) player));
+                else {
+                    final IChatComponent notification = new ChatComponentTranslation("visualprospecting.prospectorslog.reading.begin");
+                    notification.getChatStyle().setItalic(true);
+                    notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
+                    player.addChatMessage(notification);
+                    VP.taskManager.addTask(new SnapshotDownloadTask(authorUuid, (EntityPlayerMP) player));
+                }
             }
         }
-        return false;
+        return item;
     }
 
     @Override
     public String getItemStackDisplayName(ItemStack item) {
-        final NBTTagCompound compound = item.getTagCompound();
+        return I18n.format("visualprospecting.prospectorslog.name");
+    }
+
+    @Override
+    public void addInformation(ItemStack item, EntityPlayer player, List infoList, boolean ignored) {
         if(isFilledLog(item)) {
-            return I18n.format("visualprospecting.prospectorslog.owned", compound.getString(Tags.PROSPECTORSLOG_AUTHOR));
+            final NBTTagCompound compound = item.getTagCompound();
+            infoList.add(I18n.format("visualprospecting.prospectorslog.author", compound.getString(Tags.PROSPECTORSLOG_AUTHOR)));
         }
-        return I18n.format("visualprospecting.prospectorslog.empty");
+        else {
+            infoList.add(I18n.format("visualprospecting.prospectorslog.empty"));
+        }
     }
 
     private boolean isFilledLog(ItemStack item) {
