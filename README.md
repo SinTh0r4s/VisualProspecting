@@ -11,7 +11,7 @@ This mod is tailored to _GregTech: New Horizons 2_, but feel free to use it howe
 ![Underground fluids in JourneyMap overlay](https://i.ibb.co/crPhR1X/2021-10-12-15-45-25.png) \
 _Underground fluids in JourneyMap overlay._
 
-![GregTech ore veins in JourneyMap overlay](https://i.ibb.co/rQdqzPF/2021-10-20-01-13-04.png) \
+![GregTech ore veins in JourneyMap overlay](https://i.ibb.co/G5KLGjQ/2021-10-20-01-16-57.png) \
 _GregTech ore veins in JourneyMap overlay. You may double-click an ore vein to toggle it as waypoint._
 
 ### Reset Progress
