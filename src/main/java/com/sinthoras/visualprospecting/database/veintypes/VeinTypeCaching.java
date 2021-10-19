@@ -19,7 +19,7 @@ public class VeinTypeCaching implements Runnable {
     private static Map<String, VeinType> veinTypeLookupTableForNames = new HashMap<>();
     private static Map<String, Short> veinTypeStorageInfo;
     public static List<VeinType> veinTypes;
-    public static HashSet<Short> largeVeinOres;
+    public static Set<Short> largeVeinOres;
     private static int longesOreName = 0;
 
     // BartWorks initializes veins in FML preInit

@@ -246,14 +246,14 @@ public class Utils {
         }
     }
 
-    public static HashMap<Integer, ByteBuffer> getDIMFiles(File directory) {
+    public static Map<Integer, ByteBuffer> getDIMFiles(File directory) {
         try {
             final List<Integer> dimensionIds = Files.walk(directory.toPath(), 1)
                     .filter(Files::isRegularFile)
                     .filter(path -> path.getFileName().toString().startsWith("DIM"))
                     .map(dimensionFolder -> Integer.parseInt(dimensionFolder.getFileName().toString().substring(3)))
                     .collect(Collectors.toList());
-            final HashMap<Integer, ByteBuffer> dimensionFiles = new HashMap<>();
+            final Map<Integer, ByteBuffer> dimensionFiles = new HashMap<>();
             for (int dimensionId : dimensionIds) {
                 ByteBuffer buffer = readFileToBuffer(new File(directory.toPath() + "/DIM" + dimensionId));
                 if (buffer != null) {
@@ -279,7 +279,7 @@ public class Utils {
             return null;
         }
 
-        HashMap<ChunkCoordIntPair, int[]> chunkData = dimensionWiseChunkData.computeIfAbsent(dimensionId, k -> new HashMap<>(1024));
+        Map<ChunkCoordIntPair, int[]> chunkData = dimensionWiseChunkData.computeIfAbsent(dimensionId, k -> new HashMap<>(1024));
 
         int[] tInts = chunkData.get(chunkCoordinate);
 

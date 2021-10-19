@@ -89,7 +89,7 @@ public class OreVeinDrawStep implements DrawStep {
     }
 
     public List<String> getTooltip() {
-        final ArrayList<String> list = new ArrayList<>();
+        final List<String> list = new ArrayList<>();
         if(oreVeinPosition.isDepleted()) {
             list.add(EnumChatFormatting.RED + I18n.format("visualprospecting.depleted"));
         }

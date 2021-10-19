@@ -8,9 +8,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import java.nio.ByteBuffer;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 public class DimensionCache {
 
@@ -20,10 +18,10 @@ public class DimensionCache {
         New
     }
 
-    private final HashMap<Long, OreVeinPosition> oreChunks = new HashMap<>();
-    private final HashMap<Long, UndergroundFluidPosition> undergroundFluids = new HashMap<>();
-    private final HashSet<Long> changedOrNewOreChunks = new HashSet<>();
-    private final HashSet<Long> changedOrNewUndergroundFluids = new HashSet<>();
+    private final Map<Long, OreVeinPosition> oreChunks = new HashMap<>();
+    private final Map<Long, UndergroundFluidPosition> undergroundFluids = new HashMap<>();
+    private final Set<Long> changedOrNewOreChunks = new HashSet<>();
+    private final Set<Long> changedOrNewUndergroundFluids = new HashSet<>();
     private boolean oreChunksNeedsSaving = false;
     private boolean undergroundFluidsNeedsSaving = false;
     public final int dimensionId;

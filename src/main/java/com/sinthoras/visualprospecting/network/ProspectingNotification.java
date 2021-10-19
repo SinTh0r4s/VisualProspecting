@@ -41,7 +41,7 @@ public class ProspectingNotification implements IMessage {
     public void fromBytes(ByteBuf buf) {
         final int numberOfOreVeins = buf.readInt();
         oreVeins = new ArrayList<>(numberOfOreVeins);
-        for(int i=0;i<numberOfOreVeins;i++) {
+        for(int i = 0; i < numberOfOreVeins; i++) {
             final int dimensionId = buf.readInt();
             final int chunkX = buf.readInt();
             final int chunkZ = buf.readInt();
@@ -51,14 +51,14 @@ public class ProspectingNotification implements IMessage {
 
         final int numberOfUndergroundFluids = buf.readInt();
         undergroundFluids = new ArrayList<>(numberOfUndergroundFluids);
-        for(int i=0;i<numberOfUndergroundFluids;i++) {
+        for(int i = 0; i < numberOfUndergroundFluids; i++) {
             final int dimensionId = buf.readInt();
             final int chunkX = buf.readInt();
             final int chunkZ = buf.readInt();
             final Fluid fluid = FluidRegistry.getFluid(buf.readInt());
             final int[][] chunks = new int[VP.undergroundFluidSizeChunkX][VP.undergroundFluidSizeChunkZ];
             for(int offsetChunkX = 0; offsetChunkX < VP.undergroundFluidSizeChunkX; offsetChunkX++)
-                for(int offsetChunkZ = 0; offsetChunkZ< VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
+                for(int offsetChunkZ = 0; offsetChunkZ < VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
                     chunks[offsetChunkX][offsetChunkZ] = buf.readInt();
                 }
             undergroundFluids.add(new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, fluid, chunks));

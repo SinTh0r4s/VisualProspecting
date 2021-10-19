@@ -2,8 +2,6 @@ package com.sinthoras.visualprospecting.database.veintypes;
 
 import com.sinthoras.visualprospecting.Tags;
 import gregtech.api.GregTech_API;
-import gregtech.api.enums.Materials;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.HashSet;
@@ -23,7 +21,7 @@ public class VeinType {
     public final short secondaryOreMeta;
     public final short inBetweenOreMeta;
     public final short sporadicOreMeta;
-    private final HashSet<Short> oresAsHashSet;
+    private final Set<Short> oresAsSet;
     private boolean isHighlighted = true;
 
     // Available after VisualProspecting post GT initialization
@@ -37,19 +35,19 @@ public class VeinType {
         this.secondaryOreMeta = secondaryOreMeta;
         this.inBetweenOreMeta = inBetweenOreMeta;
         this.sporadicOreMeta = sporadicOreMeta;
-        oresAsHashSet = new HashSet<>();
-        oresAsHashSet.add(primaryOreMeta);
-        oresAsHashSet.add(secondaryOreMeta);
-        oresAsHashSet.add(inBetweenOreMeta);
-        oresAsHashSet.add(sporadicOreMeta);
+        oresAsSet = new HashSet<>();
+        oresAsSet.add(primaryOreMeta);
+        oresAsSet.add(secondaryOreMeta);
+        oresAsSet.add(inBetweenOreMeta);
+        oresAsSet.add(sporadicOreMeta);
     }
 
     public boolean matches(Set<Short> foundOres) {
-        return foundOres.containsAll(oresAsHashSet);
+        return foundOres.containsAll(oresAsSet);
     }
 
     public boolean matchesWithSpecificPrimaryOrSecondary(Set<Short> foundOres, short specificMeta) {
-        return (primaryOreMeta == specificMeta || secondaryOreMeta == specificMeta) && foundOres.containsAll(oresAsHashSet);
+        return (primaryOreMeta == specificMeta || secondaryOreMeta == specificMeta) && foundOres.containsAll(oresAsSet);
     }
 
     public boolean canOverlapIntoNeighborOreChunk() {
@@ -64,7 +62,7 @@ public class VeinType {
     }
 
     public List<String> getOreMaterialNames() {
-        return oresAsHashSet.stream()
+        return oresAsSet.stream()
                 .map(metaData -> GregTech_API.sGeneratedMaterials[metaData])
                 .filter(Objects::nonNull)
                 .map(material -> EnumChatFormatting.GRAY + material.mLocalizedName)
@@ -76,8 +74,8 @@ public class VeinType {
         return veinName.substring(0, 1).toUpperCase() + veinName.substring(1);
     }
 
-    public HashSet<Short> getOresAtLayer(int layerBlockY) {
-        final HashSet<Short> result = new HashSet<>();
+    public Set<Short> getOresAtLayer(int layerBlockY) {
+        final Set<Short> result = new HashSet<>();
         switch(layerBlockY) {
             case 0:
             case 1:

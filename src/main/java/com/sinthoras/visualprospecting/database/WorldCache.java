@@ -8,11 +8,12 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public abstract class WorldCache {
 
-    protected HashMap<Integer, DimensionCache> dimensions = new HashMap<>();
+    protected Map<Integer, DimensionCache> dimensions = new HashMap<>();
     private boolean needsSaving = false;
     protected File oreVeinCacheDirectory;
     protected File undergroundFluidCacheDirectory;
@@ -30,8 +31,8 @@ public abstract class WorldCache {
         undergroundFluidCacheDirectory = new File(worldCacheDirectory, Tags.UNDERGROUNDFLUID_DIR);
         oreVeinCacheDirectory.mkdirs();
         undergroundFluidCacheDirectory.mkdirs();
-        final HashMap<Integer, ByteBuffer> oreVeinDimensionBuffers = Utils.getDIMFiles(oreVeinCacheDirectory);
-        final HashMap<Integer, ByteBuffer> undergroundFluidDimensionBuffers = Utils.getDIMFiles(undergroundFluidCacheDirectory);
+        final Map<Integer, ByteBuffer> oreVeinDimensionBuffers = Utils.getDIMFiles(oreVeinCacheDirectory);
+        final Map<Integer, ByteBuffer> undergroundFluidDimensionBuffers = Utils.getDIMFiles(undergroundFluidCacheDirectory);
         final Set<Integer> dimensionsIds = new HashSet<>();
         dimensionsIds.addAll(oreVeinDimensionBuffers.keySet());
         dimensionsIds.addAll(undergroundFluidDimensionBuffers.keySet());

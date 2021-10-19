@@ -6,12 +6,13 @@ import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import io.xol.enklume.nbt.*;
 
 import java.util.HashSet;
+import java.util.Set;
 
 // A slim, but faster version to identify >90% of veins
 public class ChunkAnalysis {
 
-    private final HashSet<Short> ores = new HashSet<>();
-    private final HashSet<VeinType> matchedVeins = new HashSet<>();
+    private final Set<Short> ores = new HashSet<>();
+    private final Set<VeinType> matchedVeins = new HashSet<>();
     private int minVeinBlockY = VP.minecraftWorldHeight;
 
     public void processMinecraftChunk(final NBTCompound chunkRoot) {
