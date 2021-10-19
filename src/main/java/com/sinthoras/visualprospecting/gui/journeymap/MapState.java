@@ -133,14 +133,22 @@ public class MapState {
         oldMouseX = mouseX;
         oldMouseY = mouseY;
         timeLastClick = timestamp;
+
+        boolean hitOreIcon = false;
+        activeOreVeinPosition = null;
         for(OreVeinDrawStep oreVeinDrawStep : oreChunkDrawSteps) {
             if(oreVeinDrawStep.onMouseClick(mouseX, mouseY, blockSize, isDoubleClick)) {
                 activeOreVeinPosition = oreVeinDrawStep.toWaypoint();
-                return true;
+                hitOreIcon = true;
             }
         }
-        activeOreVeinPosition = null;
-        return false;
+        return hitOreIcon;
+    }
+
+    public void disableWaypoint() {
+        for(OreVeinDrawStep oreVeinDrawStep : oreChunkDrawSteps) {
+            oreVeinDrawStep.disableWaypoint();
+        }
     }
 
     public Waypoint getActiveOreVein() {

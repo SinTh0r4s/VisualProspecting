@@ -128,8 +128,15 @@ public class OreVeinDrawStep implements DrawStep {
         return clickMouseOver;
     }
 
+    public void disableWaypoint() {
+        oreVeinPosition.triggerAsWaypointActive(false);
+    }
+
     public Waypoint toWaypoint() {
-        return new Waypoint(oreVeinPosition.veinType.getNameReadable(), oreVeinPosition.getBlockX(), 62, oreVeinPosition.getBlockZ(), new Color(getColor()), Waypoint.Type.Normal, oreVeinPosition.dimensionId);
+        if(oreVeinPosition.isAsWaypointActive()) {
+            return new Waypoint(oreVeinPosition.veinType.getNameReadable(), oreVeinPosition.getBlockX(), 65, oreVeinPosition.getBlockZ(), new Color(getColor()), Waypoint.Type.Normal, oreVeinPosition.dimensionId);
+        }
+        return null;
     }
 
     public static void drawQuad(ResourceLocation texture, double x, double y, double width, double height, int color, float alpha) {

@@ -46,7 +46,8 @@ public class MixinPlugin implements IMixinConfigPlugin {
                     "WorldGenContainerMixin",
                     "journeymap.FullscreenMixin",
                     "journeymap.FullscreenActionsMixin",
-                    "journeymap.RenderWaypointBeaconMixin"
+                    "journeymap.RenderWaypointBeaconMixin",
+                    "journeymap.WaypointManagerMixin"
             );
         }
         else {
@@ -66,6 +67,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
                 mixins.add("journeymap.FullscreenMixin");
                 mixins.add("journeymap.FullscreenActionsMixin");
                 mixins.add("journeymap.RenderWaypointBeaconMixin");
+                mixins.add("journeymap.WaypointManagerMixin");
             } else {
                 VP.info("Could not find JourneyMap! Skipping integration....");
             }
