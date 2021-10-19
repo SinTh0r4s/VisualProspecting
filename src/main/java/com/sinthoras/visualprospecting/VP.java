@@ -2,6 +2,7 @@ package com.sinthoras.visualprospecting;
 
 import com.sinthoras.visualprospecting.database.ClientCache;
 import com.sinthoras.visualprospecting.database.ServerCache;
+import com.sinthoras.visualprospecting.task.TaskManager;
 import net.minecraft.client.settings.KeyBinding;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,8 +14,9 @@ public class VP {
     public static SimpleNetworkWrapper network;
     public static KeyBinding keyDelete;
 
-    public static ServerCache serverCache = new ServerCache();
-    public static ClientCache clientCache = new ClientCache();
+    public final static TaskManager taskManager = new TaskManager();
+    public final static ServerCache serverCache = new ServerCache();
+    public final static ClientCache clientCache = new ClientCache();
 
     private static Logger LOG = LogManager.getLogger(Tags.MODID);
     public static final int gregTechSmallOreMinimumMeta = 16000;
