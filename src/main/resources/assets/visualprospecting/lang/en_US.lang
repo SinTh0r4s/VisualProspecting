@@ -21,6 +21,7 @@ visualprospecting.key.delete.category=VisualProspecting
 visualprospecting.prospectorslog.name=Prospector's Log
 visualprospecting.prospectorslog.author=Author: %s
 visualprospecting.prospectorslog.empty=Use item to fill it.
+visualprospecting.prospectorslog.creation.begin=A Prospector's Log has been written.
 visualprospecting.prospectorslog.creation.fail0=[Failed]: Damn! I spilled coffee over it...
 visualprospecting.prospectorslog.creation.fail1=[Failed]: It seem's that you cannot read your own words...
 visualprospecting.prospectorslog.creation.fail2=[Failed]: Why did I write that in eldritch? I cannot read eldritch!

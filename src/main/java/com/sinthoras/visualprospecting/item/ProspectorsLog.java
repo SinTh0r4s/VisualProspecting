@@ -49,6 +49,12 @@ public class ProspectorsLog extends Item {
                     player.addChatMessage(notification);
                     player.destroyCurrentEquippedItem();
                 }
+                else {
+                    final IChatComponent notification = new ChatComponentTranslation("visualprospecting.prospectorslog.creation.begin");
+                    notification.getChatStyle().setItalic(true);
+                    notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
+                    player.addChatMessage(notification);
+                }
             }
         }
         else if(world.isRemote == false){
