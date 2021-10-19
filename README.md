@@ -18,6 +18,10 @@ _GregTech ore veins in JourneyMap overlay. You may double-click an ore vein to t
 
 You may use JourneyMap's Actions Menu to achieve this or type `/visualprospectingresetprogress` in chat. Beware, there are no backups! Please use at your own risk.
 
+### Other Maps
+
+Does VisualProspecting run with other maps? - I runs just fine, but it has no visualization or GUI integration. If you like to add integration into other maps yourself, feel free to contact me or open a Pull Request.
+
 ### Dependencies
 
 #### Required Mods:
