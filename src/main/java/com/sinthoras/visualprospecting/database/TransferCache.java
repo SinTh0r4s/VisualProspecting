@@ -1,13 +1,9 @@
 package com.sinthoras.visualprospecting.database;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-
+import java.io.Serializable;
 import java.util.*;
 
-/*
-This class holds data to share between clients. It is wiped on server restart!
- */
-public class TransferCache {
+public class TransferCache implements Serializable {
 
     private final Map<String, List<OreVeinPosition>> oreVeins = new HashMap<>();
     private final Map<String, List<UndergroundFluidPosition>> undergroundFluids = new HashMap<>();
@@ -27,5 +23,9 @@ public class TransferCache {
 
     public List<UndergroundFluidPosition> getSharedUndergroundFluidsFrom(String uuid) {
         return undergroundFluids.getOrDefault(uuid, new ArrayList<>());
+    }
+
+    public boolean isEmpty() {
+        return oreVeins.isEmpty() && undergroundFluids.isEmpty();
     }
 }

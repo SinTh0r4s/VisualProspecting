@@ -7,12 +7,13 @@ import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class DimensionCache {
+public class DimensionCache implements Serializable {
 
     public enum UpdateResult {
         AlreadyKnown,
@@ -22,10 +23,10 @@ public class DimensionCache {
 
     private final HashMap<Long, OreVeinPosition> oreChunks = new HashMap<>();
     private final HashMap<Long, UndergroundFluidPosition> undergroundFluids = new HashMap<>();
-    private final HashSet<Long> changedOrNewOreChunks = new HashSet<>();
-    private final HashSet<Long> changedOrNewUndergroundFluids = new HashSet<>();
-    private boolean oreChunksNeedsSaving = false;
-    private boolean undergroundFluidsNeedsSaving = false;
+    private final transient HashSet<Long> changedOrNewOreChunks = new HashSet<>();
+    private final transient HashSet<Long> changedOrNewUndergroundFluids = new HashSet<>();
+    private transient boolean oreChunksNeedsSaving = false;
+    private transient boolean undergroundFluidsNeedsSaving = false;
     public final int dimensionId;
 
     public DimensionCache(int dimensionId) {

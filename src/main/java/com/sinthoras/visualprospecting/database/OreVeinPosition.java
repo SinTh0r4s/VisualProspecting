@@ -4,14 +4,18 @@ import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.database.veintypes.VeinType;
 import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 
-public class OreVeinPosition {
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+public class OreVeinPosition implements Serializable {
 
     private static final int MAX_BYTES = 3 * Integer.BYTES + Byte.BYTES;
 
     public final int dimensionId;
     public final int chunkX;
     public final int chunkZ;
-    public final VeinType veinType;
+    public transient VeinType veinType;
 
     private boolean depleted = false;
 
@@ -53,5 +57,15 @@ public class OreVeinPosition {
 
     public static int getMaxBytes() {
         return MAX_BYTES + VeinTypeCaching.getLongesOreNameLength();
+    }
+
+    private void writeObject(ObjectOutputStream objectOutputStream) throws Exception {
+        objectOutputStream.defaultWriteObject();
+        objectOutputStream.writeShort(veinType.veinId);
+    }
+
+    private void readObject(ObjectInputStream objectInputStream) throws Exception {
+        objectInputStream.defaultReadObject();
+        veinType = VeinTypeCaching.getVeinType(objectInputStream.readShort());
     }
 }

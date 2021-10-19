@@ -10,18 +10,21 @@ import org.apache.logging.log4j.Logger;
 
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
+import java.io.File;
 import java.util.Random;
 
 public class VP {
 
     public static SimpleNetworkWrapper network;
     public static KeyBinding keyDelete;
+    public static TransferCache transferCache;
 
     public final static TaskManager taskManager = new TaskManager();
     public final static ServerCache serverCache = new ServerCache();
     public final static ClientCache clientCache = new ClientCache();
     public final static Random randomGeneration = new Random();
-    public final static TransferCache transferCache = new TransferCache();
+
+    public static File transferCacheFile;
 
     private static Logger LOG = LogManager.getLogger(Tags.MODID);
     public static final int gregTechSmallOreMinimumMeta = 16000;

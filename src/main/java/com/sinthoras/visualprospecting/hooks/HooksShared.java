@@ -3,6 +3,7 @@ package com.sinthoras.visualprospecting.hooks;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Config;
 import com.sinthoras.visualprospecting.Tags;
+import com.sinthoras.visualprospecting.database.TransferCache;
 import com.sinthoras.visualprospecting.database.WorldIdHandler;
 import com.sinthoras.visualprospecting.database.cachebuilder.WorldAnalysis;
 import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
@@ -33,7 +34,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.zip.DataFormatException;
 
 
@@ -95,18 +96,40 @@ public class HooksShared {
 				e.printStackTrace();
 			}
 		}
+
+		final File worldDirectory = minecraftServer.getEntityWorld().getSaveHandler().getWorldDirectory();
+		VP.transferCacheFile = new File(worldDirectory, Tags.TRANSFERCACHE_FILE);
+		try {
+			final FileInputStream fileInputStream = new FileInputStream(VP.transferCacheFile);
+			final ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+			VP.transferCache = (TransferCache) objectInputStream.readObject();
+		}
+		catch (Exception e) {
+			VP.transferCache = new TransferCache();
+		}
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerStartedEvent event) {
-		
+
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerStoppingEvent event) {
 		VP.serverCache.saveVeinCache();
 		VP.serverCache.reset();
+
+		if(VP.transferCache.isEmpty() == false) {
+			try {
+				FileOutputStream fileOutputStream = new FileOutputStream(VP.transferCacheFile);
+				ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+				objectOutputStream.writeObject(VP.transferCache);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerStoppedEvent event) {
-		
+
 	}
 }
