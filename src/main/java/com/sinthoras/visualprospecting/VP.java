@@ -2,6 +2,7 @@ package com.sinthoras.visualprospecting;
 
 import com.sinthoras.visualprospecting.database.ClientCache;
 import com.sinthoras.visualprospecting.database.ServerCache;
+import com.sinthoras.visualprospecting.database.TransferCache;
 import com.sinthoras.visualprospecting.task.TaskManager;
 import net.minecraft.client.settings.KeyBinding;
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +21,7 @@ public class VP {
     public final static ServerCache serverCache = new ServerCache();
     public final static ClientCache clientCache = new ClientCache();
     public final static Random randomGeneration = new Random();
+    public final static TransferCache transferCache = new TransferCache();
 
     private static Logger LOG = LogManager.getLogger(Tags.MODID);
     public static final int gregTechSmallOreMinimumMeta = 16000;

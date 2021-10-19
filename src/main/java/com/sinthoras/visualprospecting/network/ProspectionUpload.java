@@ -147,7 +147,9 @@ public class ProspectionUpload implements IMessage {
             oreVeins.get(player).addAll(message.oreVeins);
             undergroundFluids.get(player).addAll(message.undergroundFluids);
             if(message.isLastMessage) {
-                // TODO: Pass on to server side cache
+                VP.transferCache.addClientProspectionData(player.getPersistentID().toString(), oreVeins.get(player), undergroundFluids.get(player));
+                oreVeins.remove(player);
+                undergroundFluids.remove(player);
             }
             return null;
         }
