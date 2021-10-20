@@ -73,6 +73,14 @@ public class MixinPlugin implements IMixinConfigPlugin {
                 VP.info("Could not find JourneyMap! Skipping integration....");
             }
 
+            if(loadJar("bartworks")) {
+                VP.info("Found Bartworks! Integrating now...");
+                mixins.add("bartworks.WorldGenContainerMixin");
+            }
+            else {
+                VP.info("Could not find Bartworks! Skipping integration....");
+            }
+
             if(loadJar("GalacticGreg")) {
                 VP.info("Found GalacticGreg! Integrating now...");
                 mixins.add("GalacticGreg.GT_Worldgenerator_SpaceMixin");
