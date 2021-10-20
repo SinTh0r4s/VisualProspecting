@@ -62,6 +62,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
                     "ItemEditableBookMixin",
                     "WorldGenContainerMixin"
             );
+
             if (loadJar("journeymap-1.7.10")) {
                 VP.info("Found JourneyMap! Integrating now...");
                 mixins.add("journeymap.FullscreenMixin");
@@ -71,6 +72,15 @@ public class MixinPlugin implements IMixinConfigPlugin {
             } else {
                 VP.info("Could not find JourneyMap! Skipping integration....");
             }
+
+            if(loadJar("GalacticGreg")) {
+                VP.info("Found GalacticGreg! Integrating now...");
+                mixins.add("GalacticGreg.GT_Worldgenerator_SpaceMixin");
+            }
+            else {
+                VP.info("Could not find GalacticGreg! Skipping integration....");
+            }
+
             return mixins;
         }
     }

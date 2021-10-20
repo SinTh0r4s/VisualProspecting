@@ -111,6 +111,9 @@ dependencies {
     compile("codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev")
 
     compile("curse.maven:journeymap-32274:2367915")
+    compileOnly("com.github.GTNewHorizons:GalacticGregGT5:1.0.3") {
+        transitive = false
+    }
 }
 
 task relocateShadowJar(type: ConfigureShadowRelocation) {
