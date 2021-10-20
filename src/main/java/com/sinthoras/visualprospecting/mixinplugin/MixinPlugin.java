@@ -83,7 +83,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
             if(loadJar("GalacticGreg")) {
                 VP.info("Found GalacticGreg! Integrating now...");
-                mixins.add("GalacticGreg.GT_Worldgenerator_SpaceMixin");
+                mixins.add("galacticgreg.GT_Worldgenerator_SpaceMixin");
             }
             else {
                 VP.info("Could not find GalacticGreg! Skipping integration....");
