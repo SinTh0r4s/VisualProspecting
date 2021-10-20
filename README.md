@@ -1,4 +1,7 @@
 # GregTech5U Add-On: VisualProspecting
+
+[![](https://jitpack.io/v/SinTh0r4s/VisualProspecting.svg)](https://jitpack.io/#SinTh0r4s/VisualProspecting)
+
 ### For Minecraft 1.7.10
 
 This mod is intended for player convenience, but may also be used as API, since it provides the location of all GT ore veins in a cache. VisualProspecting tracks all GT Ore Veins a player has found and visualizes them in JourneyMap (optional, if installed).
@@ -53,7 +56,7 @@ repositories {
 Add Visual Prospecting in your dependencies:
 ```
 dependencies {
-    compile("com.github.SinTh0r4s:VisualProspecting:master-SNAPSHOT")
+    compile("com.github.SinTh0r4s:VisualProspecting:1.0.10b")  // Adapt 1.0.10b to targeted release
 }
 ```
 
