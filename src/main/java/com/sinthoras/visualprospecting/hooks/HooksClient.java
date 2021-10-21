@@ -38,6 +38,7 @@ public class HooksClient extends HooksShared {
 		super.fmlLifeCycleEvent(event);
 		ClientCommandHandler.instance.registerCommand(new ResetClientCacheCommand());
 	}
+
 	@Override
 	public void fmlLifeCycleEvent(FMLServerAboutToStartEvent event) {
 		super.fmlLifeCycleEvent(event);
