@@ -40,6 +40,10 @@ Does VisualProspecting run with other maps? - I runs just fine, but it has no vi
  - JourneyMap: Visualizes prospected ore veins and oil fields on custom overlay, that can be toggled on and off.
     - Injected class: [_Fullscreen_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/FullscreenMixin.java)
  - NEI: Ores on JourneyMap are highlighted according to NEI search if active (double click on search field).
+ - GalacticGreg: Injects a notification call into ore vein generation.
+    - Injected class: [_GT_Worldgenerator_Space_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/galacticgreg/GT_Worldgenerator_SpaceMixin.java)
+ - Bartworks: Injects a notification call into ore vein generation.
+    - Injected class: [_BW_WordGenerator.WorldGenContainer_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/bartworks/WorldGenContainerMixin.java)
 
 ### Add Visual Prospecting as API
 
