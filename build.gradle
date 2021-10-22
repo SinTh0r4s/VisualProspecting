@@ -101,13 +101,14 @@ dependencies {
 
     shadowImplementation("com.github.Hugobros3:Enklume:master-SNAPSHOT")
 
-    compile("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
-    compile("com.github.GTNewHorizons:StructureLib:1.0.6:deobf")
     compile("com.github.GTNewHorizons:GT5-Unofficial:experimental-SNAPSHOT:dev") {
         transitive = false
         setChanging(true)
     }
 
+    // GT5U Dependencies
+    compile("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
+    compile("com.github.GTNewHorizons:StructureLib:1.0.6:deobf")
     compile("codechicken:CodeChickenLib:1.7.10-1.1.3.140:dev")
     compile("codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev")
     compile("codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev")
@@ -177,7 +178,7 @@ runClient {
         playerUserName = "Player-default"
     }
 
-    args "--tweakClass", "org.spongepowered.asm.launch.MixinTweaker",
+    args    "--tweakClass", "org.spongepowered.asm.launch.MixinTweaker",
             // Having mixin in the same jar as normal mode makes FML ignore it.
             // It should be fine in production, however I suppose it's not properly read here.
             // The only option which worked for me was adding it as a mod explicitly via next argument:
@@ -186,7 +187,7 @@ runClient {
 }
 
 runServer {
-    args "--tweakClass", "org.spongepowered.asm.launch.MixinTweaker",
+    args    "--tweakClass", "org.spongepowered.asm.launch.MixinTweaker",
             // Having mixin in the same jar as normal mode makes FML ignore it.
             // It should be fine in production, however I suppose it's not properly read here.
             // The only option which worked for me was adding it as a mod explicitly via next argument:
