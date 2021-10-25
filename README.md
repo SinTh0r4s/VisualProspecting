@@ -84,21 +84,21 @@ GregTech, JourneyMap and their respective dependencies will be loaded automatica
 
 ### Usage as API
 
-All database access is channeled through the classes `ServerCache` and `ClientCache`. Database use is split up into logical sides.
-You need to determine whether your code is executed on the logical client or logical server. Dependent on your answer you need to use the according database: The client database only knows about ore veins the player has already prospected, while the server database will know about all veins. You may add or request the ore vein for a chunk:
-```
-VP.serverCache.getOreVein(int dimensionId, int chunkX, int chunkZ);
-VP.serverCache.notifyOreVeinGeneration(int dimensionId, int chunkX, int chunkZ, final VPVeinType veinType);
-VP.serverCache.notifyOreVeinGeneration(int dimensionId, int chunkX, int chunkZ, final String veinName)
+#### GT Ore Database
 
-VP.clientCache.getOreVein(int dimensionId, int chunkX, int chunkZ);
-VP.clientCache.putOreVeins(List<OreVeinPosition> oreVeinPositions);
-VP.clientCache.toggleOreVein(int dimensionId, int chunkX, int chunkZ);
-
-VP.clientCache.putUndergroundFluids(List<UndergroundFluidPosition> undergroundFluids);
-VP.clientCache.getUndergroundFluid(int dimensionId, int chunkX, int chunkZ);
+All database access is channeled through the classes [`ServerCache`](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/database/ServerCache.java) and [`ClientCache`](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/database/ClientCache.java). Database use is split up into logical sides.
+You need to determine whether your code is executed on the logical client or logical server. Dependent on your answer you need to use the according database: The client database only knows about ore veins the player has already prospected, while the server database will know about all veins. [`VisualProspecting_API`](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/VisualProspecting_API.java) helps you to clarify which side you are working on. You may add or request the ore vein for a chunk:
 ```
-The logical server does not store underground fluid information, because GregTech has its own database for it. Instead, it provides a wrapper to access said GT database. You may also use more sophisticated methods to prospect whole areas at once. Take a look at exposed methods in `ServerCache`.
+VisualProspecting_API.LogicalServer.getOreVein(int dimensionId, int chunkX, int chunkZ);
+VisualProspecting_API.LogicalServer.getUndergroundFluid(World world, int blockX, int blockZ);
+
+
+VisualProspecting_API.LogicalClient.getOreVein(int dimensionId, int chunkX, int chunkZ);
+VisualProspecting_API.LogicalClient.getUndergroundFluid(int dimensionId, int blockX, int blockZ);
+VisualProspecting_API.LogicalClient.setOreVeinDepleted(int dimensionId, int blockX, int blockZ);
+VisualProspecting_API.LogicalClient.putProspectionResults(List<OreVeinPosition> oreVeins, List<UndergroundFluidPosition> undergroundFluids);
+```
+The logical server does not store underground fluid information, because GregTech has its own database for it. Instead, it provides a wrapper to access said GT database. You may also use more sophisticated methods to prospect whole areas at once. Take a look at exposed methods in [`VisualProspecting_API`](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/VisualProspecting_API.java) or directly in [`ServerCache`](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/database/ServerCache.java) and [`ClientCache`](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/database/ClientCache.java).
 
 Please keep in mind that chunk coordinates are block coordinates divided by 16! When in doubt you may fall back on:
 ```
@@ -113,7 +113,7 @@ int blockZ = Utils.coordChunkToBlock(chunkZ);
 
 Whenever you detect a new ore vein you need to add custom network payloads and request the information from the logical server yourself. Please do your best to disallow a logical client from querying the complete server database as it would lead to potential abuse. So, please check if the player is allowed to prospect a dimension and location.
 
-If you simply want to notify a logical client from the logical server you may send a ``ProspectingNotification`` to the logical client. It will be handled from the client. For example:
+If you simply want to notify a logical client from the logical server you may send a [`ProspectingNotification`](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/network/ProspectingNotification.java) to the logical client. It will be handled from the client. For example:
 ```
 final World world;
 final int blockX;
@@ -122,19 +122,82 @@ final int blockRadius;
 final EntityPlayerMP entityPlayer;
 
 if(world.isRemote == false) {
-    final List<OreVeinPosition> foundOreVeins = VP.serverCache.prospectOreBlockRadius(world.provider.dimensionId, blockX, blockZ, blockRadius);
-    final List<UndergroundFluidPosition> foundUndergroundFluids = VP.serverCache.prospectUndergroundFluidBlockRadius(world, blockX, blockZ, VP.undergroundFluidChunkProspectingBlockRadius);
+    final List<OreVeinPosition> foundOreVeins = VisualProspecting_API.LogicalServer.prospectOreVeinsWithinRadius(world.provider.dimensionId, blockX, blockZ, blockRadius);
+    final List<UndergroundFluidPosition> foundUndergroundFluids = VisualProspecting_API.LogicalServer.prospectUndergroundFluidsWithingRadius(world, blockX, blockZ, VP.undergroundFluidChunkProspectingBlockRadius);
 
-    // Skip networking if in single player
-    if(Utils.isLogicalClient()) {
-        VP.clientCache.putOreVeins(foundOreVeins);
-        VP.clientCache.putUndergroundFluids(foundUndergroundFluids);
-    }
-    else {
-        VP.network.sendTo(new ProspectingNotification(foundOreVeins, foundUndergroundFluids), entityPlayer);
+    VisualProspecting_API.LogicalServer.sendProspectionResultsToClient(entityPlayer, foundOreVeins, foundUndergroundFluids);
+}
+```
+
+#### JourneyMap Custom Layer
+
+VisualProspecting provides a light-weight API for custom and interactive layers in JourneyMap. This API will keep JourneyMap as optional mod at runtime and not crash you game if it is missing. You may overwrite [`LayerButton`](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/gui/journeymap/buttons/LayerButton.java) to create your own button in JourneyMap:
+
+```
+class MyLayerButton extends LayerButton {
+
+    // You need to provide a texture in "assets\journeymap\icon\theme\Vault\icon/textureName.png"
+    // and "assets\journeymap\icon\theme\Victorian\icon/textureName.png"
+    public static final MyLayerButton instance = new MyLayerButton("hover.text.translation.key", "textureName");
+    
+    public MyLayerButton(String buttonTextKey, String iconName) {
+        super(buttonTextKey, iconName);
     }
 }
 ```
+
+Now it is already time to implement the actual render unit. You can implement `DrawStep` to get started. `DrawStep` is an interface from JourneyMap:
+
+```
+class MyDrawStep implements DrawStep {
+
+    private final String text;
+    private final int blockX;
+    private final int blockZ;
+    
+    public MyDrawStep(String text, int blockX, int blockZ) {
+        this.text = text;
+        this.blockX = blockX;
+        this.blockZ = blockZ;
+    }
+    
+    @Override
+    public void draw(double draggedPixelX, double draggedPixelY, GridRenderer gridRenderer, float drawScale, double fontScale, double rotation) {
+        final double blockSize = Math.pow(2, gridRenderer.getZoom());
+        final Point2D.Double blockAsPixel = gridRenderer.getBlockPixelInGrid(blockX, blockZ);
+        final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + draggedPixelX, blockAsPixel.getY() + draggedPixelY);
+        
+        DrawUtil.drawLabel(text, pixel.getX(), pixel.getY(), DrawUtil.HAlign.Center, DrawUtil.VAlign.Middle, 0, 180, 0x00FFFFFF, 255, fontScale, false, rotation);
+    }
+}
+```
+
+Continue with your own implementation of [`InformationLayer`](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/gui/journeymap/layers/InformationLayer.java):
+
+```
+class MyLayer extends InformationLayer {
+
+    public MyLayer() {
+        // You may skip MyLayerButton and use an existing Button like "OreVeinButton.instance"
+        super(MyLayerButton.instance);
+    }
+    
+    @Override
+    protected List<DrawStep> generateDrawSteps(int minBlockX, int minBlockZ, int maxBlockX, int maxBlockZ) {
+        return Collections.singletonList(new MyDrawStep("Hello World", 0, 0);
+    }
+
+}
+```
+
+That's already it! Now you need to register both, `MyLayerButton` and `MyLayer`, in Forge's postInit:
+
+```
+VisualProspecting_API.LogicalClient.registerLayerButton(MyLayerButton.instance);
+VisualProspecting_API.LogicalClient.registerLayer(new MyLayer());
+```
+
+Now you need to launch Minecraft, teleport to the right sport (`/tp 0 80 0`) and open JourneyMap.
 
 Thank you and happy coding,\
 SinTh0r4s

@@ -51,6 +51,10 @@ public class Utils {
         return Loader.isModLoaded("tcnodetracker");
     }
 
+    public static boolean isJourneyMapInstalled() {
+        return Loader.isModLoaded("journeymap");
+    }
+
     public static int coordBlockToChunk(int blockCoord) {
         return blockCoord < 0 ? -((-blockCoord - 1) >> 4) - 1 : blockCoord >> 4;
     }
