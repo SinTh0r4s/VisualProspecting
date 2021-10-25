@@ -99,16 +99,8 @@ public class ThaumcraftNodeDrawStep implements DrawStep {
         GL11.glPopMatrix();
     }
 
-    public boolean onMouseClick(int mouseX, int mouseY, boolean isDoubleClick) {
-        final double deltaX = mouseX - centerPixelX;
-        final double deltaY = mouseY - centerPixelY;
-        final boolean clickMouseOver = deltaX * deltaX + deltaY * deltaY <= clickableRadiusPixelSquared;
-
-        if((isDoubleClick && clickMouseOver && isActiveAsWaypoint() == false)
-                || (isDoubleClick == false && clickMouseOver && isActiveAsWaypoint())) {
-            return true;
-        }
-        return clickMouseOver;
+    public boolean onDoubleClick() {
+        return isActiveAsWaypoint() == false;
     }
 
     public List<String> getTooltip() {

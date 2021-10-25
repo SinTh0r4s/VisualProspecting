@@ -209,9 +209,16 @@ public class MapState {
         }
         if(drawThaumcraftNodes && isTCNodeTrackerInstalled()) {
             for(ThaumcraftNodeDrawStep thaumcraftNodeDrawStep : thaumcraftNodesDrawSteps) {
-                if(thaumcraftNodeDrawStep.onMouseClick(mouseX, mouseY, isDoubleClick)) {
-                    activeAuraNode = thaumcraftNodeDrawStep.toWaypoint();
+                if(thaumcraftNodeDrawStep.mouseOver(mouseX, mouseY)) {
+                    if(isDoubleClick) {
+                        if (thaumcraftNodeDrawStep.onDoubleClick()) {
+                            activeAuraNode = thaumcraftNodeDrawStep.toWaypoint();
+                        } else {
+                            activeAuraNode = null;
+                        }
+                    }
                     objectHit = true;
+                    break;
                 }
             }
         }
