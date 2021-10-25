@@ -83,7 +83,7 @@ public class ThaumcraftNodeDrawStep implements DrawStep {
         clickableRadiusPixelSquared = borderSizeHalf * borderSizeHalf;
 
         final int alpha = 204;
-        OreVeinDrawStep.drawQuad(isActiveAsWaypoint() ? markedTextureLocation : unmarkedTextureLocation, pixel.getX() - borderSizeHalf, pixel.getY() - borderSizeHalf, borderSize, borderSize, 0xFFFFFF, alpha);
+        DrawUtils.drawQuad(isActiveAsWaypoint() ? markedTextureLocation : unmarkedTextureLocation, pixel.getX() - borderSizeHalf, pixel.getY() - borderSizeHalf, borderSize, borderSize, 0xFFFFFF, alpha);
 
         GL11.glPushMatrix();
         GL11.glTranslated(pixel.getX(), pixel.getY(), 0);
@@ -182,18 +182,18 @@ public class ThaumcraftNodeDrawStep implements DrawStep {
 
         // Draw background
         final int backgroundColor = 0xF0100010;
-        drawGradientRect(pixelX - 3, pixelY - 4, pixelX + tooltipWidth + 3, pixelY - 3, backgroundColor, backgroundColor);
-        drawGradientRect(pixelX - 3, pixelY + tooltipHeight + 3, pixelX + tooltipWidth + 3, pixelY + tooltipHeight + 4, backgroundColor, backgroundColor);
-        drawGradientRect(pixelX - 3, pixelY - 3, pixelX + tooltipWidth + 3, pixelY + tooltipHeight + 3, backgroundColor, backgroundColor);
-        drawGradientRect(pixelX - 4, pixelY - 3, pixelX - 3, pixelY + tooltipHeight + 3, backgroundColor, backgroundColor);
-        drawGradientRect(pixelX + tooltipWidth + 3, pixelY - 3, pixelX + tooltipWidth + 4, pixelY + tooltipHeight + 3, backgroundColor, backgroundColor);
+        DrawUtils.drawGradientRect(pixelX - 3, pixelY - 4, pixelX + tooltipWidth + 3, pixelY - 3, backgroundColor, backgroundColor);
+        DrawUtils.drawGradientRect(pixelX - 3, pixelY + tooltipHeight + 3, pixelX + tooltipWidth + 3, pixelY + tooltipHeight + 4, backgroundColor, backgroundColor);
+        DrawUtils.drawGradientRect(pixelX - 3, pixelY - 3, pixelX + tooltipWidth + 3, pixelY + tooltipHeight + 3, backgroundColor, backgroundColor);
+        DrawUtils.drawGradientRect(pixelX - 4, pixelY - 3, pixelX - 3, pixelY + tooltipHeight + 3, backgroundColor, backgroundColor);
+        DrawUtils.drawGradientRect(pixelX + tooltipWidth + 3, pixelY - 3, pixelX + tooltipWidth + 4, pixelY + tooltipHeight + 3, backgroundColor, backgroundColor);
 
         int verdunGreen = 0x505000FF;
         int borderColor = 0x5028007F;
-        drawGradientRect(pixelX - 3, pixelY - 3 + 1, pixelX - 3 + 1, pixelY + tooltipHeight + 3 - 1, verdunGreen, borderColor);
-        drawGradientRect(pixelX + tooltipWidth + 2, pixelY - 3 + 1, pixelX + tooltipWidth + 3, pixelY + tooltipHeight + 3 - 1, verdunGreen, borderColor);
-        drawGradientRect(pixelX - 3, pixelY - 3, pixelX + tooltipWidth + 3, pixelY - 3 + 1, verdunGreen, verdunGreen);
-        drawGradientRect(pixelX - 3, pixelY + tooltipHeight + 2, pixelX + tooltipWidth + 3, pixelY + tooltipHeight + 3, borderColor, borderColor);
+        DrawUtils.drawGradientRect(pixelX - 3, pixelY - 3 + 1, pixelX - 3 + 1, pixelY + tooltipHeight + 3 - 1, verdunGreen, borderColor);
+        DrawUtils.drawGradientRect(pixelX + tooltipWidth + 2, pixelY - 3 + 1, pixelX + tooltipWidth + 3, pixelY + tooltipHeight + 3 - 1, verdunGreen, borderColor);
+        DrawUtils.drawGradientRect(pixelX - 3, pixelY - 3, pixelX + tooltipWidth + 3, pixelY - 3 + 1, verdunGreen, verdunGreen);
+        DrawUtils.drawGradientRect(pixelX - 3, pixelY + tooltipHeight + 2, pixelX + tooltipWidth + 3, pixelY + tooltipHeight + 3, borderColor, borderColor);
 
         // Draw text
         int offset = 0;
@@ -246,38 +246,5 @@ public class ThaumcraftNodeDrawStep implements DrawStep {
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 
         return true;
-    }
-
-    protected void drawGradientRect(int minPixelX, int minPixelY, int maxPixelX, int maxPixelY, int colorA, int colorB)
-    {
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        GL11.glShadeModel(GL11.GL_SMOOTH);
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-
-        float alpha = (colorA >> 24 & 255) / 255.0f;
-        float red = (colorA >> 16 & 255) / 255.0f;
-        float green = (colorA >> 8 & 255) / 255.0f;
-        float blue = (colorA & 255) / 255.0f;
-        tessellator.setColorRGBA_F(red, green, blue, alpha);
-        tessellator.addVertex(maxPixelX, minPixelY, 300);
-        tessellator.addVertex(minPixelX, minPixelY, 300);
-
-        alpha = (colorB >> 24 & 255) / 255.0f;
-        red = (colorB >> 16 & 255) / 255.0f;
-        green = (colorB >> 8 & 255) / 255.0f;
-        blue = (colorB & 255) / 255.0f;
-        tessellator.setColorRGBA_F(red, green, blue, alpha);
-        tessellator.addVertex(minPixelX, maxPixelY, 300);
-        tessellator.addVertex(maxPixelX, maxPixelY, 300);
-
-        tessellator.draw();
-        GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 }
