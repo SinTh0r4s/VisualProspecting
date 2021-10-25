@@ -278,7 +278,7 @@ public abstract class FullscreenMixin extends JmUI {
         final boolean isDoubleClick = mouseX == oldMouseX && mouseY == oldMouseY && timestamp - timeLastClick < 500;
         oldMouseX = mouseX;
         oldMouseY = mouseY;
-        timeLastClick = timestamp;
+        timeLastClick = isDoubleClick ? 0 : timestamp;
 
         if(mouseButton != 0) {
             return false;
