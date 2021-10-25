@@ -1,6 +1,6 @@
 package com.sinthoras.visualprospecting.network;
 
-import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.database.ClientCache;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -33,7 +33,7 @@ public class WorldIdNotification implements IMessage {
 
         @Override
         public IMessage onMessage(WorldIdNotification message, MessageContext ctx) {
-            VP.clientCache.loadVeinCache(message.worldId);
+            ClientCache.instance.loadVeinCache(message.worldId);
             return null;
         }
     }

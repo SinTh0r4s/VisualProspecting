@@ -2,7 +2,9 @@ package com.sinthoras.visualprospecting.network;
 
 import com.sinthoras.visualprospecting.Config;
 import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.database.ClientCache;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
+import com.sinthoras.visualprospecting.database.TransferCache;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -146,7 +148,7 @@ public class ProspectionSharing implements IMessage {
             oreVeins.get(player).addAll(message.oreVeins);
             undergroundFluids.get(player).addAll(message.undergroundFluids);
             if(message.isLastMessage) {
-                VP.transferCache.addClientProspectionData(player.getPersistentID().toString(), oreVeins.get(player), undergroundFluids.get(player));
+                TransferCache.instance.addClientProspectionData(player.getPersistentID().toString(), oreVeins.get(player), undergroundFluids.get(player));
                 oreVeins.remove(player);
                 undergroundFluids.remove(player);
             }
@@ -171,8 +173,8 @@ public class ProspectionSharing implements IMessage {
             oreVeins.addAll(message.oreVeins);
             undergroundFluids.addAll(message.undergroundFluids);
             if(message.isLastMessage) {
-                VP.clientCache.putOreVeins(oreVeins);
-                VP.clientCache.putUndergroundFluids(undergroundFluids);
+                ClientCache.instance.putOreVeins(oreVeins);
+                ClientCache.instance.putUndergroundFluids(undergroundFluids);
             }
             return null;
         }

@@ -1,9 +1,9 @@
 package com.sinthoras.visualprospecting.network;
 
 import com.sinthoras.visualprospecting.Config;
-import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
+import com.sinthoras.visualprospecting.database.ServerCache;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -96,7 +96,7 @@ public class ProspectingRequest implements IMessage {
                             lastRequestPerPlayer.put(uuid, timestamp);
 
                             // Prioritise center vein
-                            final OreVeinPosition centerOreVeinPosition = VP.serverCache.getOreVein(message.dimensionId, chunkX, chunkZ);
+                            final OreVeinPosition centerOreVeinPosition = ServerCache.instance.getOreVein(message.dimensionId, chunkX, chunkZ);
                             if(centerOreVeinPosition.veinType.containsOre(message.foundOreMetaData)) {
                                 return new ProspectingNotification(centerOreVeinPosition);
                             }
@@ -110,7 +110,7 @@ public class ProspectingRequest implements IMessage {
                                         final int neighborChunkX = centerChunkX + offsetChunkX;
                                         final int neighborChunkZ = centerChunkZ + offsetChunkZ;
                                         final int distanceBlocks = Math.max(Math.abs(neighborChunkX - chunkX), Math.abs(neighborChunkZ - chunkZ));
-                                        final OreVeinPosition neighborOreVeinPosition = VP.serverCache.getOreVein(message.dimensionId, neighborChunkX, neighborChunkZ);
+                                        final OreVeinPosition neighborOreVeinPosition = ServerCache.instance.getOreVein(message.dimensionId, neighborChunkX, neighborChunkZ);
                                         final int maxDistance = ((neighborOreVeinPosition.veinType.blockSize + 16) >> 4) + 1;  // Equals to: ceil(blockSize / 16.0) + 1
                                         if (neighborOreVeinPosition.veinType.containsOre(message.foundOreMetaData) && distanceBlocks <= maxDistance) {
                                             return new ProspectingNotification(neighborOreVeinPosition);

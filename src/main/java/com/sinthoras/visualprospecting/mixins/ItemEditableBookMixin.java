@@ -3,6 +3,8 @@ package com.sinthoras.visualprospecting.mixins;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.Utils;
+import com.sinthoras.visualprospecting.database.ClientCache;
+import com.sinthoras.visualprospecting.database.ServerCache;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.network.ProspectingNotification;
@@ -36,11 +38,11 @@ public class ItemEditableBookMixin {
                 final int blockX = compound.getInteger(Tags.PROSPECTION_BLOCK_X);
                 final int blockZ = compound.getInteger(Tags.PROSPECTION_BLOCK_Z);
                 final int blockRadius = compound.getInteger(Tags.PROSPECTION_ORE_RADIUS);
-                final List<OreVeinPosition> foundOreVeins = VP.serverCache.prospectOreBlockRadius(dimensionId, blockX, blockZ, blockRadius);
-                final List<UndergroundFluidPosition> foundUndergroundFluids = VP.serverCache.prospectUndergroundFluidBlockRadius(world, blockX, blockZ, VP.undergroundFluidChunkProspectingBlockRadius);
+                final List<OreVeinPosition> foundOreVeins = ServerCache.instance.prospectOreBlockRadius(dimensionId, blockX, blockZ, blockRadius);
+                final List<UndergroundFluidPosition> foundUndergroundFluids = ServerCache.instance.prospectUndergroundFluidBlockRadius(world, blockX, blockZ, VP.undergroundFluidChunkProspectingBlockRadius);
                 if(Utils.isLogicalClient()) {
-                    VP.clientCache.putOreVeins(foundOreVeins);
-                    VP.clientCache.putUndergroundFluids(foundUndergroundFluids);
+                    ClientCache.instance.putOreVeins(foundOreVeins);
+                    ClientCache.instance.putUndergroundFluids(foundUndergroundFluids);
                 }
                 else {
                     VP.network.sendTo(new ProspectingNotification(foundOreVeins, foundUndergroundFluids), (EntityPlayerMP) entityPlayer);

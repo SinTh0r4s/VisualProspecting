@@ -2,6 +2,7 @@ package com.sinthoras.visualprospecting.task;
 
 import com.sinthoras.visualprospecting.Config;
 import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.database.ClientCache;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import com.sinthoras.visualprospecting.network.ProspectionSharing;
@@ -16,8 +17,8 @@ public class SnapshotUploadTask implements ITask {
     private boolean firstMessage = true;
 
     public SnapshotUploadTask() {
-        oreVeins = VP.clientCache.getAllOreVeins();
-        undergroundFluids = VP.clientCache.getAllUndergroundFluids();
+        oreVeins = ClientCache.instance.getAllOreVeins();
+        undergroundFluids = ClientCache.instance.getAllUndergroundFluids();
     }
 
     @Override

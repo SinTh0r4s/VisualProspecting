@@ -18,6 +18,8 @@ import java.util.List;
 
 public class ClientCache extends WorldCache {
 
+    public static final ClientCache instance = new ClientCache();
+
     protected File getStorageDirectory() {
         final EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
         return new File(Utils.getSubDirectory(Tags.CLIENT_DIR), player.getDisplayName() + "_" + player.getPersistentID().toString());

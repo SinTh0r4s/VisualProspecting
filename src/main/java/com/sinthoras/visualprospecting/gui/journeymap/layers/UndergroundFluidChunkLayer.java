@@ -2,6 +2,7 @@ package com.sinthoras.visualprospecting.gui.journeymap.layers;
 
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.database.ClientCache;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import com.sinthoras.visualprospecting.gui.journeymap.drawsteps.UndergroundFluidChunkDrawStep;
 import com.sinthoras.visualprospecting.gui.journeymap.buttons.UndergroundFluidButton;
@@ -52,7 +53,7 @@ public class UndergroundFluidChunkLayer extends InformationLayer {
 
         for (int chunkX = minUndergroundFluidX; chunkX <= maxUndergroundFluidX; chunkX += VP.undergroundFluidSizeChunkX) {
             for (int chunkZ = minUndergroundFluidZ; chunkZ <= maxUndergroundFluidZ; chunkZ += VP.undergroundFluidSizeChunkZ) {
-                final UndergroundFluidPosition undergroundFluid = VP.clientCache.getUndergroundFluid(playerDimensionId, chunkX, chunkZ);
+                final UndergroundFluidPosition undergroundFluid = ClientCache.instance.getUndergroundFluid(playerDimensionId, chunkX, chunkZ);
                 if (undergroundFluid.isProspected()) {
                     final int minAmountInField = undergroundFluid.getMinProduction();
                     final int maxAmountInField = undergroundFluid.getMaxProduction();

@@ -3,7 +3,7 @@ package com.sinthoras.visualprospecting.mixins.bartworks;
 import com.github.bartimaeusnek.bartworks.system.oregen.BW_OreLayer;
 import com.github.bartimaeusnek.bartworks.system.oregen.BW_WordGenerator;
 import com.sinthoras.visualprospecting.Utils;
-import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.database.ServerCache;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +23,7 @@ public class WorldGenContainerMixin {
     private boolean onOreVeinGenerationAttempt(BW_OreLayer worldGen, World world, Random random, String biome, int dimensionType, int blockX, int blockZ, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
         final boolean oreVeinPlaced = worldGen.executeWorldgen(world, random, biome, Integer.MIN_VALUE, blockX, blockZ, chunkGenerator, chunkProvider);
         if(oreVeinPlaced) {
-            VP.serverCache.notifyOreVeinGeneration(world.provider.dimensionId, Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk(blockX)), Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk(blockZ)), worldGen.mWorldGenName);
+            ServerCache.instance.notifyOreVeinGeneration(world.provider.dimensionId, Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk(blockX)), Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk(blockZ)), worldGen.mWorldGenName);
         }
         return oreVeinPlaced;
     }

@@ -15,6 +15,8 @@ import java.util.List;
 
 public class ServerCache extends WorldCache {
 
+    public static final ServerCache instance = new ServerCache();
+
     protected File getStorageDirectory() {
         return Utils.getSubDirectory(Tags.SERVER_DIR);
     }

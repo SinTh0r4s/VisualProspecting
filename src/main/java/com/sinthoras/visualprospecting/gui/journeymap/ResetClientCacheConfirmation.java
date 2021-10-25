@@ -1,6 +1,6 @@
 package com.sinthoras.visualprospecting.gui.journeymap;
 
-import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.database.ClientCache;
 import journeymap.client.ui.UIManager;
 import journeymap.client.ui.component.Button;
 import journeymap.client.ui.component.ButtonList;
@@ -40,7 +40,7 @@ public class ResetClientCacheConfirmation extends JmUI {
 
     protected void func_146284_a(GuiButton guibutton) {
         if(guibutton == confirmButton) {
-            VP.clientCache.resetPlayerProgression();
+            ClientCache.instance.resetPlayerProgression();
             final IChatComponent confirmation = new ChatComponentTranslation("visualprospecting.resetprogress.confirmation");
             confirmation.getChatStyle().setItalic(true);
             Minecraft.getMinecraft().thePlayer.addChatMessage(confirmation);

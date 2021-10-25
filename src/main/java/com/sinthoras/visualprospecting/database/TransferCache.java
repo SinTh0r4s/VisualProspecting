@@ -1,13 +1,10 @@
 package com.sinthoras.visualprospecting.database;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-
 import java.util.*;
 
-/*
-This class holds data to share between clients. It is wiped on server restart!
- */
 public class TransferCache {
+
+    public static final TransferCache instance = new TransferCache();
 
     private final Map<String, List<OreVeinPosition>> oreVeins = new HashMap<>();
     private final Map<String, List<UndergroundFluidPosition>> undergroundFluids = new HashMap<>();

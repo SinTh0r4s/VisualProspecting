@@ -3,6 +3,7 @@ package com.sinthoras.visualprospecting.hooks;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Config;
 import com.sinthoras.visualprospecting.Tags;
+import com.sinthoras.visualprospecting.database.ServerCache;
 import com.sinthoras.visualprospecting.database.WorldIdHandler;
 import com.sinthoras.visualprospecting.database.cachebuilder.WorldAnalysis;
 import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
@@ -85,7 +86,7 @@ public class HooksShared {
 	public void fmlLifeCycleEvent(FMLServerStartingEvent event) {
 		final MinecraftServer minecraftServer = event.getServer();
 		WorldIdHandler.load(minecraftServer.worldServers[0]);
-		if(VP.serverCache.loadVeinCache(WorldIdHandler.getWorldId()) == false || Config.recacheVeins) {
+		if(ServerCache.instance.loadVeinCache(WorldIdHandler.getWorldId()) == false || Config.recacheVeins) {
 			try {
 				WorldAnalysis world = new WorldAnalysis(minecraftServer.getEntityWorld().getSaveHandler().getWorldDirectory());
 				world.cacheVeins();
@@ -102,8 +103,8 @@ public class HooksShared {
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerStoppingEvent event) {
-		VP.serverCache.saveVeinCache();
-		VP.serverCache.reset();
+		ServerCache.instance.saveVeinCache();
+		ServerCache.instance.reset();
 	}
 	
 	public void fmlLifeCycleEvent(FMLServerStoppedEvent event) {

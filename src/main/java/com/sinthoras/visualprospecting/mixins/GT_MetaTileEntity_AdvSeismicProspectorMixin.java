@@ -3,6 +3,7 @@ package com.sinthoras.visualprospecting.mixins;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.Utils;
+import com.sinthoras.visualprospecting.database.ServerCache;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
@@ -73,7 +74,7 @@ public abstract class GT_MetaTileEntity_AdvSeismicProspectorMixin extends GT_Met
                 compound.setInteger(Tags.PROSPECTION_BLOCK_Z, getBaseMetaTileEntity().getZCoord());
                 compound.setInteger(Tags.PROSPECTION_ORE_RADIUS, radius);
 
-                final List<UndergroundFluidPosition> undergroundFluidPositions = VP.serverCache.prospectUndergroundFluidBlockRadius(aPlayer.worldObj, getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord(), VP.undergroundFluidChunkProspectingBlockRadius);
+                final List<UndergroundFluidPosition> undergroundFluidPositions = ServerCache.instance.prospectUndergroundFluidBlockRadius(aPlayer.worldObj, getBaseMetaTileEntity().getXCoord(), getBaseMetaTileEntity().getZCoord(), VP.undergroundFluidChunkProspectingBlockRadius);
                 compound.setInteger(Tags.PROSPECTION_NUMBER_OF_UNDERGROUND_FLUID, undergroundFluidPositions.size());
 
                 String[] fluidStrings = new String[9];

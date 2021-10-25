@@ -2,6 +2,8 @@ package com.sinthoras.visualprospecting.hooks;
 
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Utils;
+import com.sinthoras.visualprospecting.database.ClientCache;
+import com.sinthoras.visualprospecting.database.ServerCache;
 import com.sinthoras.visualprospecting.database.WorldIdHandler;
 import com.sinthoras.visualprospecting.network.WorldIdNotification;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -15,13 +17,13 @@ public class HooksEventBus {
     @SubscribeEvent
     public void onEvent(WorldEvent.Unload event) {
         if(Utils.isLogicalClient()) {
-            VP.clientCache.saveVeinCache();
+            ClientCache.instance.saveVeinCache();
         }
     }
 
     @SubscribeEvent
     public void onEvent(WorldEvent.Save event) {
-        VP.serverCache.saveVeinCache();
+        ServerCache.instance.saveVeinCache();
     }
 
     @SubscribeEvent
@@ -31,7 +33,7 @@ public class HooksEventBus {
                 VP.network.sendTo(new WorldIdNotification(WorldIdHandler.getWorldId()), (EntityPlayerMP) event.entity);
             }
             else if (event.entity instanceof EntityPlayer) {
-                VP.clientCache.loadVeinCache(WorldIdHandler.getWorldId());
+                ClientCache.instance.loadVeinCache(WorldIdHandler.getWorldId());
             }
         }
     }

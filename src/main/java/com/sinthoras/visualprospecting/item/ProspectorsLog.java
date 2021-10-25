@@ -2,8 +2,10 @@ package com.sinthoras.visualprospecting.item;
 
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.database.TransferCache;
 import com.sinthoras.visualprospecting.task.SnapshotDownloadTask;
 import com.sinthoras.visualprospecting.task.SnapshotUploadTask;
+import com.sinthoras.visualprospecting.task.TaskManager;
 import gregtech.api.GregTech_API;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,7 +39,7 @@ public class ProspectorsLog extends Item {
             compound.setString(Tags.PROSPECTORSLOG_AUTHOR_ID, player.getPersistentID().toString());
             item.setTagCompound(compound);
             if (world.isRemote) {
-                VP.taskManager.addTask(new SnapshotUploadTask());
+                TaskManager.instance.addTask(new SnapshotUploadTask());
             }
             else {
                 final int random = VP.randomGeneration.nextInt(100);
@@ -61,7 +63,7 @@ public class ProspectorsLog extends Item {
             final NBTTagCompound compound = item.getTagCompound();
             final String authorUuid = compound.getString(Tags.PROSPECTORSLOG_AUTHOR_ID);
             if(authorUuid.equals(player.getPersistentID().toString()) == false) {
-                final int random = VP.randomGeneration.nextInt(VP.transferCache.isClientDataAvailable(authorUuid) ? 100 : 10);
+                final int random = VP.randomGeneration.nextInt(TransferCache.instance.isClientDataAvailable(authorUuid) ? 100 : 10);
                 if(random < 10) {
                     final String localizationKey = "visualprospecting.prospectorslog.reading.fail" + (random / 2);
                     final IChatComponent notification = new ChatComponentTranslation(localizationKey);
@@ -75,7 +77,7 @@ public class ProspectorsLog extends Item {
                     notification.getChatStyle().setItalic(true);
                     notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
                     player.addChatMessage(notification);
-                    VP.taskManager.addTask(new SnapshotDownloadTask(authorUuid, (EntityPlayerMP) player));
+                    TaskManager.instance.addTask(new SnapshotDownloadTask(authorUuid, (EntityPlayerMP) player));
                 }
             }
         }

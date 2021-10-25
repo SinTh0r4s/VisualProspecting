@@ -1,7 +1,7 @@
 package com.sinthoras.visualprospecting.gui.journeymap.layers;
 
 import com.sinthoras.visualprospecting.Utils;
-import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.database.ClientCache;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.database.veintypes.VeinType;
 import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
@@ -64,7 +64,7 @@ public class OreVeinLayer extends WaypointProviderLayer {
 
         for (int chunkX = minOreChunkX; chunkX <= maxOreChunkX; chunkX = Utils.mapToCenterOreChunkCoord(chunkX + 3)) {
             for (int chunkZ = minOreChunkZ; chunkZ <= maxOreChunkZ; chunkZ = Utils.mapToCenterOreChunkCoord(chunkZ + 3)) {
-                final OreVeinPosition oreVeinPosition = VP.clientCache.getOreVein(playerDimensionId, chunkX, chunkZ);
+                final OreVeinPosition oreVeinPosition = ClientCache.instance.getOreVein(playerDimensionId, chunkX, chunkZ);
                 if (oreVeinPosition.veinType != VeinType.NO_VEIN) {
                     oreChunkDrawSteps.add(new OreVeinDrawStep(oreVeinPosition));
                 }

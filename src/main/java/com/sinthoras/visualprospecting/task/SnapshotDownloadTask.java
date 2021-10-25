@@ -3,6 +3,7 @@ package com.sinthoras.visualprospecting.task;
 import com.sinthoras.visualprospecting.Config;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
+import com.sinthoras.visualprospecting.database.TransferCache;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import com.sinthoras.visualprospecting.network.ProspectionSharing;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,8 +23,8 @@ public class SnapshotDownloadTask implements ITask {
 
     public SnapshotDownloadTask(String authorUuid, EntityPlayerMP player) {
         this.player = player;
-        oreVeins = VP.transferCache.getSharedOreVeinsFrom(authorUuid);
-        undergroundFluids = VP.transferCache.getSharedUndergroundFluidsFrom(authorUuid);
+        oreVeins = TransferCache.instance.getSharedOreVeinsFrom(authorUuid);
+        undergroundFluids = TransferCache.instance.getSharedUndergroundFluidsFrom(authorUuid);
     }
 
     @Override

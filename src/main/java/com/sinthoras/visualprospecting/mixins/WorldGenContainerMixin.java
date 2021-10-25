@@ -1,7 +1,7 @@
 package com.sinthoras.visualprospecting.mixins;
 
 import com.sinthoras.visualprospecting.Utils;
-import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.database.ServerCache;
 import gregtech.common.GT_Worldgen_GT_Ore_Layer;
 import gregtech.common.GT_Worldgenerator;
 import net.minecraft.world.World;
@@ -24,7 +24,7 @@ public class WorldGenContainerMixin {
     protected int onOreVeinPlaced(GT_Worldgen_GT_Ore_Layer instance, World aWorld, Random aRandom, String aBiome, int aDimensionType, int aChunkX, int aChunkZ, int aSeedX, int aSeedZ, IChunkProvider aChunkGenerator, IChunkProvider aChunkProvider) {
         final int result = instance.executeWorldgenChunkified(aWorld, aRandom, aBiome, aDimensionType, aChunkX, aChunkZ, aSeedX, aSeedZ, aChunkGenerator, aChunkProvider);
         if(result == GT_Worldgen_GT_Ore_Layer.ORE_PLACED && instance.mWorldGenName.equals("NoOresInVein") == false) {
-            VP.serverCache.notifyOreVeinGeneration(
+            ServerCache.instance.notifyOreVeinGeneration(
                     aWorld.provider.dimensionId,
                     Utils.coordBlockToChunk(aSeedX),
                     Utils.coordBlockToChunk(aSeedZ),

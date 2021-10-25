@@ -3,6 +3,7 @@ package com.sinthoras.visualprospecting.database.cachebuilder;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
+import com.sinthoras.visualprospecting.database.ServerCache;
 import com.sinthoras.visualprospecting.database.veintypes.VeinType;
 import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import io.xol.enklume.nbt.*;
@@ -41,14 +42,14 @@ public class DetailedChunkAnalysis {
 
     public void cleanUpWithNeighbors(final Map<Long, Integer> veinChunkY) {
         final OreVeinPosition[] neighbors = new OreVeinPosition[] {
-                VP.serverCache.getOreVein(dimensionId, chunkX - 3, chunkZ + 3),
-                VP.serverCache.getOreVein(dimensionId, chunkX, chunkZ + 3),
-                VP.serverCache.getOreVein(dimensionId, chunkX + 3, chunkZ + 3),
-                VP.serverCache.getOreVein(dimensionId, chunkX + 3, chunkZ),
-                VP.serverCache.getOreVein(dimensionId, chunkX + 3, chunkZ - 3),
-                VP.serverCache.getOreVein(dimensionId, chunkX, chunkZ - 3),
-                VP.serverCache.getOreVein(dimensionId, chunkX - 3, chunkZ - 3),
-                VP.serverCache.getOreVein(dimensionId, chunkX - 3, chunkZ)
+                ServerCache.instance.getOreVein(dimensionId, chunkX - 3, chunkZ + 3),
+                ServerCache.instance.getOreVein(dimensionId, chunkX, chunkZ + 3),
+                ServerCache.instance.getOreVein(dimensionId, chunkX + 3, chunkZ + 3),
+                ServerCache.instance.getOreVein(dimensionId, chunkX + 3, chunkZ),
+                ServerCache.instance.getOreVein(dimensionId, chunkX + 3, chunkZ - 3),
+                ServerCache.instance.getOreVein(dimensionId, chunkX, chunkZ - 3),
+                ServerCache.instance.getOreVein(dimensionId, chunkX - 3, chunkZ - 3),
+                ServerCache.instance.getOreVein(dimensionId, chunkX - 3, chunkZ)
         };
         final int[] neighborVeinBlockY = new int[] {
                 veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX, chunkZ + 3), 0),

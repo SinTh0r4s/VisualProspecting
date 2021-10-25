@@ -3,6 +3,7 @@ package com.sinthoras.visualprospecting.gui.journeymap.drawsteps;
 import com.sinthoras.visualprospecting.Config;
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.database.ClientCache;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.gui.journeymap.DrawUtils;
 import com.sinthoras.visualprospecting.gui.journeymap.layers.OreVeinLayer;
@@ -103,7 +104,7 @@ public class OreVeinDrawStep implements ClickableDrawStep {
     }
 
     public void onActionKeyPressed() {
-        VP.clientCache.toggleOreVein(oreVeinPosition.dimensionId, oreVeinPosition.chunkX, oreVeinPosition.chunkZ);
+        ClientCache.instance.toggleOreVein(oreVeinPosition.dimensionId, oreVeinPosition.chunkX, oreVeinPosition.chunkZ);
     }
 
     private int getColor() {

@@ -2,7 +2,7 @@ package com.sinthoras.visualprospecting.mixins.galacticgreg;
 
 import bloodasp.galacticgreg.GT_Worldgenerator_Space;
 import com.sinthoras.visualprospecting.Utils;
-import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.database.ServerCache;
 import gregtech.api.world.GT_Worldgen;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -23,7 +23,7 @@ public class GT_Worldgenerator_SpaceMixin {
     private boolean onOreVeinGenerated(GT_Worldgen worldGen, World world, Random random, String biome, int dimensionType, int blockX, int blockZ, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
         final boolean oreVeinPlaced = worldGen.executeWorldgen(world, random, biome, Integer.MIN_VALUE, blockX, blockZ, chunkGenerator, chunkProvider);
         if(oreVeinPlaced) {
-            VP.serverCache.notifyOreVeinGeneration(world.provider.dimensionId, Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk(blockX)), Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk(blockZ)), worldGen.mWorldGenName);
+            ServerCache.instance.notifyOreVeinGeneration(world.provider.dimensionId, Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk(blockX)), Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk(blockZ)), worldGen.mWorldGenName);
         }
         return oreVeinPlaced;
     }

@@ -1,6 +1,7 @@
 package com.sinthoras.visualprospecting.network;
 
 import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.database.ClientCache;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
@@ -93,8 +94,8 @@ public class ProspectingNotification implements IMessage {
 
         @Override
         public IMessage onMessage(ProspectingNotification message, MessageContext ctx) {
-            VP.clientCache.putOreVeins(message.oreVeins);
-            VP.clientCache.putUndergroundFluids(message.undergroundFluids);
+            ClientCache.instance.putOreVeins(message.oreVeins);
+            ClientCache.instance.putUndergroundFluids(message.undergroundFluids);
             return null;
         }
     }
