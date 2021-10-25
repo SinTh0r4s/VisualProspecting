@@ -1,5 +1,7 @@
 package com.sinthoras.visualprospecting.gui.journeymap;
 
+import com.dyonovan.tcnodetracker.TCNodeTracker;
+import com.dyonovan.tcnodetracker.lib.NodeList;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
@@ -12,6 +14,8 @@ import net.minecraft.client.Minecraft;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.sinthoras.visualprospecting.Utils.isTCNodeTrackerInstalled;
+
 public class MapState {
     public static final MapState instance = new MapState();
 
@@ -20,6 +24,7 @@ public class MapState {
     private int oldMaxOreChunkX = 0;
     private int oldMinOreChunkZ = 0;
     private int oldMaxOreChunkZ = 0;
+
     private final List<UndergroundFluidChunkDrawStep> undergroundFluidChunksDrawSteps = new ArrayList<>();
     private final List<UndergroundFluidDrawStep> undergroundFluidsDrawSteps = new ArrayList<>();
     private int oldMinUndergroundFluidX = 0;
@@ -27,13 +32,39 @@ public class MapState {
     private int oldMinUndergroundFluidZ = 0;
     private int oldMaxUndergroundFluidZ = 0;
 
+    private final List<ThaumcraftNodeDrawStep> thaumcraftNodesDrawSteps = new ArrayList<>();
+    private int oldMinBlockX = 0;
+    private int oldMinBlockZ = 0;
+    private int oldMaxBlockX = 0;
+    private int oldMaxBlockZ = 0;
+
     private Waypoint activeOreVeinPosition = null;
+    private Waypoint activeAuraNode = null;
     private int oldMouseX = 0;
     private int oldMouseY = 0;
     private long timeLastClick = 0;
 
     public boolean drawOreVeins = true;
     public boolean drawUndergroundFluids = false;
+    public boolean drawThaumcraftNodes = false;
+
+    public void refresh() {
+        oldMinOreChunkX = 0;
+        oldMaxOreChunkX = 0;
+        oldMinOreChunkZ = 0;
+        oldMaxOreChunkZ = 0;
+        oldMinUndergroundFluidX = 0;
+        oldMaxUndergroundFluidX = 0;
+        oldMinUndergroundFluidZ = 0;
+        oldMaxUndergroundFluidZ = 0;
+        oldMinBlockX = 0;
+        oldMinBlockZ = 0;
+        oldMaxBlockX = 0;
+        oldMaxBlockZ = 0;
+        oldMouseX = 0;
+        oldMouseY = 0;
+        timeLastClick = 0;
+    }
 
     public List<OreVeinDrawStep> getOreVeinDrawSteps(final GridRenderer gridRenderer) {
         final Minecraft minecraft = Minecraft.getMinecraft();
@@ -118,9 +149,40 @@ public class MapState {
         return undergroundFluidsDrawSteps;
     }
 
-    public void onToggleOreVein() {
-        for(OreVeinDrawStep oreVeinDrawStep : oreChunkDrawSteps) {
-            oreVeinDrawStep.toggleDepletedIfMouseOver();
+    public List<ThaumcraftNodeDrawStep> getThaumcraftNodesDrawSteps(final GridRenderer gridRenderer) {
+        final Minecraft minecraft = Minecraft.getMinecraft();
+        final int centerBlockX = (int) Math.round(gridRenderer.getCenterBlockX());
+        final int centerBlockZ = (int) Math.round(gridRenderer.getCenterBlockZ());
+        final int radiusBlockX = minecraft.displayWidth >> (1 + gridRenderer.getZoom());
+        final int radiusBlockZ = minecraft.displayHeight >> (1 + gridRenderer.getZoom());
+        final int minBlockX = centerBlockX - radiusBlockX;
+        final int minBlockZ = centerBlockZ - radiusBlockZ;
+        final int maxBlockX = centerBlockX + radiusBlockX;
+        final int maxBlockZ = centerBlockZ + radiusBlockZ;
+        if(minBlockX != oldMinBlockX || minBlockZ != oldMinBlockZ || maxBlockX != oldMaxBlockX || maxBlockZ != oldMaxBlockZ) {
+            oldMinBlockX = minBlockX;
+            oldMinBlockZ = minBlockZ;
+            oldMaxBlockX = maxBlockX;
+            oldMaxBlockZ = maxBlockZ;
+            thaumcraftNodesDrawSteps.clear();
+            for (NodeList node : TCNodeTracker.nodelist) {
+                if(node.dim == minecraft.thePlayer.dimension
+                        && node.x >= minBlockX && node.x <= maxBlockX
+                        && node.z >= minBlockZ && node.z <= maxBlockZ) {
+                    thaumcraftNodesDrawSteps.add(new ThaumcraftNodeDrawStep(node));
+                }
+            }
+        }
+
+        return thaumcraftNodesDrawSteps;
+    }
+
+    public void onDeletePressed() {
+        if(drawOreVeins) {
+            oreChunkDrawSteps.removeIf(OreVeinDrawStep::onDeletePressed);
+        }
+        else if(drawThaumcraftNodes && isTCNodeTrackerInstalled()) {
+            thaumcraftNodesDrawSteps.removeIf(ThaumcraftNodeDrawStep::onDeletePressed);
         }
     }
 
@@ -134,24 +196,50 @@ public class MapState {
         oldMouseY = mouseY;
         timeLastClick = timestamp;
 
-        boolean hitOreIcon = false;
-        activeOreVeinPosition = null;
-        for(OreVeinDrawStep oreVeinDrawStep : oreChunkDrawSteps) {
-            if(oreVeinDrawStep.onMouseClick(mouseX, mouseY, blockSize, isDoubleClick)) {
-                activeOreVeinPosition = oreVeinDrawStep.toWaypoint();
-                hitOreIcon = true;
+        boolean objectHit = false;
+        // If no double click: Just check if click hit a DrawStep and return boolean. Remove isDoubleClick from mouseClick call
+        if(drawOreVeins) {
+            activeOreVeinPosition = null;
+            for (OreVeinDrawStep oreVeinDrawStep : oreChunkDrawSteps) {
+                if (oreVeinDrawStep.onMouseClick(mouseX, mouseY, blockSize, isDoubleClick)) {
+                    activeOreVeinPosition = oreVeinDrawStep.toWaypoint();
+                    objectHit = true;
+                }
             }
         }
-        return hitOreIcon;
+        if(drawThaumcraftNodes && isTCNodeTrackerInstalled()) {
+            for(ThaumcraftNodeDrawStep thaumcraftNodeDrawStep : thaumcraftNodesDrawSteps) {
+                if(thaumcraftNodeDrawStep.onMouseClick(mouseX, mouseY, isDoubleClick)) {
+                    activeAuraNode = thaumcraftNodeDrawStep.toWaypoint();
+                    objectHit = true;
+                }
+            }
+        }
+        return objectHit;
     }
 
     public void disableWaypoint() {
         for(OreVeinDrawStep oreVeinDrawStep : oreChunkDrawSteps) {
             oreVeinDrawStep.disableWaypoint();
         }
+        for(ThaumcraftNodeDrawStep thaumcraftNodeDrawStep : thaumcraftNodesDrawSteps) {
+            thaumcraftNodeDrawStep.disableWaypoint();
+        }
     }
 
     public Waypoint getActiveOreVein() {
         return activeOreVeinPosition;
+    }
+
+    public Waypoint getActiveAuraNode() {
+        return activeAuraNode;
+    }
+
+    public void setActiveAuraNode(final Waypoint activeAuraNode) {
+        this.activeAuraNode = activeAuraNode;
+    }
+
+    public void resetActiveNode() {
+        activeAuraNode = null;
     }
 }

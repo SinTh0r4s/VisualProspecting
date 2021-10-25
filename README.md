@@ -65,6 +65,15 @@ dependencies {
 }
 ```
 
+In case you do not require any Thaumcraft integration it is recommended to disable it. This will increase your start time of Minecraft in dev:
+```
+dependencies {
+    compile("com.github.SinTh0r4s:VisualProspecting:1.0.10b") {  // Adapt 1.0.10b to targeted release
+        exclude module: "TCNodeTracker"
+    }
+}
+```
+
 GregTech, JourneyMap and their respective dependencies will be loaded automatically. You are ready to start now.
 
 

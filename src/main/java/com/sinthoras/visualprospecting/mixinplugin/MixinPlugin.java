@@ -47,7 +47,8 @@ public class MixinPlugin implements IMixinConfigPlugin {
                     "journeymap.FullscreenMixin",
                     "journeymap.FullscreenActionsMixin",
                     "journeymap.RenderWaypointBeaconMixin",
-                    "journeymap.WaypointManagerMixin"
+                    "journeymap.WaypointManagerMixin",
+                    "journeymap.tcnodetracker.GuiMainMixin"
             );
         }
         else {
@@ -69,6 +70,14 @@ public class MixinPlugin implements IMixinConfigPlugin {
                 mixins.add("journeymap.FullscreenActionsMixin");
                 mixins.add("journeymap.RenderWaypointBeaconMixin");
                 mixins.add("journeymap.WaypointManagerMixin");
+
+                if(loadJar("tcnodetracker-1.7.10")) {
+                    VP.info("Found TCNodeTracker! Integrating now...");
+                    mixins.add("journeymap.tcnodetracker.GuiMainMixin");
+                }
+                else {
+                    VP.info("Could not find TCNodeTracker! Skipping integration....");
+                }
             } else {
                 VP.info("Could not find JourneyMap! Skipping integration....");
             }

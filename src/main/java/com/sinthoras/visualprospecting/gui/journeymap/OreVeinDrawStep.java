@@ -89,25 +89,26 @@ public class OreVeinDrawStep implements DrawStep {
     }
 
     public List<String> getTooltip() {
-        final List<String> list = new ArrayList<>();
+        final List<String> tooltop = new ArrayList<>();
         if(oreVeinPosition.isDepleted()) {
-            list.add(EnumChatFormatting.RED + I18n.format("visualprospecting.depleted"));
+            tooltop.add(EnumChatFormatting.RED + I18n.format("visualprospecting.depleted"));
         }
         if(oreVeinPosition.isAsWaypointActive()) {
-            list.add(EnumChatFormatting.GOLD + I18n.format("visualprospecting.iswaypoint"));
+            tooltop.add(EnumChatFormatting.GOLD + I18n.format("visualprospecting.iswaypoint"));
         }
-        list.add(EnumChatFormatting.WHITE + oreVeinPosition.veinType.getNameReadable());
+        tooltop.add(EnumChatFormatting.WHITE + oreVeinPosition.veinType.getNameReadable());
         if(oreVeinPosition.isDepleted() == false) {
-            list.addAll(oreVeinPosition.veinType.getOreMaterialNames().stream().map(materialName -> EnumChatFormatting.GRAY + materialName).collect(Collectors.toList()));
+            tooltop.addAll(oreVeinPosition.veinType.getOreMaterialNames().stream().map(materialName -> EnumChatFormatting.GRAY + materialName).collect(Collectors.toList()));
         }
-        list.add(EnumChatFormatting.DARK_GRAY + I18n.format("visualprospecting.depleted.toggle", Keyboard.getKeyName(VP.keyDelete.getKeyCode())));
-        return list;
+        tooltop.add(EnumChatFormatting.DARK_GRAY + I18n.format("visualprospecting.node.deletehint", Keyboard.getKeyName(VP.keyDelete.getKeyCode())));
+        return tooltop;
     }
 
-    public void toggleDepletedIfMouseOver() {
+    public boolean onDeletePressed() {
         if(mouseOver) {
             VP.clientCache.toggleOreVein(oreVeinPosition.dimensionId, oreVeinPosition.chunkX, oreVeinPosition.chunkZ);
         }
+        return false;
     }
 
     private int getColor() {
@@ -133,14 +134,18 @@ public class OreVeinDrawStep implements DrawStep {
     }
 
     public Waypoint toWaypoint() {
-        if(oreVeinPosition.isAsWaypointActive()) {
-            return new Waypoint(oreVeinPosition.veinType.getNameReadable(), oreVeinPosition.getBlockX(), 65, oreVeinPosition.getBlockZ(), new Color(getColor()), Waypoint.Type.Normal, oreVeinPosition.dimensionId);
-        }
-        return null;
+        return new Waypoint(I18n.format("visualprospecting.tracked", oreVeinPosition.veinType.getNameReadable()),
+                oreVeinPosition.getBlockX(),
+                65,
+                oreVeinPosition.getBlockZ(),
+                new Color(getColor()),
+                Waypoint.Type.Normal,
+                oreVeinPosition.dimensionId);
     }
 
     public static void drawQuad(ResourceLocation texture, double x, double y, double width, double height, int color, float alpha) {
-        IRenderHelper renderHelper = ForgeHelper.INSTANCE.getRenderHelper();
+        final IRenderHelper renderHelper = ForgeHelper.INSTANCE.getRenderHelper();
+
         GL11.glPushMatrix();
         try {
             renderHelper.glEnableBlend();

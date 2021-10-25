@@ -31,6 +31,10 @@ public class RenderWaypointBeaconMixin {
         if(oreVeinWaypoint != null && oreVeinWaypoint.getDimensions().contains(mc.thePlayer.dimension)) {
             doRender(oreVeinWaypoint);
         }
+        final Waypoint auraNodeWaypoint = MapState.instance.getActiveAuraNode();
+        if(auraNodeWaypoint != null && auraNodeWaypoint.getDimensions().contains(mc.thePlayer.dimension)) {
+            doRender(auraNodeWaypoint);
+        }
     }
 
 }

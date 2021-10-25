@@ -4,6 +4,7 @@ import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import com.sinthoras.visualprospecting.gui.journeymap.MapState;
 import com.sinthoras.visualprospecting.gui.journeymap.OreVeinDrawStep;
+import com.sinthoras.visualprospecting.gui.journeymap.ThaumcraftNodeDrawStep;
 import journeymap.client.Constants;
 import journeymap.client.io.ThemeFileHandler;
 import journeymap.client.log.LogFormatter;
@@ -37,13 +38,11 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.List;
 
 import static com.sinthoras.visualprospecting.Utils.isNEIInstalled;
+import static com.sinthoras.visualprospecting.Utils.isTCNodeTrackerInstalled;
 import static com.sinthoras.visualprospecting.gui.journeymap.Reflection.getJourneyMapGridRenderer;
 
 @Mixin(value = Fullscreen.class, remap = false)
 public abstract class FullscreenMixin extends JmUI {
-
-    private ThemeButton buttonOreVeins;
-    private ThemeButton buttonUndergroundFluids;
 
     @Shadow(remap = false)
     ThemeToolbar mapTypeToolbar;
@@ -80,6 +79,11 @@ public abstract class FullscreenMixin extends JmUI {
         super("");
     }
 
+    @Inject(method = "<init>*", at = @At("RETURN"), remap = false, require = 1)
+    private void init(CallbackInfo callbackInfo) {
+        MapState.instance.refresh();
+    }
+
     @Shadow(remap = false)
     private int getMapFontScale() {
         throw new IllegalStateException("Mixin failed to shadow getMapFontScale()");
@@ -90,7 +94,7 @@ public abstract class FullscreenMixin extends JmUI {
         throw new IllegalStateException("Mixin failed to shadow drawMap()");
     }
 
-    @Shadow @Final private static GridRenderer gridRenderer;
+    @Shadow @Final static GridRenderer gridRenderer;
 
     @Inject(method = "<init>*", at = @At("RETURN"), remap = false, require = 1)
     private void onConstructed(CallbackInfo callbackInfo) {
@@ -105,7 +109,7 @@ public abstract class FullscreenMixin extends JmUI {
             remap = false,
             require = 1,
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    private void onBeforeDrawWaypoints(CallbackInfo callbackInfo, boolean refreshReady, StatTimer timer, int xOffset, int yOffset, float drawScale) {
+    private void onBeforeDrawJourneyMapWaypoints(CallbackInfo callbackInfo, boolean refreshReady, StatTimer timer, int xOffset, int yOffset, float drawScale) {
         final GridRenderer gridRenderer = getJourneyMapGridRenderer();
         assert (gridRenderer != null);
         if(MapState.instance.drawUndergroundFluids) {
@@ -114,6 +118,9 @@ public abstract class FullscreenMixin extends JmUI {
         }
         if(MapState.instance.drawOreVeins) {
             gridRenderer.draw(MapState.instance.getOreVeinDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
+        }
+        if(MapState.instance.drawThaumcraftNodes) {
+            gridRenderer.draw(MapState.instance.getThaumcraftNodesDrawSteps(gridRenderer), xOffset, yOffset, drawScale, getMapFontScale(), 0.0);
         }
     }
 
@@ -126,21 +133,33 @@ public abstract class FullscreenMixin extends JmUI {
     private void OnCreateMapTypeToolbar(Fullscreen owner, ThemeToolbar value) {
         final Theme theme = ThemeFileHandler.getCurrentTheme();
 
-        buttonOreVeins = new ThemeToggle(theme, "visualprospecting.button.orevein", "oreveins");
+        final ThemeButton buttonOreVeins = new ThemeToggle(theme, "visualprospecting.button.orevein", "oreveins");
         buttonOreVeins.setToggled(MapState.instance.drawOreVeins, false);
         buttonOreVeins.addToggleListener((button, toggled) -> {
             MapState.instance.drawOreVeins = toggled;
             return true;
         });
 
-        buttonUndergroundFluids = new ThemeToggle(theme, "visualprospecting.button.undergroundfluid", "undergroundfluid");
+        final ThemeButton buttonUndergroundFluids = new ThemeToggle(theme, "visualprospecting.button.undergroundfluid", "undergroundfluid");
         buttonUndergroundFluids.setToggled(MapState.instance.drawUndergroundFluids, false);
         buttonUndergroundFluids.addToggleListener((button, toggled) -> {
             MapState.instance.drawUndergroundFluids = toggled;
             return true;
         });
 
-        mapTypeToolbar = new ThemeToolbar(theme, buttonUndergroundFluids, buttonOreVeins, buttonCaves, buttonNight, buttonDay);
+        if(isTCNodeTrackerInstalled()) {
+            final ThemeButton buttonThaumcraftNodes = new ThemeToggle(theme, "visualprospecting.button.nodes", "nodes");
+            buttonThaumcraftNodes.setToggled(MapState.instance.drawThaumcraftNodes, false);
+            buttonThaumcraftNodes.addToggleListener((button, toggled) -> {
+                MapState.instance.drawThaumcraftNodes = toggled;
+                return true;
+            });
+
+            mapTypeToolbar = new ThemeToolbar(theme, buttonThaumcraftNodes, buttonUndergroundFluids, buttonOreVeins, buttonCaves, buttonNight, buttonDay);
+        }
+        else {
+            mapTypeToolbar = new ThemeToolbar(theme, buttonUndergroundFluids, buttonOreVeins, buttonCaves, buttonNight, buttonDay);
+        }
     }
 
     @Override
@@ -168,13 +187,21 @@ public abstract class FullscreenMixin extends JmUI {
                 }
             }
 
-            if(tooltip == null && MapState.instance.drawOreVeins) {
+            if(tooltip == null) {
                 final int scaledMouseX = (mx * mc.displayWidth) / this.width;
                 final int scaledMouseY = (my * mc.displayHeight) / this.height;
-                for(OreVeinDrawStep oreVein : MapState.instance.getOreVeinDrawSteps(gridRenderer)) {
-                    if(oreVein.mouseOver(scaledMouseX, scaledMouseY)) {
-                        tooltip = oreVein.getTooltip();
-                        break;
+                if(MapState.instance.drawOreVeins) {
+                    for(OreVeinDrawStep oreVein : MapState.instance.getOreVeinDrawSteps(gridRenderer)) {
+                        if(oreVein.mouseOver(scaledMouseX, scaledMouseY)) {
+                            tooltip = oreVein.getTooltip();
+                        }
+                    }
+                }
+                else if(MapState.instance.drawThaumcraftNodes) {
+                    for(ThaumcraftNodeDrawStep thaumcraftNodeDrawStep : MapState.instance.getThaumcraftNodesDrawSteps(gridRenderer)) {
+                        if(thaumcraftNodeDrawStep.mouseOver(scaledMouseX, scaledMouseY)) {
+                            tooltip = thaumcraftNodeDrawStep.getTooltip();
+                        }
                     }
                 }
             }
@@ -187,6 +214,18 @@ public abstract class FullscreenMixin extends JmUI {
                 drawHoveringText(tooltip, mx, my, getFontRenderer());
                 RenderHelper.disableStandardItemLighting();
             }
+            else {
+                final int scaledMouseX = (mx * mc.displayWidth) / this.width;
+                final int scaledMouseY = (my * mc.displayHeight) / this.height;
+                for(ThaumcraftNodeDrawStep thaumcraftNodeDrawStep : MapState.instance.getThaumcraftNodesDrawSteps(gridRenderer)) {
+                    if(thaumcraftNodeDrawStep.mouseOver(scaledMouseX, scaledMouseY)
+                            && thaumcraftNodeDrawStep.drawTooltip(getFontRenderer(), mx, my, this.width, this.height)) {
+                        break;
+                    }
+                }
+            }
+
+
         }
         catch (Throwable var11) {
             logger.log(Level.ERROR, "Unexpected exception in jm.fullscreen.drawScreen(): " + LogFormatter.toString(var11));
@@ -205,7 +244,7 @@ public abstract class FullscreenMixin extends JmUI {
             cancellable = true)
     private void onKeyPress(CallbackInfo callbackInfo) {
         if((chat == null || chat.isHidden()) && Constants.isPressed(VP.keyDelete)) {
-            MapState.instance.onToggleOreVein();
+            MapState.instance.onDeletePressed();
             callbackInfo.cancel();
         }
     }

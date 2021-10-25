@@ -38,9 +38,12 @@ public class Utils {
         return Loader.isModLoaded("bartworks");
     }
 
-
     public static boolean isNEIInstalled() {
         return Loader.isModLoaded("NotEnoughItems");
+    }
+
+    public static boolean isTCNodeTrackerInstalled() {
+        return Loader.isModLoaded("tcnodetracker");
     }
 
     public static int coordBlockToChunk(int blockCoord) {

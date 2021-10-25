@@ -115,6 +115,8 @@ dependencies {
 
     compile("curse.maven:journeymap-32274:2367915")
 
+    compile("com.github.GTNewHorizons:TCNodeTracker:latest")
+
     compileOnly("com.github.GTNewHorizons:bartworks:0.5.24") {
         transitive = false
     }
