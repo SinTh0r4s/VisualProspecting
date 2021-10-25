@@ -13,6 +13,8 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Set;
 
+import static com.sinthoras.visualprospecting.Utils.isDevelopmentEnvironment;
+
 public class MixinPlugin implements IMixinConfigPlugin {
     @Override
     public void onLoad(String mixinPackage) {
@@ -36,8 +38,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public List<String> getMixins() {
-        final boolean developerEnvironment = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
-        if(developerEnvironment) {
+        if(isDevelopmentEnvironment()) {
             return Lists.newArrayList(
                     "GT_Block_Ores_AbstractMixin",
                     "GT_MetaTileEntity_AdvSeismicProspectorMixin",

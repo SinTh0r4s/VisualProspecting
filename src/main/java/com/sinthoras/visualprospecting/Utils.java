@@ -10,6 +10,7 @@ import gregtech.api.objects.GT_UO_Fluid;
 import gregtech.api.objects.XSTR;
 import gregtech.common.GT_UndergroundOil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
@@ -33,6 +34,10 @@ import static gregtech.common.GT_Proxy.*;
 import static gregtech.common.GT_Proxy.GTOIL;
 
 public class Utils {
+
+    public static boolean isDevelopmentEnvironment() {
+        return (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
+    }
 
     public static boolean isBartworksInstalled() {
         return Loader.isModLoaded("bartworks");
