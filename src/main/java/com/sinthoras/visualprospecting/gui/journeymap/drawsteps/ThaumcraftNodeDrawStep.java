@@ -5,7 +5,6 @@ import com.dyonovan.tcnodetracker.lib.NodeList;
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.gui.journeymap.DrawUtils;
-import com.sinthoras.visualprospecting.gui.journeymap.MapState;
 import com.sinthoras.visualprospecting.gui.journeymap.layers.ThaumcraftNodeLayer;
 import journeymap.client.model.Waypoint;
 import journeymap.client.render.map.GridRenderer;
@@ -21,7 +20,6 @@ import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.nodes.NodeType;
 import thaumcraft.client.lib.UtilsFX;
-import thaumcraft.client.renderers.tile.ItemNodeRenderer;
 import thaumcraft.common.config.ConfigBlocks;
 import thaumcraft.common.tiles.TileNode;
 
@@ -75,7 +73,7 @@ public class ThaumcraftNodeDrawStep implements ClickableDrawStep {
 
     @Override
     public void draw(double draggedPixelX, double draggedPixelY, GridRenderer gridRenderer, float drawScale, double fontScale, double rotation) {
-        final double borderSize = 48 * fontScale;
+        final double borderSize = 44 * fontScale;
         final double borderSizeHalf = borderSize / 2;
         final Point2D.Double blockAsPixel = gridRenderer.getBlockPixelInGrid(node.x, node.z);
         final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + draggedPixelX, blockAsPixel.getY() + draggedPixelY);
@@ -86,18 +84,8 @@ public class ThaumcraftNodeDrawStep implements ClickableDrawStep {
         final int alpha = 204;
         DrawUtils.drawQuad(isWaypoint(ThaumcraftNodeLayer.instance.getActiveWaypoint()) ? markedTextureLocation : unmarkedTextureLocation, pixel.getX() - borderSizeHalf, pixel.getY() - borderSizeHalf, borderSize, borderSize, 0xFFFFFF, alpha);
 
-        GL11.glPushMatrix();
-        GL11.glTranslated(pixel.getX(), pixel.getY(), 0);
-        final double scale = 64 * fontScale;
-        GL11.glScaled(scale, scale, scale);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        ItemNodeRenderer.renderItemNode(nodeTile);
-        GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
-        ItemNodeRenderer.renderItemNode(nodeTile);
-        GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
-        ItemNodeRenderer.renderItemNode(nodeTile);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glPopMatrix();
+        final int aspectPixelDiameter = 32;
+        DrawUtils.drawAspect(pixel.getX(), pixel.getY(), aspectPixelDiameter, nodeTile.getAspects().getAspectsSortedAmount()[0], 0);
     }
 
     public List<String> getTooltip() {
