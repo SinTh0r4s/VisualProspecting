@@ -15,7 +15,7 @@ import java.util.Random;
 public class VP {
 
     public static SimpleNetworkWrapper network;
-    public static KeyBinding keyDelete;
+    public static KeyBinding keyAction;
 
     public final static TaskManager taskManager = new TaskManager();
     public final static ServerCache serverCache = new ServerCache();

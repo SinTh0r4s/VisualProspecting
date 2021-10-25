@@ -22,8 +22,8 @@ public class HooksClient extends HooksShared {
 	public void fmlLifeCycleEvent(FMLPreInitializationEvent event) {
 		super.fmlLifeCycleEvent(event);
 
-		VP.keyDelete = new KeyBinding("visualprospecting.key.delete.name", Keyboard.KEY_DELETE, "visualprospecting.key.delete.category");
-		ClientRegistry.registerKeyBinding(VP.keyDelete);
+		VP.keyAction = new KeyBinding("visualprospecting.key.action.name", Keyboard.KEY_DELETE, "visualprospecting.key.action.category");
+		ClientRegistry.registerKeyBinding(VP.keyAction);
 	}
 	
 	@Override

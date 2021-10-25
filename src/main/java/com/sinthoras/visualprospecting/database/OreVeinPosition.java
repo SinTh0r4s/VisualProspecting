@@ -14,7 +14,6 @@ public class OreVeinPosition {
     public final VeinType veinType;
 
     private boolean depleted = false;
-    private boolean asWaypointActive = false;
 
     public OreVeinPosition(int dimensionId, int chunkX, int chunkZ, VeinType veinType) {
         this.dimensionId = dimensionId;
@@ -54,13 +53,5 @@ public class OreVeinPosition {
 
     public static int getMaxBytes() {
         return MAX_BYTES + VeinTypeCaching.getLongesOreNameLength();
-    }
-
-    public void triggerAsWaypointActive(boolean isActive) {
-        asWaypointActive = isActive && asWaypointActive == false;
-    }
-
-    public boolean isAsWaypointActive() {
-        return asWaypointActive;
     }
 }

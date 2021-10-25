@@ -1,15 +1,16 @@
-package com.sinthoras.visualprospecting.gui.journeymap;
+package com.sinthoras.visualprospecting.gui.journeymap.drawsteps;
 
 import com.dyonovan.tcnodetracker.TCNodeTracker;
 import com.dyonovan.tcnodetracker.lib.NodeList;
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.gui.journeymap.DrawUtils;
+import com.sinthoras.visualprospecting.gui.journeymap.MapState;
+import com.sinthoras.visualprospecting.gui.journeymap.layers.ThaumcraftNodeLayer;
 import journeymap.client.model.Waypoint;
-import journeymap.client.render.draw.DrawStep;
 import journeymap.client.render.map.GridRenderer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
@@ -27,7 +28,7 @@ import thaumcraft.common.tiles.TileNode;
 import java.awt.geom.Point2D;
 import java.util.List;
 
-public class ThaumcraftNodeDrawStep implements DrawStep {
+public class ThaumcraftNodeDrawStep implements ClickableDrawStep {
 
     private static final ResourceLocation markedTextureLocation = new ResourceLocation(Tags.MODID, "textures/node_marked.png");
     private static final ResourceLocation unmarkedTextureLocation = new ResourceLocation(Tags.MODID, "textures/node_unmarked.png");
@@ -73,17 +74,17 @@ public class ThaumcraftNodeDrawStep implements DrawStep {
     }
 
     @Override
-    public void draw(double xOffset, double yOffset, GridRenderer gridRenderer, float drawScale, double fontScale, double rotation) {
+    public void draw(double draggedPixelX, double draggedPixelY, GridRenderer gridRenderer, float drawScale, double fontScale, double rotation) {
         final double borderSize = 48 * fontScale;
         final double borderSizeHalf = borderSize / 2;
         final Point2D.Double blockAsPixel = gridRenderer.getBlockPixelInGrid(node.x, node.z);
-        final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + xOffset, blockAsPixel.getY() + yOffset);
+        final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + draggedPixelX, blockAsPixel.getY() + draggedPixelY);
         centerPixelX = pixel.getX();
         centerPixelY = pixel.getY();
         clickableRadiusPixelSquared = borderSizeHalf * borderSizeHalf;
 
         final int alpha = 204;
-        DrawUtils.drawQuad(isActiveAsWaypoint() ? markedTextureLocation : unmarkedTextureLocation, pixel.getX() - borderSizeHalf, pixel.getY() - borderSizeHalf, borderSize, borderSize, 0xFFFFFF, alpha);
+        DrawUtils.drawQuad(isWaypoint(ThaumcraftNodeLayer.instance.getActiveWaypoint()) ? markedTextureLocation : unmarkedTextureLocation, pixel.getX() - borderSizeHalf, pixel.getY() - borderSizeHalf, borderSize, borderSize, 0xFFFFFF, alpha);
 
         GL11.glPushMatrix();
         GL11.glTranslated(pixel.getX(), pixel.getY(), 0);
@@ -99,40 +100,27 @@ public class ThaumcraftNodeDrawStep implements DrawStep {
         GL11.glPopMatrix();
     }
 
-    public boolean onDoubleClick() {
-        return isActiveAsWaypoint() == false;
-    }
-
     public List<String> getTooltip() {
         return null;
     }
 
-    public boolean mouseOver(int mouseX, int mouseY) {
+    public boolean isMouseOver(int mouseX, int mouseY) {
         final double deltaX = mouseX - centerPixelX;
         final double deltaY = mouseY - centerPixelY;
         mouseOver = deltaX * deltaX + deltaY * deltaY <= clickableRadiusPixelSquared;
         return mouseOver;
     }
 
-    public boolean onDeletePressed() {
-        if(mouseOver) {
-            TCNodeTracker.nodelist.removeIf(entry -> entry.x == node.x && entry.y == node.y && entry.z == node.z);
-            return true;
-        }
-        return false;
+    public void onActionKeyPressed() {
+        TCNodeTracker.nodelist.removeIf(entry -> entry.x == node.x && entry.y == node.y && entry.z == node.z);
     }
 
-    private boolean isActiveAsWaypoint() {
-        final Waypoint activeAuraNode = MapState.instance.getActiveAuraNode();
-        return activeAuraNode != null
-                && activeAuraNode.getDimensions().contains(node.dim)
-                && activeAuraNode.getX() == node.x
-                && activeAuraNode.getY() == node.y
-                && activeAuraNode.getZ() == node.z;
-    }
-
-    public void disableWaypoint() {
-
+    public boolean isWaypoint(Waypoint waypoint) {
+        return waypoint != null
+                && waypoint.getDimensions().contains(node.dim)
+                && waypoint.getX() == node.x
+                && waypoint.getY() == node.y
+                && waypoint.getZ() == node.z;
     }
 
     public Waypoint toWaypoint() {
@@ -145,13 +133,13 @@ public class ThaumcraftNodeDrawStep implements DrawStep {
                 node.dim);
     }
 
-    public boolean drawTooltip(FontRenderer fontRenderer, int mouseX, int mouseY, int displayWidth, int displayHeight) {
-        final boolean isWaypoint = isActiveAsWaypoint();
+    public void drawTooltip(FontRenderer fontRenderer, int mouseX, int mouseY, int displayWidth, int displayHeight) {
+        final boolean isWaypoint = isWaypoint(ThaumcraftNodeLayer.instance.getActiveWaypoint());
         final String asWaypoint = EnumChatFormatting.GOLD + I18n.format("visualprospecting.iswaypoint");
         final String title = EnumChatFormatting.BOLD + I18n.format("tile.blockAiry.0.name");
         final String nodeDescription = node.mod.equals("BLANK") ? EnumChatFormatting.GRAY + I18n.format("nodetype." + node.type + ".name")
                 : EnumChatFormatting.GRAY + I18n.format("nodetype." + node.type + ".name") + ", " + I18n.format("nodemod." + node.mod + ".name");
-        final String deleteHint = EnumChatFormatting.DARK_GRAY + I18n.format("visualprospecting.node.deletehint", Keyboard.getKeyName(VP.keyDelete.getKeyCode()));
+        final String deleteHint = EnumChatFormatting.DARK_GRAY + I18n.format("visualprospecting.node.deletehint", Keyboard.getKeyName(VP.keyAction.getKeyCode()));
 
         int maxTextWidth = Math.max(Math.max(fontRenderer.getStringWidth(title), fontRenderer.getStringWidth(nodeDescription)), fontRenderer.getStringWidth(deleteHint));
         if(isWaypoint) {
@@ -244,7 +232,5 @@ public class ThaumcraftNodeDrawStep implements DrawStep {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         RenderHelper.enableStandardItemLighting();
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-
-        return true;
     }
 }

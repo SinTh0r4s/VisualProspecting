@@ -1,4 +1,4 @@
-package com.sinthoras.visualprospecting.gui.journeymap;
+package com.sinthoras.visualprospecting.gui.journeymap.drawsteps;
 
 import com.sinthoras.visualprospecting.Config;
 import com.sinthoras.visualprospecting.VP;
@@ -36,12 +36,12 @@ public class UndergroundFluidChunkDrawStep implements DrawStep {
     }
 
     @Override
-    public void draw(double xOffset, double yOffset, GridRenderer gridRenderer, float drawScale, double fontScale, double rotation) {
+    public void draw(double draggedPixelX, double draggedPixelY, GridRenderer gridRenderer, float drawScale, double fontScale, double rotation) {
         final int zoom = gridRenderer.getZoom();
         if (fluidAmount > 0 && zoom >= Config.minZoomLevelForUndergroundFluidDetails) {
             double blockSize = Math.pow(2, zoom);
             final Point2D.Double blockAsPixel = gridRenderer.getBlockPixelInGrid(blockX, blockZ);
-            final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + xOffset, blockAsPixel.getY() + yOffset);
+            final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + draggedPixelX, blockAsPixel.getY() + draggedPixelY);
             float alpha = ((float)(fluidAmount - minAmountInField)) / (maxAmountInField - minAmountInField + 1);
             alpha *= alpha * 204;
             DrawUtil.drawRectangle(pixel.getX(), pixel.getY(), VP.chunkWidth * blockSize, VP.chunkDepth * blockSize, fluid.getColor(), (int)alpha);

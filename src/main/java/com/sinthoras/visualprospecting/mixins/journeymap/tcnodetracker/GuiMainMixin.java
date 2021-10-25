@@ -4,6 +4,9 @@ import com.dyonovan.tcnodetracker.gui.GuiMain;
 import com.dyonovan.tcnodetracker.lib.AspectLoc;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.gui.journeymap.MapState;
+import com.sinthoras.visualprospecting.gui.journeymap.layers.InformationLayer;
+import com.sinthoras.visualprospecting.gui.journeymap.layers.OreVeinLayer;
+import com.sinthoras.visualprospecting.gui.journeymap.layers.WaypointProviderLayer;
 import journeymap.client.model.Waypoint;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -35,7 +38,7 @@ public class GuiMainMixin {
     private void onWaypointSet(GuiButton button, CallbackInfo callbackInfo, int i) {
         final AspectLoc aspect = GuiMain.aspectList.get(low + i);
         GuiMain.aspectList.clear();
-        MapState.instance.setActiveAuraNode(new Waypoint(I18n.format("visualprospecting.tracked", I18n.format("tile.blockAiry.0.name")),
+        OreVeinLayer.instance.setActiveWaypoint(new Waypoint(I18n.format("visualprospecting.tracked", I18n.format("tile.blockAiry.0.name")),
                 aspect.x,
                 aspect.y,
                 aspect.z,
@@ -53,6 +56,10 @@ public class GuiMainMixin {
             remap = false,
             require = 1)
     private void onWaypointClear(CallbackInfo callbackInfo) {
-        MapState.instance.resetActiveNode();
+        for(InformationLayer layer : MapState.instance.layers) {
+            if(layer instanceof WaypointProviderLayer) {
+                ((WaypointProviderLayer) layer).clearActiveWaypoint();
+            }
+        }
     }
 }

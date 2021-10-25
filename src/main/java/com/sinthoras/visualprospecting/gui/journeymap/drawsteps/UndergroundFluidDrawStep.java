@@ -1,4 +1,4 @@
-package com.sinthoras.visualprospecting.gui.journeymap;
+package com.sinthoras.visualprospecting.gui.journeymap.drawsteps;
 
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.VP;
@@ -18,12 +18,12 @@ public class UndergroundFluidDrawStep implements DrawStep {
     }
 
     @Override
-    public void draw(double xOffset, double yOffset, GridRenderer gridRenderer, float drawScale, double fontScale, double rotation) {
+    public void draw(double draggedPixelX, double draggedPixelY, GridRenderer gridRenderer, float drawScale, double fontScale, double rotation) {
         final int maxAmountInField = undergroundFluidPosition.getMaxProduction();
         if (maxAmountInField > 0) {
             double blockSize = Math.pow(2, gridRenderer.getZoom());
             final Point2D.Double blockAsPixel = gridRenderer.getBlockPixelInGrid(undergroundFluidPosition.getBlockX(), undergroundFluidPosition.getBlockZ());
-            final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + xOffset, blockAsPixel.getY() + yOffset);
+            final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + draggedPixelX, blockAsPixel.getY() + draggedPixelY);
 
             final int borderColor = undergroundFluidPosition.fluid.getColor();
             final int borderAlpha = 204;

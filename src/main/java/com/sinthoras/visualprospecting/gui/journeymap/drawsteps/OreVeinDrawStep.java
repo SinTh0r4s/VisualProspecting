@@ -1,28 +1,24 @@
-package com.sinthoras.visualprospecting.gui.journeymap;
+package com.sinthoras.visualprospecting.gui.journeymap.drawsteps;
 
 import com.sinthoras.visualprospecting.Config;
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
+import com.sinthoras.visualprospecting.gui.journeymap.DrawUtils;
+import com.sinthoras.visualprospecting.gui.journeymap.layers.OreVeinLayer;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
-import journeymap.client.cartography.RGB;
-import journeymap.client.forge.helper.ForgeHelper;
-import journeymap.client.forge.helper.IRenderHelper;
 import journeymap.client.model.Waypoint;
-import journeymap.client.render.draw.DrawStep;
 import journeymap.client.render.draw.DrawUtil;
 import journeymap.client.render.map.GridRenderer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -30,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class OreVeinDrawStep implements DrawStep {
+public class OreVeinDrawStep implements ClickableDrawStep {
 
     private static final ResourceLocation depletedTextureLocation = new ResourceLocation(Tags.MODID, "textures/depleted.png");
 
@@ -38,19 +34,22 @@ public class OreVeinDrawStep implements DrawStep {
     private double iconX;
     private double iconY;
     private double iconSize;
-    private boolean mouseOver = false;
 
 
     public OreVeinDrawStep(final OreVeinPosition oreVeinPosition) {
         this.oreVeinPosition = oreVeinPosition;
     }
 
+    public void drawTooltip(FontRenderer fontRenderer, int mouseX, int mouseY, int displayWidth, int displayHeight) {
+
+    }
+
     @Override
-    public void draw(double xOffset, double yOffset, GridRenderer gridRenderer, float drawScale, double fontScale, double rotation) {
+    public void draw(double draggedPixelX, double draggedPixelY, GridRenderer gridRenderer, float drawScale, double fontScale, double rotation) {
         iconSize = 32 * fontScale;
         final double iconSizeHalf = iconSize / 2;
         final Point2D.Double blockAsPixel = gridRenderer.getBlockPixelInGrid(oreVeinPosition.getBlockX(), oreVeinPosition.getBlockZ());
-        final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + xOffset, blockAsPixel.getY() + yOffset);
+        final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + draggedPixelX, blockAsPixel.getY() + draggedPixelY);
 
 
         if(gridRenderer.getZoom() >= Config.minZoomLevelForOreLabel && oreVeinPosition.isDepleted() == false) {
@@ -72,7 +71,7 @@ public class OreVeinDrawStep implements DrawStep {
             }
         }
 
-        if(oreVeinPosition.isAsWaypointActive()) {
+        if(isWaypoint(OreVeinLayer.instance.getActiveWaypoint())) {
             final double thickness = iconSize / 8;
             final int borderAlpha = 204;
             final int color = 0xFFD700;
@@ -83,32 +82,28 @@ public class OreVeinDrawStep implements DrawStep {
         }
     }
 
-    public boolean mouseOver(int mouseX, int mouseY) {
-        mouseOver = mouseX >= iconX && mouseX <= iconX + iconSize && mouseY >= iconY && mouseY <= iconY + iconSize;
-        return mouseOver;
+    public boolean isMouseOver(int mouseX, int mouseY) {
+        return mouseX >= iconX && mouseX <= iconX + iconSize && mouseY >= iconY && mouseY <= iconY + iconSize;
     }
 
     public List<String> getTooltip() {
-        final List<String> tooltop = new ArrayList<>();
+        final List<String> tooltip = new ArrayList<>();
         if(oreVeinPosition.isDepleted()) {
-            tooltop.add(EnumChatFormatting.RED + I18n.format("visualprospecting.depleted"));
+            tooltip.add(EnumChatFormatting.RED + I18n.format("visualprospecting.depleted"));
         }
-        if(oreVeinPosition.isAsWaypointActive()) {
-            tooltop.add(EnumChatFormatting.GOLD + I18n.format("visualprospecting.iswaypoint"));
+        if(isWaypoint(OreVeinLayer.instance.getActiveWaypoint())) {
+            tooltip.add(EnumChatFormatting.GOLD + I18n.format("visualprospecting.iswaypoint"));
         }
-        tooltop.add(EnumChatFormatting.WHITE + oreVeinPosition.veinType.getNameReadable());
+        tooltip.add(EnumChatFormatting.WHITE + oreVeinPosition.veinType.getNameReadable());
         if(oreVeinPosition.isDepleted() == false) {
-            tooltop.addAll(oreVeinPosition.veinType.getOreMaterialNames().stream().map(materialName -> EnumChatFormatting.GRAY + materialName).collect(Collectors.toList()));
+            tooltip.addAll(oreVeinPosition.veinType.getOreMaterialNames().stream().map(materialName -> EnumChatFormatting.GRAY + materialName).collect(Collectors.toList()));
         }
-        tooltop.add(EnumChatFormatting.DARK_GRAY + I18n.format("visualprospecting.node.deletehint", Keyboard.getKeyName(VP.keyDelete.getKeyCode())));
-        return tooltop;
+        tooltip.add(EnumChatFormatting.DARK_GRAY + I18n.format("visualprospecting.node.deletehint", Keyboard.getKeyName(VP.keyAction.getKeyCode())));
+        return tooltip;
     }
 
-    public boolean onDeletePressed() {
-        if(mouseOver) {
-            VP.clientCache.toggleOreVein(oreVeinPosition.dimensionId, oreVeinPosition.chunkX, oreVeinPosition.chunkZ);
-        }
-        return false;
+    public void onActionKeyPressed() {
+        VP.clientCache.toggleOreVein(oreVeinPosition.dimensionId, oreVeinPosition.chunkX, oreVeinPosition.chunkZ);
     }
 
     private int getColor() {
@@ -121,18 +116,6 @@ public class OreVeinDrawStep implements DrawStep {
         return aMaterial.mIconSet.mTextures[OrePrefixes.ore.mTextureIndex].getIcon();
     }
 
-    public boolean onMouseClick(int mouseX, int mouseY, double blockSize, boolean isDoubleClick) {
-        final boolean clickMouseOver = mouseX >= iconX - blockSize && mouseX <= iconX + iconSize + blockSize && mouseY >= iconY - blockSize && mouseY <= iconY + iconSize + blockSize;
-        if(isDoubleClick) {
-            oreVeinPosition.triggerAsWaypointActive(clickMouseOver);
-        }
-        return clickMouseOver;
-    }
-
-    public void disableWaypoint() {
-        oreVeinPosition.triggerAsWaypointActive(false);
-    }
-
     public Waypoint toWaypoint() {
         return new Waypoint(I18n.format("visualprospecting.tracked", oreVeinPosition.veinType.getNameReadable()),
                 oreVeinPosition.getBlockX(),
@@ -141,5 +124,12 @@ public class OreVeinDrawStep implements DrawStep {
                 new Color(getColor()),
                 Waypoint.Type.Normal,
                 oreVeinPosition.dimensionId);
+    }
+
+    public boolean isWaypoint(Waypoint waypoint) {
+        return waypoint != null
+                && waypoint.getDimensions().contains(oreVeinPosition.dimensionId)
+                && waypoint.getX() == oreVeinPosition.getBlockX()
+                && waypoint.getZ() == oreVeinPosition.getBlockZ();
     }
 }
