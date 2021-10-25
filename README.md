@@ -5,7 +5,7 @@
 
 ### For Minecraft 1.7.10
 
-This mod is intended for player convenience, but may also be used as API, since it provides the location of all GT ore veins in a cache. VisualProspecting tracks all GT Ore Veins a player has found and visualizes them in JourneyMap (optional, if installed).
+This mod is intended for player convenience, but may also be used as API, since it provides the location of all GT ore veins in a cache. VisualProspecting tracks all GT Ore Veins a player has found and visualizes them in JourneyMap (optional, if installed). It also visualizes tracked Thaumcraft aura nodes if TCNodeTracker if installed.
 
 VisualProspecting tracks all ores that a player interacted with, by right or by left click. It also integrates prospecting data from GTs _Advanced Seismic Prospector_.
 You may share your findings with other players by crafting a _Prospector's Log_.
@@ -17,6 +17,9 @@ _Underground fluids in JourneyMap overlay._
 
 ![GregTech ore veins in JourneyMap overlay](https://i.ibb.co/G5KLGjQ/2021-10-20-01-16-57.png) \
 _GregTech ore veins in JourneyMap overlay. You may double-click an ore vein to toggle it as waypoint._
+
+![Thaumcraft aura nodes in JourneyMap overlay](https://i.ibb.co/4YDH9rZ/2021-10-25-02-54-48.png) \
+_Thaumcraft aura nodes in JourneyMap overlay. You may double-click an aura node to toggle it as waypoint._
 
 ### Reset Progress
 
@@ -38,7 +41,9 @@ Does VisualProspecting run with other maps? - I runs just fine, but it has no vi
     - Automatically shipped. No manual handling is required.
 #### Optional Mods:
  - JourneyMap: Visualizes prospected ore veins and oil fields on custom overlay, that can be toggled on and off.
-    - Injected class: [_Fullscreen_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/FullscreenMixin.java)
+    - Injected classes: [_Fullscreen_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/FullscreenMixin.java), [_FullscreenActions_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/FullscreenActionsMixin.java), [_RenderWaypointBeacon_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/RenderWaypointBeaconMixin.java), [_WaypointManager_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/WaypointManagerMixin.java)
+ - TCNodeTracker: Visualizes tracked aura nodes in JourneyMap. Requires JourneyMap  
+    - Injected class: [_GuiMain_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/tcnodetracker/GuiMainMixin.java)
  - NEI: Ores on JourneyMap are highlighted according to NEI search if active (double click on search field).
  - GalacticGreg: Injects a notification call into ore vein generation.
     - Injected class: [_GT_Worldgenerator_Space_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/galacticgreg/GT_Worldgenerator_SpaceMixin.java)
