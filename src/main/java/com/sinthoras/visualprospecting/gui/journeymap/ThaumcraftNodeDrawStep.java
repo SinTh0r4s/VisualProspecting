@@ -24,7 +24,6 @@ import thaumcraft.client.renderers.tile.ItemNodeRenderer;
 import thaumcraft.common.config.ConfigBlocks;
 import thaumcraft.common.tiles.TileNode;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.List;
 
@@ -155,12 +154,17 @@ public class ThaumcraftNodeDrawStep implements DrawStep {
     }
 
     public boolean drawTooltip(FontRenderer fontRenderer, int mouseX, int mouseY, int displayWidth, int displayHeight) {
+        final boolean isWaypoint = isActiveAsWaypoint();
+        final String asWaypoint = EnumChatFormatting.GOLD + I18n.format("visualprospecting.iswaypoint");
         final String title = EnumChatFormatting.BOLD + I18n.format("tile.blockAiry.0.name");
         final String nodeDescription = node.mod.equals("BLANK") ? EnumChatFormatting.GRAY + I18n.format("nodetype." + node.type + ".name")
                 : EnumChatFormatting.GRAY + I18n.format("nodetype." + node.type + ".name") + ", " + I18n.format("nodemod." + node.mod + ".name");
         final String deleteHint = EnumChatFormatting.DARK_GRAY + I18n.format("visualprospecting.node.deletehint", Keyboard.getKeyName(VP.keyDelete.getKeyCode()));
 
         int maxTextWidth = Math.max(Math.max(fontRenderer.getStringWidth(title), fontRenderer.getStringWidth(nodeDescription)), fontRenderer.getStringWidth(deleteHint));
+        if(isWaypoint) {
+            maxTextWidth = Math.max(maxTextWidth, fontRenderer.getStringWidth(asWaypoint));
+        }
         if(fontRenderer.getBidiFlag()) {
             maxTextWidth = (int) Math.ceil(maxTextWidth * 1.25f);
         }
@@ -170,7 +174,7 @@ public class ThaumcraftNodeDrawStep implements DrawStep {
 
         int pixelX = mouseX + 12;
         int pixelY = mouseY - 12;
-        final int tooltipHeight = 32 + aspectRows * 16;
+        final int tooltipHeight = (isWaypoint ? 44 : 32) + aspectRows * 16;
         final int tooltipWidth = Math.max(aspectColumns * 16, maxTextWidth);
         if(pixelX + tooltipWidth > displayWidth) {
             pixelX -= 28 + tooltipWidth;
@@ -200,18 +204,32 @@ public class ThaumcraftNodeDrawStep implements DrawStep {
         drawGradientRect(pixelX - 3, pixelY + tooltipHeight + 2, pixelX + tooltipWidth + 3, pixelY + tooltipHeight + 3, borderColor, borderColor);
 
         // Draw text
+        int offset = 0;
         if(fontRenderer.getBidiFlag()) {
+            if(isWaypoint) {
+                final int asWaypointWidth = (int) Math.ceil(fontRenderer.getStringWidth(asWaypoint) * 1.1f);
+                fontRenderer.drawString(title, pixelX + tooltipWidth - asWaypointWidth, pixelY, 0xFFFFFFFF);
+                offset += 12;
+            }
             final int titleWidth = (int) Math.ceil(fontRenderer.getStringWidth(title) * 1.1f);
-            fontRenderer.drawString(title, pixelX + tooltipWidth - titleWidth, pixelY, 0xFFFFFFFF);
+            fontRenderer.drawString(title, pixelX + tooltipWidth - titleWidth, pixelY + offset, 0xFFFFFFFF);
+            offset += 12;
             final int nodeDescriptonWidth = (int) Math.ceil(fontRenderer.getStringWidth(nodeDescription) * 1.1f);
-            fontRenderer.drawString(nodeDescription, pixelX + nodeDescriptonWidth - titleWidth, pixelY + 12, 0xFFFFFFFF);
+            fontRenderer.drawString(nodeDescription, pixelX + nodeDescriptonWidth - titleWidth, pixelY + offset, 0xFFFFFFFF);
+
             final int deleteHintWidth = (int) Math.ceil(fontRenderer.getStringWidth(deleteHint) * 1.1f);
-            fontRenderer.drawString(deleteHint, pixelX + tooltipWidth - deleteHintWidth, pixelY + aspectRows * 16 + 24, 0xFFFFFFFF);
+            fontRenderer.drawString(deleteHint, pixelX + tooltipWidth - deleteHintWidth, pixelY + aspectRows * 16 + offset + 12, 0xFFFFFFFF);
         }
         else {
-            fontRenderer.drawString(title, pixelX, pixelY, 0xFFFFFFFF);
-            fontRenderer.drawString(nodeDescription, pixelX, pixelY + 12, 0xFFFFFFFF);
-            fontRenderer.drawString(deleteHint, pixelX, pixelY + aspectRows * 16 + 24, 0xFFFFFFFF);
+            if(isWaypoint) {
+                fontRenderer.drawString(asWaypoint, pixelX, pixelY, 0xFFFFFFFF);
+                offset += 12;
+            }
+            fontRenderer.drawString(title, pixelX, pixelY + offset, 0xFFFFFFFF);
+            offset += 12;
+            fontRenderer.drawString(nodeDescription, pixelX, pixelY + offset, 0xFFFFFFFF);
+
+            fontRenderer.drawString(deleteHint, pixelX, pixelY + aspectRows * 16 + offset + 12, 0xFFFFFFFF);
         }
 
         // Draw aspects
@@ -221,7 +239,7 @@ public class ThaumcraftNodeDrawStep implements DrawStep {
 
         for(Aspect aspect : nodeTile.getAspects().getAspectsSortedAmount()) {
             GL11.glPushMatrix();
-            UtilsFX.drawTag(pixelX + aspectX * 16, pixelY + aspectY * 16 + 22, aspect, nodeTile.getAspects().getAmount(aspect), 0, 0.01, 1, 1, false);
+            UtilsFX.drawTag(pixelX + aspectX * 16, pixelY + aspectY * 16 + offset + 10, aspect, nodeTile.getAspects().getAmount(aspect), 0, 0.01, 1, 1, false);
             GL11.glPopMatrix();
             ++aspectX;
             if(aspectX >= 5) {

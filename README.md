@@ -18,7 +18,7 @@ _Underground fluids in JourneyMap overlay._
 ![GregTech ore veins in JourneyMap overlay](https://i.ibb.co/G5KLGjQ/2021-10-20-01-16-57.png) \
 _GregTech ore veins in JourneyMap overlay. You may double-click an ore vein to toggle it as waypoint._
 
-![Thaumcraft aura nodes in JourneyMap overlay](https://i.ibb.co/4YDH9rZ/2021-10-25-02-54-48.png) \
+![Thaumcraft aura nodes in JourneyMap overlay](https://i.ibb.co/zJ06k5T/2021-10-25-03-08-30.png) \
 _Thaumcraft aura nodes in JourneyMap overlay. You may double-click an aura node to toggle it as waypoint._
 
 ### Reset Progress
