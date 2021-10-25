@@ -22,8 +22,8 @@ public class UndergroundFluidPosition {
 
     public UndergroundFluidPosition(int dimensionId, int chunkX, int chunkZ, Fluid fluid, int[][] chunks) {
         this.dimensionId = dimensionId;
-        this.chunkX = chunkX;
-        this.chunkZ = chunkZ;
+        this.chunkX = Utils.mapToCornerUndergroundFluidChunkCoord(chunkX);
+        this.chunkZ = Utils.mapToCornerUndergroundFluidChunkCoord(chunkZ);
         this.fluid = fluid;
         this.chunks = chunks;
     }

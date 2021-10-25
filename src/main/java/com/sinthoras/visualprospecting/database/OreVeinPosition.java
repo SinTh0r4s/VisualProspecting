@@ -17,15 +17,15 @@ public class OreVeinPosition {
 
     public OreVeinPosition(int dimensionId, int chunkX, int chunkZ, VeinType veinType) {
         this.dimensionId = dimensionId;
-        this.chunkX = chunkX;
-        this.chunkZ = chunkZ;
+        this.chunkX = Utils.mapToCenterOreChunkCoord(chunkX);
+        this.chunkZ = Utils.mapToCenterOreChunkCoord(chunkZ);
         this.veinType = veinType;
     }
 
     public OreVeinPosition(int dimensionId, int chunkX, int chunkZ, VeinType veinType, boolean depleted) {
         this.dimensionId = dimensionId;
-        this.chunkX = chunkX;
-        this.chunkZ = chunkZ;
+        this.chunkX = Utils.mapToCenterOreChunkCoord(chunkX);
+        this.chunkZ = Utils.mapToCenterOreChunkCoord(chunkZ);
         this.veinType = veinType;
         this.depleted = depleted;
     }
