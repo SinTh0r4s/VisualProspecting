@@ -148,13 +148,13 @@ public abstract class FullscreenMixin extends JmUI {
         final ButtonList buttonList = new ButtonList();
 
         for(LayerButton layerButton : MapState.instance.buttons) {
-            final ThemeButton button = new ThemeToggle(theme, layerButton.getButtonTextKey(), layerButton.getIconName());
-            button.setToggled(layerButton.isLayerActive(), false);
-            button.addToggleListener((buttonInstance, toggled) -> {
+            layerButton.setGuiButton(new ThemeToggle(theme, layerButton.getButtonTextKey(), layerButton.getIconName()));
+            layerButton.getGuiButton().setToggled(layerButton.isLayerActive(), false);
+            layerButton.getGuiButton().addToggleListener((button, toggled) -> {
                 layerButton.setLayerActive(toggled);
                 return true;
             });
-            buttonList.add(button);
+            buttonList.add(layerButton.getGuiButton());
         }
 
         buttonList.add(buttonCaves);
