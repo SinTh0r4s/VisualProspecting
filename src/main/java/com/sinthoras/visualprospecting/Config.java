@@ -23,7 +23,7 @@ public class Config {
         public static final String network = "network";
     }
 
-    public final static int uploadPacketsPerSecond = 10;
+    public static final int uploadPacketsPerSecond = 10;
 
     public static boolean enableProspecting = Defaults.enableProspecting;
     public static int cacheGenerationLogUpdateMinTime = Defaults.cacheGenerationLogUpdateMinTime;

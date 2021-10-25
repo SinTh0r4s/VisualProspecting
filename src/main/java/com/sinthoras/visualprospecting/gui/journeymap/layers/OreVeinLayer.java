@@ -17,7 +17,7 @@ import static com.sinthoras.visualprospecting.Utils.isNEIInstalled;
 
 public class OreVeinLayer extends WaypointProviderLayer {
 
-    public final static OreVeinLayer instance = new OreVeinLayer();
+    public static final OreVeinLayer instance = new OreVeinLayer();
 
     private int oldMinOreChunkX = 0;
     private int oldMaxOreChunkX = 0;

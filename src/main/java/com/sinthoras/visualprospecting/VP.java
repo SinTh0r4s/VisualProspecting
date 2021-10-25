@@ -13,7 +13,7 @@ public class VP {
     public static SimpleNetworkWrapper network;
     public static KeyBinding keyAction;
 
-    public final static Random randomGeneration = new Random();
+    public static final Random randomGeneration = new Random();
 
     private static Logger LOG = LogManager.getLogger(Tags.MODID);
     public static final int gregTechSmallOreMinimumMeta = 16000;

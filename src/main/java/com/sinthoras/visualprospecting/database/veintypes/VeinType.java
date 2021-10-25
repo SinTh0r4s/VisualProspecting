@@ -25,7 +25,7 @@ public class VeinType {
     private boolean isHighlighted = true;
 
     // Available after VisualProspecting post GT initialization
-    public final static VeinType NO_VEIN = new VeinType(Tags.ORE_MIX_NONE_NAME, 0, (short)-1, (short)-1, (short)-1, (short)-1);
+    public static final VeinType NO_VEIN = new VeinType(Tags.ORE_MIX_NONE_NAME, 0, (short)-1, (short)-1, (short)-1, (short)-1);
 
     public VeinType(String name, int blockSize, short primaryOreMeta, short secondaryOreMeta, short inBetweenOreMeta, short sporadicOreMeta)
     {

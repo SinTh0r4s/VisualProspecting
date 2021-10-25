@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ThaumcraftNodeLayer extends WaypointProviderLayer {
 
-    public final static ThaumcraftNodeLayer instance = new ThaumcraftNodeLayer();
+    public static final ThaumcraftNodeLayer instance = new ThaumcraftNodeLayer();
 
     private int oldMinBlockX = 0;
     private int oldMinBlockZ = 0;
