@@ -199,5 +199,7 @@ VisualProspecting_API.LogicalClient.registerLayer(new MyLayer());
 
 Now you need to launch Minecraft, teleport to the right sport (`/tp 0 80 0`) and open JourneyMap.
 
+For interactive layers you may take a look at extensions/implementations of [`WaypointProviderLayer`](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/gui/journeymap/layers/WaypointProviderLayer.java) and [`ClickableDrawStep`](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/gui/journeymap/drawsteps/ClickableDrawStep.java).
+
 Thank you and happy coding,\
 SinTh0r4s
