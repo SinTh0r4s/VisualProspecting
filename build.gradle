@@ -208,7 +208,7 @@ processResources
 
         // replace version and mcversion
         expand "mcversion": project.minecraft.version,
-                "version": modVersion,
+                "version": version,
                 "modid": modId,
                 "modName": modName
     }
