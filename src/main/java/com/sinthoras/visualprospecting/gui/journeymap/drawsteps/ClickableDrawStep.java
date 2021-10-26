@@ -8,15 +8,15 @@ import java.util.List;
 
 public interface ClickableDrawStep extends DrawStep {
 
-    public List<String> getTooltip();
+    List<String> getTooltip();
 
-    public void drawTooltip(FontRenderer fontRenderer, int mouseX, int mouseY, int displayWidth, int displayHeight);
+    void drawTooltip(FontRenderer fontRenderer, int mouseX, int mouseY, int displayWidth, int displayHeight);
 
-    public boolean isMouseOver(int scaledMouseX, int scaledMouseY);
+    boolean isMouseOver(int scaledMouseX, int scaledMouseY);
 
-    public void onActionKeyPressed();
+    void onActionKeyPressed();
 
-    public boolean isWaypoint(Waypoint waypoint);
+    boolean isWaypoint(Waypoint waypoint);
 
-    public Waypoint toWaypoint();
+    Waypoint toWaypoint();
 }
