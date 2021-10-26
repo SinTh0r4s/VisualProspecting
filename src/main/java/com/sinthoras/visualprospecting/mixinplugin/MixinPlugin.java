@@ -2,7 +2,7 @@ package com.sinthoras.visualprospecting.mixinplugin;
 
 import com.google.common.collect.Lists;
 import com.sinthoras.visualprospecting.VP;
-import net.minecraft.launchwrapper.Launch;
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import org.spongepowered.asm.lib.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -38,69 +38,56 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public List<String> getMixins() {
-        if(isDevelopmentEnvironment()) {
-            return Lists.newArrayList(
-                    "GT_Block_Ores_AbstractMixin",
-                    "GT_MetaTileEntity_AdvSeismicProspectorMixin",
-                    "GT_MetaTileEntity_ScannerMixin",
-                    "ItemEditableBookMixin",
-                    "WorldGenContainerMixin",
-                    "journeymap.FullscreenMixin",
-                    "journeymap.FullscreenActionsMixin",
-                    "journeymap.RenderWaypointBeaconMixin",
-                    "journeymap.WaypointManagerMixin",
-                    "journeymap.tcnodetracker.GuiMainMixin"
-            );
+        final boolean loadClientSideOnlyClasses = FMLLaunchHandler.side().isClient();
+        final boolean isDevelopmentEnvironment = isDevelopmentEnvironment();
+
+        if (isDevelopmentEnvironment == false && loadJar("gregtech") == false) {
+            VP.error("Could not load gregtech's jar!");
+            return null;
+        }
+        List<String> mixins = Lists.newArrayList(
+                "GT_Block_Ores_AbstractMixin",
+                "GT_MetaTileEntity_AdvSeismicProspectorMixin",
+                "GT_MetaTileEntity_ScannerMixin",
+                "ItemEditableBookMixin",
+                "WorldGenContainerMixin"
+        );
+
+        if (loadClientSideOnlyClasses && (isDevelopmentEnvironment || loadJar("journeymap-1.7.10"))) {
+            VP.info("Found JourneyMap! Integrating now...");
+            mixins.add("journeymap.FullscreenMixin");
+            mixins.add("journeymap.FullscreenActionsMixin");
+            mixins.add("journeymap.RenderWaypointBeaconMixin");
+            mixins.add("journeymap.WaypointManagerMixin");
+
+            if(isDevelopmentEnvironment || loadJar("tcnodetracker-1.7.10")) {
+                VP.info("Found TCNodeTracker! Integrating now...");
+                mixins.add("journeymap.tcnodetracker.GuiMainMixin");
+            }
+            else {
+                VP.info("Could not find TCNodeTracker! Skipping integration....");
+            }
+        } else {
+            VP.info("Could not find JourneyMap! Skipping integration....");
+        }
+
+        if(loadJar("bartworks")) {
+            VP.info("Found Bartworks! Integrating now...");
+            mixins.add("bartworks.WorldGenContainerMixin");
         }
         else {
-            if (loadJar("gregtech") == false) {
-                VP.error("Could not load gregtech's jar!");
-                return null;
-            }
-            List<String> mixins = Lists.newArrayList(
-                    "GT_Block_Ores_AbstractMixin",
-                    "GT_MetaTileEntity_AdvSeismicProspectorMixin",
-                    "GT_MetaTileEntity_ScannerMixin",
-                    "ItemEditableBookMixin",
-                    "WorldGenContainerMixin"
-            );
-
-            if (loadJar("journeymap-1.7.10")) {
-                VP.info("Found JourneyMap! Integrating now...");
-                mixins.add("journeymap.FullscreenMixin");
-                mixins.add("journeymap.FullscreenActionsMixin");
-                mixins.add("journeymap.RenderWaypointBeaconMixin");
-                mixins.add("journeymap.WaypointManagerMixin");
-
-                if(loadJar("tcnodetracker-1.7.10")) {
-                    VP.info("Found TCNodeTracker! Integrating now...");
-                    mixins.add("journeymap.tcnodetracker.GuiMainMixin");
-                }
-                else {
-                    VP.info("Could not find TCNodeTracker! Skipping integration....");
-                }
-            } else {
-                VP.info("Could not find JourneyMap! Skipping integration....");
-            }
-
-            if(loadJar("bartworks")) {
-                VP.info("Found Bartworks! Integrating now...");
-                mixins.add("bartworks.WorldGenContainerMixin");
-            }
-            else {
-                VP.info("Could not find Bartworks! Skipping integration....");
-            }
-
-            if(loadJar("GalacticGreg")) {
-                VP.info("Found GalacticGreg! Integrating now...");
-                mixins.add("galacticgreg.GT_Worldgenerator_SpaceMixin");
-            }
-            else {
-                VP.info("Could not find GalacticGreg! Skipping integration....");
-            }
-
-            return mixins;
+            VP.info("Could not find Bartworks! Skipping integration....");
         }
+
+        if(loadJar("GalacticGreg")) {
+            VP.info("Found GalacticGreg! Integrating now...");
+            mixins.add("galacticgreg.GT_Worldgenerator_SpaceMixin");
+        }
+        else {
+            VP.info("Could not find GalacticGreg! Skipping integration....");
+        }
+
+        return mixins;
     }
 
     public boolean loadJar(final String jarName) {
