@@ -2,7 +2,6 @@ package com.sinthoras.visualprospecting.mixins.journeymap.tcnodetracker;
 
 import com.dyonovan.tcnodetracker.gui.GuiMain;
 import com.dyonovan.tcnodetracker.lib.AspectLoc;
-import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.gui.journeymap.MapState;
 import com.sinthoras.visualprospecting.gui.journeymap.layers.InformationLayer;
 import com.sinthoras.visualprospecting.gui.journeymap.layers.OreVeinLayer;
