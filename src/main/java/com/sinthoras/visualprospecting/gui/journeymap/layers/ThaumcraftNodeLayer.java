@@ -5,6 +5,7 @@ import com.dyonovan.tcnodetracker.lib.NodeList;
 import com.sinthoras.visualprospecting.gui.journeymap.drawsteps.ClickableDrawStep;
 import com.sinthoras.visualprospecting.gui.journeymap.drawsteps.ThaumcraftNodeDrawStep;
 import com.sinthoras.visualprospecting.gui.journeymap.buttons.ThaumcraftNodeButton;
+import journeymap.client.model.Waypoint;
 import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
@@ -50,5 +51,19 @@ public class ThaumcraftNodeLayer extends WaypointProviderLayer {
         }
 
         return thaumcraftNodesDrawSteps;
+    }
+
+    @Override
+    public void clearActiveWaypoint() {
+        super.clearActiveWaypoint();
+        TCNodeTracker.yMarker = -1;
+    }
+
+    @Override
+    public void setActiveWaypoint(Waypoint waypoint) {
+        super.setActiveWaypoint(waypoint);
+        TCNodeTracker.xMarker = waypoint.getX();
+        TCNodeTracker.yMarker = waypoint.getY();
+        TCNodeTracker.zMarker = waypoint.getZ();
     }
 }

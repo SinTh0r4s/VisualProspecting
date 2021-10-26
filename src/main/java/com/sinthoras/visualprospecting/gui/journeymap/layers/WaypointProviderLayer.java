@@ -69,10 +69,10 @@ public abstract class WaypointProviderLayer extends InformationLayer {
         if(hoveredDrawStep != null) {
             if(isDoubleClick) {
                 if(hoveredDrawStep.isWaypoint(activeWaypoint)) {
-                    activeWaypoint = null;
+                    clearActiveWaypoint();
                 }
                 else {
-                    activeWaypoint = hoveredDrawStep.toWaypoint();
+                    setActiveWaypoint(hoveredDrawStep.toWaypoint());
                 }
             }
             return true;
