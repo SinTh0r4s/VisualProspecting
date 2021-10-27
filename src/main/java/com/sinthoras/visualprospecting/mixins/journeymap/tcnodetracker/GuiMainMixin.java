@@ -2,10 +2,7 @@ package com.sinthoras.visualprospecting.mixins.journeymap.tcnodetracker;
 
 import com.dyonovan.tcnodetracker.gui.GuiMain;
 import com.dyonovan.tcnodetracker.lib.AspectLoc;
-import com.sinthoras.visualprospecting.gui.journeymap.MapState;
-import com.sinthoras.visualprospecting.gui.journeymap.layers.InformationLayer;
 import com.sinthoras.visualprospecting.gui.journeymap.layers.ThaumcraftNodeLayer;
-import com.sinthoras.visualprospecting.gui.journeymap.layers.WaypointProviderLayer;
 import journeymap.client.model.Waypoint;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
