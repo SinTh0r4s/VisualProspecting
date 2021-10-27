@@ -42,9 +42,9 @@ public class ProspectorsLog extends Item {
                 TaskManager.instance.addTask(new SnapshotUploadTask());
             }
             else {
-                final int random = VP.randomGeneration.nextInt(100);
-                if(random < 10) {
-                    final String localizationKey = "visualprospecting.prospectorslog.creation.fail" + (random / 2);
+                final int random = VP.randomGeneration.nextInt(1000);
+                if(random < 5) {
+                    final String localizationKey = "visualprospecting.prospectorslog.creation.fail" + random;
                     final IChatComponent notification = new ChatComponentTranslation(localizationKey);
                     notification.getChatStyle().setItalic(true);
                     notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
@@ -63,9 +63,9 @@ public class ProspectorsLog extends Item {
             final NBTTagCompound compound = item.getTagCompound();
             final String authorUuid = compound.getString(Tags.PROSPECTORSLOG_AUTHOR_ID);
             if(authorUuid.equals(player.getPersistentID().toString()) == false) {
-                final int random = VP.randomGeneration.nextInt(TransferCache.instance.isClientDataAvailable(authorUuid) ? 100 : 10);
-                if(random < 10) {
-                    final String localizationKey = "visualprospecting.prospectorslog.reading.fail" + (random / 2);
+                final int random = VP.randomGeneration.nextInt(TransferCache.instance.isClientDataAvailable(authorUuid) ? 1000 : 5);
+                if(random < 5) {
+                    final String localizationKey = "visualprospecting.prospectorslog.reading.fail" + random;
                     final IChatComponent notification = new ChatComponentTranslation(localizationKey);
                     notification.getChatStyle().setItalic(true);
                     notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
