@@ -21,6 +21,10 @@ public abstract class InformationLayer {
         return layerButton.isLayerActive();
     }
 
+    public void activateLayer() {
+        layerButton.setLayerActive(true);
+    }
+
     public void forceRefresh() {
         forceRefresh = true;
     }

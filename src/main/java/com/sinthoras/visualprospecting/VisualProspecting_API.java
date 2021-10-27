@@ -7,6 +7,8 @@ import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import com.sinthoras.visualprospecting.gui.journeymap.MapState;
 import com.sinthoras.visualprospecting.gui.journeymap.buttons.LayerButton;
 import com.sinthoras.visualprospecting.gui.journeymap.layers.InformationLayer;
+import com.sinthoras.visualprospecting.gui.journeymap.layers.OreVeinLayer;
+import com.sinthoras.visualprospecting.gui.journeymap.layers.UndergroundFluidLayer;
 import com.sinthoras.visualprospecting.network.ProspectingNotification;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -19,6 +21,7 @@ import java.util.List;
 
 import static com.sinthoras.visualprospecting.Utils.isJourneyMapInstalled;
 
+@SuppressWarnings("unused")
 public class VisualProspecting_API {
 
     @SideOnly(Side.CLIENT)
@@ -33,6 +36,34 @@ public class VisualProspecting_API {
         public static void registerLayer(InformationLayer layer) {
             if (isJourneyMapInstalled()) {
                 MapState.instance.layers.add(layer);
+            }
+        }
+
+        public static void openJourneyForOreVeinsMapAt(int blockX, int blockZ) {
+            if (isJourneyMapInstalled()) {
+                OreVeinLayer.instance.activateLayer();
+                MapState.instance.openJourneyMapAt(blockX, blockZ);
+            }
+        }
+
+        public static void openJourneyForOreVeinsMapAt(int blockX, int blockZ, int zoom) {
+            if (isJourneyMapInstalled()) {
+                OreVeinLayer.instance.activateLayer();
+                MapState.instance.openJourneyMapAt(blockX, blockZ, zoom);
+            }
+        }
+
+        public static void openJourneyMapForUndergroundFluidsAt(int blockX, int blockZ) {
+            if (isJourneyMapInstalled()) {
+                UndergroundFluidLayer.instance.activateLayer();
+                MapState.instance.openJourneyMapAt(blockX, blockZ);
+            }
+        }
+
+        public static void openJourneyMapForUndergroundFluidsAt(int blockX, int blockZ, int zoom) {
+            if (isJourneyMapInstalled()) {
+                UndergroundFluidLayer.instance.activateLayer();
+                MapState.instance.openJourneyMapAt(blockX, blockZ, zoom);
             }
         }
 
