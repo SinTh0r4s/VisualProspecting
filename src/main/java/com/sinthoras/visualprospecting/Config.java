@@ -16,6 +16,7 @@ public class Config {
         public static final int minZoomLevelForOreLabel = 1;
         public static final int minZoomLevelForUndergroundFluidDetails = 2;
         public static final int uploadBandwidthBytes = 2000000;
+        public static final int maxTransferCacheSizeMB = 50;
     }
 
     private static class Categories {
@@ -33,6 +34,7 @@ public class Config {
     public static int minZoomLevelForUndergroundFluidDetails = Defaults.minZoomLevelForUndergroundFluidDetails;
     public static double uploadBandwidthBytes = Defaults.uploadBandwidthBytes;
     public static int uploadSizePerPacket = (int)(uploadBandwidthBytes / uploadPacketsPerSecond);
+    public static int maxTransferCacheSizeMB = Defaults.maxTransferCacheSizeMB;
 
 
     public static void syncronizeConfiguration(File configFile) {
@@ -66,6 +68,11 @@ public class Config {
                         " If exceeded, the client will be kicked!");
         uploadBandwidthBytes = uploadBandwidthProperty.getDouble();
         uploadSizePerPacket = (int)(uploadBandwidthBytes / uploadPacketsPerSecond);
+
+        Property maxTransferCacheSizeMBProperty = configuration.get(Categories.general, "maxTransferCacheSizeMB",
+                Defaults.maxTransferCacheSizeMB, "[Server] Limit the RAM size in MB of what can players use to" +
+                        " synchronize their map data.");
+        maxTransferCacheSizeMB = maxTransferCacheSizeMBProperty.getInt();
 
         Property recacheVeinsProperty = configuration.get(Categories.general, "recacheVeins", Defaults.recacheVeins,
                 "[SERVER] Redo GT ore vein caching if set to True. Will automatically be set back to False the next " +
