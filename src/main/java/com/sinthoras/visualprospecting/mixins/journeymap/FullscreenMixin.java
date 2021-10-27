@@ -39,14 +39,16 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
 
-import static com.sinthoras.visualprospecting.gui.journeymap.Reflection.getJourneyMapGridRenderer;
-
 @Mixin(value = Fullscreen.class, remap = false)
 public abstract class FullscreenMixin extends JmUI {
 
     private int oldMouseX = 0;
     private int oldMouseY = 0;
     private long timeLastClick = 0;
+
+    @Final
+    @Shadow(remap = false)
+    static GridRenderer gridRenderer;
 
     @Shadow(remap = false)
     ThemeToolbar mapTypeToolbar;
@@ -100,8 +102,6 @@ public abstract class FullscreenMixin extends JmUI {
         throw new IllegalStateException("Mixin failed to shadow drawMap()");
     }
 
-    @Shadow @Final static GridRenderer gridRenderer;
-
     @Inject(method = "<init>*", at = @At("RETURN"), remap = false, require = 1)
     private void onConstructed(CallbackInfo callbackInfo) {
         for(InformationLayer layer : MapState.instance.layers) {
@@ -116,9 +116,6 @@ public abstract class FullscreenMixin extends JmUI {
             require = 1,
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void onBeforeDrawJourneyMapWaypoints(CallbackInfo callbackInfo, boolean refreshReady, StatTimer timer, int xOffset, int yOffset, float drawScale) {
-        final GridRenderer gridRenderer = getJourneyMapGridRenderer();
-        assert (gridRenderer != null);
-
         final int fontScale = getMapFontScale();
         final Minecraft minecraft = Minecraft.getMinecraft();
         final int centerBlockX = (int) Math.round(gridRenderer.getCenterBlockX());
