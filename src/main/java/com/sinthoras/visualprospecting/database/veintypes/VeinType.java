@@ -78,11 +78,6 @@ public class VeinType {
                 .collect(Collectors.toList());
     }
 
-    public String getNameReadable() {
-        final String veinName = name.replace("ore.mix.custom.", "").replace("ore.mix.", "");
-        return veinName.substring(0, 1).toUpperCase() + veinName.substring(1);
-    }
-
     public Set<Short> getOresAtLayer(int layerBlockY) {
         final Set<Short> result = new HashSet<>();
         switch(layerBlockY) {

@@ -1,6 +1,5 @@
 package com.sinthoras.visualprospecting.gui.journeymap.drawsteps;
 
-import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import journeymap.client.render.draw.DrawStep;
@@ -32,7 +31,7 @@ public class UndergroundFluidDrawStep implements DrawStep {
             DrawUtil.drawRectangle(pixel.getX() + 2 * blockSize, pixel.getY() + VP.undergroundFluidSizeChunkZ * VP.chunkDepth * blockSize, VP.undergroundFluidSizeChunkX * VP.chunkWidth * blockSize, 2 * blockSize, borderColor, borderAlpha);
             DrawUtil.drawRectangle(pixel.getX(), pixel.getY() + 2 * blockSize, 2 * blockSize, VP.undergroundFluidSizeChunkZ * VP.chunkDepth * blockSize, borderColor, borderAlpha);
 
-            final String label = undergroundFluidPosition.getMinProduction() + "L - " + maxAmountInField + "L  " + Utils.getEnglishLocalization(undergroundFluidPosition.fluid);
+            final String label = undergroundFluidPosition.getMinProduction() + "L - " + maxAmountInField + "L  " + undergroundFluidPosition.fluid.getLocalizedName();
             DrawUtil.drawLabel(label, pixel.getX() + VP.chunkWidth * blockSize, pixel.getY(), DrawUtil.HAlign.Right, DrawUtil.VAlign.Below, 0, 180, 0x00FFFFFF, 255, fontScale, false, rotation);
         }
     }

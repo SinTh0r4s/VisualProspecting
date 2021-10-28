@@ -8,6 +8,7 @@ import com.google.common.collect.HashBiMap;
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.Utils;
 import gregtech.common.GT_Worldgen_GT_Ore_Layer;
+import net.minecraft.client.resources.I18n;
 
 import java.io.File;
 import java.util.*;
@@ -139,7 +140,7 @@ public class VeinTypeCaching implements Runnable {
                 if (veinType != VeinType.NO_VEIN) {
                     if (isSearchActive) {
                         List<String> searchableStrings = veinType.getOreMaterialNames();
-                        searchableStrings.add(veinType.getNameReadable());
+                        searchableStrings.add(I18n.format(veinType.name));
                         searchableStrings = searchableStrings.stream().map(String::toLowerCase).filter(searchableString -> searchableString.contains(searchString)).collect(Collectors.toList());
                         veinType.setNEISearchHeighlight(searchableStrings.isEmpty() == false);
                     } else {

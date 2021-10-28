@@ -55,7 +55,7 @@ public class OreVeinDrawStep implements ClickableDrawStep {
 
         if(gridRenderer.getZoom() >= Config.minZoomLevelForOreLabel && oreVeinPosition.isDepleted() == false) {
             final int fontColor = oreVeinPosition.veinType.isHighlighted() ? 0xFFFFFF : 0x7F7F7F;
-            DrawUtil.drawLabel(oreVeinPosition.veinType.getNameReadable(), pixel.getX(), pixel.getY() - iconSize, DrawUtil.HAlign.Center, DrawUtil.VAlign.Middle, 0, 180, fontColor, 255, fontScale, false, rotation);
+            DrawUtil.drawLabel(I18n.format(oreVeinPosition.veinType.name), pixel.getX(), pixel.getY() - iconSize, DrawUtil.HAlign.Center, DrawUtil.VAlign.Middle, 0, 180, fontColor, 255, fontScale, false, rotation);
         }
 
         iconX = pixel.getX() - iconSizeHalf;
@@ -95,7 +95,7 @@ public class OreVeinDrawStep implements ClickableDrawStep {
         if(isWaypoint(OreVeinLayer.instance.getActiveWaypoint())) {
             tooltip.add(EnumChatFormatting.GOLD + I18n.format("visualprospecting.iswaypoint"));
         }
-        tooltip.add(EnumChatFormatting.WHITE + oreVeinPosition.veinType.getNameReadable());
+        tooltip.add(EnumChatFormatting.WHITE + I18n.format(oreVeinPosition.veinType.name));
         if(oreVeinPosition.isDepleted() == false) {
             tooltip.addAll(oreVeinPosition.veinType.getOreMaterialNames().stream().map(materialName -> EnumChatFormatting.GRAY + materialName).collect(Collectors.toList()));
         }
@@ -118,7 +118,7 @@ public class OreVeinDrawStep implements ClickableDrawStep {
     }
 
     public Waypoint toWaypoint() {
-        return new Waypoint(I18n.format("visualprospecting.tracked", oreVeinPosition.veinType.getNameReadable()),
+        return new Waypoint(I18n.format("visualprospecting.tracked", I18n.format(oreVeinPosition.veinType.name)),
                 oreVeinPosition.getBlockX(),
                 65,
                 oreVeinPosition.getBlockZ(),

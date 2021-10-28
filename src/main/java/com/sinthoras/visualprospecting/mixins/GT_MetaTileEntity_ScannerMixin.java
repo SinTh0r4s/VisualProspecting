@@ -1,5 +1,6 @@
 package com.sinthoras.visualprospecting.mixins;
 
+import com.sinthoras.visualprospecting.ServerTranslations;
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.database.ServerCache;
@@ -66,7 +67,7 @@ public abstract class GT_MetaTileEntity_ScannerMixin extends GT_MetaTileEntity_B
                         final int veinId = pageNumber * pageSize + i;
                         if(veinId < foundOreVeins.size()) {
                             final OreVeinPosition oreVein = foundOreVeins.get(veinId);
-                            pageString.append(oreVein.getBlockX()).append(",").append(oreVein.getBlockZ()).append(" - ").append(oreVein.veinType.getNameReadable()).append("\n");
+                            pageString.append(oreVein.getBlockX()).append(",").append(oreVein.getBlockZ()).append(" - ").append(ServerTranslations.getEnglishLocalization(oreVein.veinType)).append("\n");
                         }
                     }
                     String pageCounter = numberOfPages > 1 ? String.format(" %d/%d", pageNumber + 1, numberOfPages) : "";

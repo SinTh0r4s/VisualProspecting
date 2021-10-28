@@ -5,6 +5,7 @@ import com.sinthoras.visualprospecting.network.ProspectingRequest;
 import gregtech.common.blocks.GT_TileEntity_Ores;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
@@ -27,7 +28,7 @@ public class ClientCache extends WorldCache {
 
     private void notifyNewOreVein(OreVeinPosition oreVeinPosition) {
         final String location = "(" + (oreVeinPosition.getBlockX() + 8) + "," + (oreVeinPosition.getBlockZ() + 8) + ")";
-        final IChatComponent veinNotification = new ChatComponentTranslation("visualprospecting.vein.prospected", oreVeinPosition.veinType.getNameReadable(), location);
+        final IChatComponent veinNotification = new ChatComponentTranslation("visualprospecting.vein.prospected", I18n.format(oreVeinPosition.veinType.name), location);
         veinNotification.getChatStyle().setItalic(true);
         veinNotification.getChatStyle().setColor(EnumChatFormatting.GRAY);
         Minecraft.getMinecraft().thePlayer.addChatMessage(veinNotification);
