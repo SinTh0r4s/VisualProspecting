@@ -54,6 +54,11 @@ public class VeinType {
         return blockSize > 24;
     }
 
+    // Ore chunks on coordinates -1 and 1 are one chunk less apart
+    public boolean canOverlapIntoNeighborOreChunkAtCoordinateAxis() {
+        return blockSize > 16;
+    }
+
     public boolean containsOre(short oreMetaData) {
         return primaryOreMeta == oreMetaData
                 || secondaryOreMeta == oreMetaData

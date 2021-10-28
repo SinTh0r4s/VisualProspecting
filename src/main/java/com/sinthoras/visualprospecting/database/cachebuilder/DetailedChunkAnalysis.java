@@ -65,8 +65,10 @@ public class DetailedChunkAnalysis {
         // Remove all generated ores from neighbors. They could also be generated in the same chunk,
         // but that case is rare and therefore, neglected
         for(int neighborId = 0; neighborId < neighbors.length; neighborId++) {
-            final VeinType neighbor = neighbors[neighborId].veinType;
-            if (neighbor != null && neighbor.canOverlapIntoNeighborOreChunk()) {
+            final OreVeinPosition neighbor = neighbors[neighborId];
+            final boolean atCoordinateAxis = Math.abs(neighbor.chunkX - chunkX) < 3 || Math.abs(neighbor.chunkZ - chunkZ) < 3;
+            final boolean canOverlap = atCoordinateAxis ? neighbor.veinType.canOverlapIntoNeighborOreChunkAtCoordinateAxis() : neighbor.veinType.canOverlapIntoNeighborOreChunk();
+            if (neighbor.veinType != VeinType.NO_VEIN && canOverlap) {
                 final int veinBlockY = neighborVeinBlockY[neighborId];
                 for (int layerBlockY = 0; layerBlockY < VeinType.veinHeight; layerBlockY++) {
                     final int blockY = veinBlockY + layerBlockY;
@@ -74,7 +76,7 @@ public class DetailedChunkAnalysis {
                         break;
                     }
                     if(oresPerY[blockY] != null) {
-                        for (short metaData : neighbor.getOresAtLayer(layerBlockY)) {
+                        for (short metaData : neighbor.veinType.getOresAtLayer(layerBlockY)) {
                             oresPerY[blockY].remove(metaData);
                         }
                     }
