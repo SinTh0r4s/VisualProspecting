@@ -13,7 +13,7 @@ import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.sinthoras.visualprospecting.Utils.isBartworksInstalled;
+import static com.sinthoras.visualprospecting.Utils.*;
 
 public class VeinTypeCaching implements Runnable {
 
