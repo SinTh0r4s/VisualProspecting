@@ -37,7 +37,15 @@ public class VeinTypeCaching implements Runnable {
             if(vein.mWorldGenName.equals(Tags.ORE_MIX_NONE_NAME)) {
                 break;
             }
-            veinTypes.add(new VeinType(vein.mWorldGenName, vein.mSize, vein.mPrimaryMeta, vein.mSecondaryMeta, vein.mBetweenMeta, vein.mSporadicMeta));
+            veinTypes.add(new VeinType(
+                    vein.mWorldGenName,
+                    vein.mSize,
+                    vein.mPrimaryMeta,
+                    vein.mSecondaryMeta,
+                    vein.mBetweenMeta,
+                    vein.mSporadicMeta,
+                    Math.max(0, vein.mMinY - 6),  // GregTech ore veins start at layer -1 and the blockY RNG adds another -5 offset
+                    Math.min(255, vein.mMaxY - 6)));
         }
 
         if(isBartworksInstalled()) {
@@ -48,7 +56,9 @@ public class VeinTypeCaching implements Runnable {
                         (short) vein.mPrimaryMeta,
                         (short) vein.mSecondaryMeta,
                         (short) vein.mBetweenMeta,
-                        (short) vein.mSporadicMeta));
+                        (short) vein.mSporadicMeta,
+                        Math.max(0, vein.mMinY),
+                        Math.min(255, vein.mMaxY)));
             }
         }
 

@@ -9,6 +9,7 @@ import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import io.xol.enklume.nbt.*;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 // Slower, but more sophisticated approach to identify overlapping veins
 public class DetailedChunkAnalysis {
@@ -109,8 +110,23 @@ public class DetailedChunkAnalysis {
         if(matchedVeins.size() == 1) {
             return matchedVeins.stream().findAny().get();
         }
-        else {
-            return VeinType.NO_VEIN;
+        else if(matchedVeins.size() >= 2) {
+            matchedVeins.removeIf(veinType -> IntStream.range(veinType.minBlockY, veinType.maxBlockY).boxed().noneMatch(blockY -> isOreVeinGeneratedAtHeight(veinType, blockY)));
+
+            if(matchedVeins.size() == 1) {
+                return matchedVeins.stream().findAny().get();
+            }
+
         }
+        return VeinType.NO_VEIN;
+    }
+
+    private boolean isOreVeinGeneratedAtHeight(VeinType veinType, int blockY) {
+        for(int layer = 0; layer < VeinType.veinHeight; layer++) {
+            if(oresPerY[blockY + layer] == null || oresPerY[blockY + layer].keySet().containsAll(veinType.getOresAtLayer(layer)) == false) {
+                return false;
+            }
+        }
+        return true;
     }
 }
