@@ -52,14 +52,14 @@ public class DetailedChunkAnalysis {
                 ServerCache.instance.getOreVein(dimensionId, chunkX - 3, chunkZ)
         };
         final int[] neighborVeinBlockY = new int[] {
-                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX, chunkZ + 3), 0),
-                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX + 3, chunkZ + 3), 0),
-                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX + 3, chunkZ), 0),
-                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX + 3, chunkZ - 3), 0),
-                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX, chunkZ - 3), 0),
-                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX, chunkZ - 3), 0),
-                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX - 3, chunkZ - 3), 0),
-                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(chunkX - 3, chunkZ), 0)
+                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(Utils.mapToCenterOreChunkCoord(chunkX - 3), Utils.mapToCenterOreChunkCoord(chunkZ + 3)), 0),
+                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(Utils.mapToCenterOreChunkCoord(chunkX), Utils.mapToCenterOreChunkCoord(chunkZ + 3)), 0),
+                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(Utils.mapToCenterOreChunkCoord(chunkX + 3), Utils.mapToCenterOreChunkCoord(chunkZ + 3)), 0),
+                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(Utils.mapToCenterOreChunkCoord(chunkX + 3), Utils.mapToCenterOreChunkCoord(chunkZ)), 0),
+                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(Utils.mapToCenterOreChunkCoord(chunkX + 3), Utils.mapToCenterOreChunkCoord(chunkZ - 3)), 0),
+                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(Utils.mapToCenterOreChunkCoord(chunkX), Utils.mapToCenterOreChunkCoord(chunkZ - 3)), 0),
+                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(Utils.mapToCenterOreChunkCoord(chunkX - 3), Utils.mapToCenterOreChunkCoord(chunkZ - 3)), 0),
+                veinChunkY.getOrDefault(Utils.chunkCoordsToKey(Utils.mapToCenterOreChunkCoord(chunkX - 3), Utils.mapToCenterOreChunkCoord(chunkZ)), 0)
         };
 
         // Remove all generated ores from neighbors. They could also be generated in the same chunk,
@@ -90,7 +90,7 @@ public class DetailedChunkAnalysis {
 
         final Map<Short, Integer> allOres = new HashMap<>();
         for(Map<Short, Integer> oreLevel : oresPerY) {
-            if (oreLevel != null) {
+            if (oreLevel != null && oreLevel.isEmpty() == false) {
                 oreLevel.forEach((metaData, numberOfBlocks) -> allOres.merge(metaData, numberOfBlocks, Integer::sum));
             }
         }
