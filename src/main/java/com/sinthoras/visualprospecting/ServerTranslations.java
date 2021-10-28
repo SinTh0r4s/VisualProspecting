@@ -14,68 +14,70 @@ public class ServerTranslations {
         }
 
         switch(fluid.getUnlocalizedName()) {
-            case "gas_natural_gas":
+            case "fluid.gas_natural_gas":
                 return "Natural Gas";
-            case "liquid_light_oil":
+            case "fluid.liquid_light_oil":
                 return "Light Oil";
-            case "liquid_medium_oil":
+            case "fluid.liquid_medium_oil":
                 return "Raw Oil";
-            case "liquid_heavy_oil":
+            case "fluid.liquid_heavy_oil":
                 return "Heavy Oil";
-            case "oil":
+            case "fluid.oil":
                 return "Oil";
-            case "helium-3":
+            case "fluid.drillingfluid":
+                return "Drilling Fluid";
+            case "fluid.helium-3":
                 return "Helium-3";
-            case "saltwater":
+            case "fluid.saltwater":
                 return "Saltwater";
-            case "molten.iron":
+            case "fluid.molten.iron":
                 return "Molten Iron";
-            case "molten.lead":
+            case "fluid.molten.lead":
                 return "Molten Lead";
-            case "sulfuricacid":
+            case "fluid.sulfuricacid":
                 return "Sulfuric Acid";
-            case "carbondioxide":
+            case "fluid.carbondioxide":
                 return "Carbondioxide";
-            case "chlorobenzene":
+            case "fluid.chlorobenzene":
                 return "Chlorobenzene";
-            case "liquid_extra_heavy_oil":
+            case "fluid.liquid_extra_heavy_oil":
                 return "Extra Heavy Oil";
-            case "ic2distilledwater":
+            case "fluid.ic2distilledwater":
                 return "Distilled Water";
-            case "oxygen":
+            case "fluid.oxygen":
                 return "Oxygen";
-            case "liquidair":
+            case "fluid.liquidair":
                 return "Liquid Air";
-            case "methane":
+            case "fluid.methane":
                 return "Methane";
-            case "ethane":
+            case "fluid.ethane":
                 return "Ethane";
-            case "liquid_hydricsulfur":
+            case "fluid.liquid_hydricsulfur":
                 return "Liquid Hydric Sulfur";
-            case "carbonmonoxide":
+            case "fluid.carbonmonoxide":
                 return "Carbonmonoxide";
-            case "nitrogen":
+            case "fluid.nitrogen":
                 return "Nitrogen";
-            case "ethylene":
+            case "fluid.ethylene":
                 return "Ethylene";
-            case "deuterium":
+            case "fluid.deuterium":
                 return "Deuterium";
-            case "fluorine":
+            case "fluid.fluorine":
                 return "Fluorine";
-            case "hydrofluoricacid_gt5u":
+            case "fluid.hydrofluoricacid_gt5u":
                 return "Hydrofluoric Acid";
-            case "molten.copper":
+            case "fluid.molten.copper":
                 return "Molten Copper";
-            case "unknowwater":
+            case "fluid.unknowwater":
                 return "Unknowwater";
-            case "molten.tin":
+            case "fluid.molten.tin":
                 return "Molten Tin";
-            case "hydrogen":
+            case "fluid.hydrogen":
                 return "Hydrogen";
-            case "lava":
+            case "fluid.lava":
                 return "Lava";
             default:
-                return fluid.getLocalizedName(null);
+                return fluid.getUnlocalizedName();
         }
     }
 
