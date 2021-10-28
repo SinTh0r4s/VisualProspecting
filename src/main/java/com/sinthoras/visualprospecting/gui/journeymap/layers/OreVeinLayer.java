@@ -13,8 +13,6 @@ import net.minecraft.client.Minecraft;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sinthoras.visualprospecting.Utils.isNEIInstalled;
-
 public class OreVeinLayer extends WaypointProviderLayer {
 
     public static final OreVeinLayer instance = new OreVeinLayer();
@@ -30,9 +28,7 @@ public class OreVeinLayer extends WaypointProviderLayer {
 
     @Override
     public void onOpenMap() {
-        if(isNEIInstalled()) {
-            VeinTypeCaching.recalculateNEISearch();
-        }
+        VeinTypeCaching.recalculateNEISearch();
     }
 
     @Override
