@@ -71,3 +71,23 @@ ore.mix.quartzspace=Quartz
 ore.mix.rutile=Rutile
 ore.mix.tfgalena=Cryolite
 ore.mix.luvtantalite=Pyrolusite
+
+ore.mix.ross128.Thorianit=Thorianit
+ore.mix.ross128.carbon=Graphite
+ore.mix.ross128.bismuth=Bismuth
+ore.mix.ross128.TurmalinAlkali=Olenit
+ore.mix.ross128.Roquesit=Roquesit
+ore.mix.ross128.Tungstate=Scheelite
+ore.mix.ross128.CopperSulfits=Djurleit
+ore.mix.ross128.Forsterit=Forsterit
+ore.mix.ross128.Hedenbergit=Hedenbergit
+ore.mix.ross128.RedZircon=Red Zircon
+
+ore.mix.ross128ba.tib=Tiberium
+ore.mix.ross128ba.Tungstate=Scheelite
+ore.mix.ross128ba.bart=BArTiMaEuSNeK
+ore.mix.ross128ba.TurmalinAlkali=Olenit
+ore.mix.ross128ba.Amethyst=Amethyst
+ore.mix.ross128ba.CopperSulfits=Djurleit
+ore.mix.ross128ba.RedZircon=Red Zircon
+ore.mix.ross128ba.Fluorspar=Fluorspar

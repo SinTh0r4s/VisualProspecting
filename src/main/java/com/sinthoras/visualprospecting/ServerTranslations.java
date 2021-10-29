@@ -243,6 +243,42 @@ public class ServerTranslations {
                 return "Cryolite";
             case "ore.mix.luvtantalite":
                 return "Pyrolusit";
+            case "ore.mix.ross128.Thorianit":
+                return "Thorianit";
+            case "ore.mix.ross128.carbon":
+                return "Graphite";
+            case "ore.mix.ross128.bismuth":
+                return "Bismuth";
+            case "ore.mix.ross128.TurmalinAlkali":
+                return "Olenit";
+            case "ore.mix.ross128.Roquesit":
+                return "Roquesit";
+            case "ore.mix.ross128.Tungstate":
+                return "Scheelite";
+            case "ore.mix.ross128.CopperSulfits":
+                return "Djurleit";
+            case "ore.mix.ross128.Forsterit":
+                return "Forsterit";
+            case "ore.mix.ross128.Hedenbergit":
+                return "Hedenbergit";
+            case "ore.mix.ross128.RedZircon":
+                return "Red Zircon";
+            case "ore.mix.ross128ba.tib":
+                return "Tiberium";
+            case "ore.mix.ross128ba.Tungstate":
+                return "Scheelite";
+            case "ore.mix.ross128ba.bart":
+                return "BArTiMaEuSNeK";
+            case "ore.mix.ross128ba.TurmalinAlkali":
+                return "Olenit";
+            case "ore.mix.ross128ba.Amethyst":
+                return "Amethyst";
+            case "ore.mix.ross128ba.CopperSulfits":
+                return "Djurleit";
+            case "ore.mix.ross128ba.RedZircon":
+                return "Red Zircon";
+            case "ore.mix.ross128ba.Fluorspar":
+                return "Fluorspa";
             default:
                 return veinType.name;
         }
