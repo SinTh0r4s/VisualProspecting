@@ -1,11 +1,12 @@
 package com.sinthoras.visualprospecting.database.cachebuilder;
 
 import com.sinthoras.visualprospecting.Config;
+import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.VP;
 
 import java.text.DecimalFormat;
 
-import static com.sinthoras.visualprospecting.database.cachebuilder.Reflection.setUserMessage;
+import static com.sinthoras.visualprospecting.database.cachebuilder.Reflection.renderUserMessage;
 
 public class AnalysisProgressTracker {
 
@@ -47,7 +48,9 @@ public class AnalysisProgressTracker {
                     + (dimensionsProcessed + 1) + "/" + numberOfDimensions + ")  "
                     + (numberOfRegionFiles == 0 ? 0 : ((regionFilesProcessed * 100) / numberOfRegionFiles)) + "%";
             VP.info(message);
-            setUserMessage(message);
+            if(Utils.isLogicalClient()) {
+                renderUserMessage(message + "%");  // Escape % for String.format
+            }
 
         }
     }
@@ -57,6 +60,10 @@ public class AnalysisProgressTracker {
         DecimalFormat format = new DecimalFormat();
         format.setMinimumFractionDigits(1);
         format.setMaximumFractionDigits(1);
-        VP.info("Parsing complete! Thank you for your patience.  - Duration: " + format.format(elapsedTimeMS / 1000) + "sec");
+        final String message = "Parsing complete! Thank you for your patience.  - Duration: " + format.format(elapsedTimeMS / 1000) + "sec";
+        VP.info(message);
+        if(Utils.isLogicalClient()) {
+            renderUserMessage(message);
+        }
     }
 }
