@@ -54,8 +54,10 @@ minecraft {
     version = minecraftVersion + "-" + forgeVersion + "-" + minecraftVersion
     runDir = "run"
 
-    replaceIn "src/main/java/com/sinthoras/visualprospecting/Tags.java"
-    replace "GRADLETOKEN_VERSION", version
+    if (replaceGradleTokenInFile && gradleToken) {
+        replaceIn replaceGradleTokenInFile
+        replace gradleToken, versionDetails().lastTag
+    }
 }
 
 repositories {
