@@ -2,13 +2,13 @@
 {
   "modid": "visualprospecting",
   "name": "VisualProspecting",
-  "description": "VisualProspecting tracks discovered GT Ore Veins and displays them in JourneyMap",
+  "description": "GregTech 5 Unofficial convenience mod for easy GT Ore Vein and underground fluid tracking. Includes visualization for JourneyMap.",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://github.com/SinTh0r4s/VisualProspecting",
   "updateUrl": "",
   "authorList": ["SinTh0r4s"],
-  "credits": "The Forge and FML guys, for making this example",
+  "credits": "Special thanks to basdxz and Houstonruss for contributing CI and textures!",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
