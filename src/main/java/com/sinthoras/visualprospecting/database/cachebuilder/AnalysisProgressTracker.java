@@ -5,6 +5,8 @@ import com.sinthoras.visualprospecting.VP;
 
 import java.text.DecimalFormat;
 
+import static com.sinthoras.visualprospecting.database.cachebuilder.Reflection.setUserMessage;
+
 public class AnalysisProgressTracker {
 
     private static int numberOfDimensions = 0;
@@ -41,9 +43,12 @@ public class AnalysisProgressTracker {
         long timestamp = System.currentTimeMillis();
         if(timestamp - (Config.cacheGenerationLogUpdateMinTime * 1000) > lastLogUpdate) {
             lastLogUpdate = timestamp;
-            VP.info("Caching GT ore generation meta data - Dimension ("
+            final String message = "Caching GT ore generation meta data - Dimension ("
                     + (dimensionsProcessed + 1) + "/" + numberOfDimensions + ")  "
-                    + (numberOfRegionFiles == 0 ? 0 : ((regionFilesProcessed * 100) / numberOfRegionFiles)) + "%");
+                    + (numberOfRegionFiles == 0 ? 0 : ((regionFilesProcessed * 100) / numberOfRegionFiles)) + "%";
+            VP.info(message);
+            setUserMessage(message);
+
         }
     }
 
