@@ -1,16 +1,16 @@
 [
-{
-  "modid": "${modId}",
-  "name": "${modName}",
-  "description": "${modDescription}",
-  "version": "${modVersion}",
-  "mcversion": "${minecraftVersion}",
-  "url": "${modUrl}",
-  "updateUrl": "",
-  "authorList": ["SinTh0r4s"],
-  "credits": "${modCredits}",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
-}
+    {
+      "modid": "${modId}",
+      "name": "${modName}",
+      "description": "${modDescription}",
+      "version": "${modVersion}",
+      "mcversion": "${minecraftVersion}",
+      "url": "${modUrl}",
+      "updateUrl": "",
+      "authorList": ["SinTh0r4s"],
+      "credits": "${modCredits}",
+      "logoFile": "",
+      "screenshots": [],
+      "dependencies": []
+    }
 ]
