@@ -98,21 +98,24 @@ def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + mixingConfig
 def mixinSrg = "${tasks.reobf.temporaryDir}" + File.separator + "mixins.srg"
 
 shadowJar {
-    from refMap
-    manifest {
-        attributes([
-                "TweakClass"                 : "org.spongepowered.asm.launch.MixinTweaker",
-                "MixinConfigs"               : mixinConfigJson,
-                "FMLCorePluginContainsFMLMod": true,
-                "ForceLoadAsMod"             : true
-        ])
-    }
     minimize()
     configurations = [project.configurations.shadowImplementation]
     dependsOn(relocateShadowJar)
 }
 
 jar {
+    if(usesMixins.toBoolean()) {
+        from refMap
+        manifest {
+            attributes([
+                    "TweakClass"                 : "org.spongepowered.asm.launch.MixinTweaker",
+                    "MixinConfigs"               : mixinConfigJson,
+                    "FMLCorePluginContainsFMLMod": true,
+                    "ForceLoadAsMod"             : forceLoadAsMod.toBoolean()
+            ])
+        }
+    }
+
     if(usesShadowedDependencies.toBoolean()) {
         dependsOn(shadowJar)
         enabled = false
@@ -144,40 +147,41 @@ afterEvaluate {
 runClient {
     args    "--mods=../build/libs/$modId-${version}.jar",
             usesMixins.toBoolean() ? "--tweakClass org.spongepowered.asm.launch.MixinTweaker" : "",
-            developmentEnvironmentUserName.isEmpty() == false ? "--username " + developmentEnvironmentUserName : ""
+            developmentEnvironmentUserName.isEmpty() == false ? "--username": "",
+            developmentEnvironmentUserName.isEmpty() == false ? developmentEnvironmentUserName : ""
 }
 
 runServer {
-    args    "--mods=../build/libs/$modId-${version}.jar",
+    args    "",//"--mods=../build/libs/$modId-${version}.jar",
             usesMixins.toBoolean() ? "--tweakClass org.spongepowered.asm.launch.MixinTweaker" : ""
 
 }
 
 processResources
-{
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+        {
+            // this will ensure that this task is redone when the versions change.
+            inputs.property "version", project.version
+            inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
+            // replace stuff in mcmod.info, nothing else
+            from(sourceSets.main.resources.srcDirs) {
+                include 'mcmod.info'
 
-        // replace version and mcversion
-        expand "minecraftVersion": project.minecraft.version,
-                "modVersion": versionDetails().lastTag,
-                "modId": modId,
-                "modName": modName,
-                "modDescription": modDescription,
-                "modUrl": modUrl,
-                "modCredits": modCredits
-    }
+                // replace version and mcversion
+                expand "minecraftVersion": project.minecraft.version,
+                        "modVersion": versionDetails().lastTag,
+                        "modId": modId,
+                        "modName": modName,
+                        "modDescription": modDescription,
+                        "modUrl": modUrl,
+                        "modCredits": modCredits
+            }
 
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
+            // copy everything else, thats not the mcmod.info
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+        }
 
 task sourcesJar(type: Jar) {
     from (sourceSets.main.allJava)
@@ -191,8 +195,27 @@ task devJar(type: Jar) {
     archiveClassifier.set("dev")
 }
 
+task apiJar(type: Jar) {
+    from (sourceSets.main.allJava) {
+        include apiPackage + '/**'
+    }
+
+    from (sourceSets.main.output) {
+        include apiPackage + '/**'
+    }
+
+    from (sourceSets.main.resources.srcDirs) {
+        include("LICENSE")
+    }
+
+    getArchiveClassifier().set('api')
+}
+
 
 artifacts {
     archives sourcesJar
     archives devJar
+    if(apiPackage.isEmpty() == false) {
+        archives apiJar
+    }
 }
