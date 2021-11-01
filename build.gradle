@@ -66,6 +66,18 @@ configurations {
     implementation.extendsFrom(shadowImplementation)
 }
 
+repositories {
+    if(usesMixins.toBoolean()) {
+        maven {
+            name = "sponge"
+            url = "https://repo.spongepowered.org/repository/maven-public"
+        }
+        maven {
+            url = "https://jitpack.io"
+        }
+    }
+}
+
 dependencies {
     if(usesMixins.toBoolean()) {
         annotationProcessor("org.ow2.asm:asm-debug-all:5.0.3")
