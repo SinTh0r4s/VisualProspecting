@@ -5,7 +5,7 @@ import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.database.ClientCache;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
-import com.sinthoras.visualprospecting.gui.journeymap.DrawUtils;
+import com.sinthoras.visualprospecting.gui.DrawUtils;
 import com.sinthoras.visualprospecting.gui.journeymap.layers.OreVeinLayer;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;

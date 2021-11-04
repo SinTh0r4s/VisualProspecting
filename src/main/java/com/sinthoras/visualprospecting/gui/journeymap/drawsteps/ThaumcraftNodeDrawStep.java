@@ -4,7 +4,7 @@ import com.dyonovan.tcnodetracker.TCNodeTracker;
 import com.dyonovan.tcnodetracker.lib.NodeList;
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.gui.journeymap.DrawUtils;
+import com.sinthoras.visualprospecting.gui.DrawUtils;
 import com.sinthoras.visualprospecting.gui.journeymap.layers.ThaumcraftNodeLayer;
 import journeymap.client.model.Waypoint;
 import journeymap.client.render.map.GridRenderer;
