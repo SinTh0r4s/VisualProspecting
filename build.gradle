@@ -1,3 +1,11 @@
+/*
+DO NOT CHANGE THIS FILE!
+
+Also, you may replace this file at any time if there is an update available.
+Please check https://github.com/SinTh0r4s/ExampleMod1.7.10/blob/main/build.gradle for updates.
+ */
+
+
 import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 import java.util.concurrent.TimeUnit
 
@@ -40,10 +48,11 @@ idea {
 
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
-}
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+    // Make sure GregTech build won't time out
+    System.setProperty("org.gradle.internal.http.connectionTimeout", 120000 as String)
+    System.setProperty("org.gradle.internal.http.socketTimeout", 120000 as String)
+}
 
 // Pulls version from git tag
 version = minecraftVersion + "-" + gitVersion()
@@ -51,12 +60,27 @@ group = modGroup
 archivesBaseName = modId
 
 minecraft {
+    if(JavaVersion.current() != JavaVersion.VERSION_1_8) {
+        throw new GradleException("This project requires Java 8, but it's running on " + JavaVersion.current())
+    }
+
     version = minecraftVersion + "-" + forgeVersion + "-" + minecraftVersion
     runDir = "run"
 
-    if (replaceGradleTokenInFile && gradleToken) {
+    if (replaceGradleTokenInFile) {
         replaceIn replaceGradleTokenInFile
-        replace gradleToken, versionDetails().lastTag
+        if(gradleTokenModId) {
+            replace gradleTokenModId, modId
+        }
+        if(gradleTokenModName) {
+            replace gradleTokenModName, modName
+        }
+        if(gradleTokenModName) {
+            replace gradleTokenVersion, versionDetails().lastTag
+        }
+        if(gradleTokenGroupName) {
+            replace gradleTokenGroupName, modGroup
+        }
     }
 }
 
@@ -109,6 +133,22 @@ def mixingConfigRefMap = "mixins." + modId + ".refmap.json"
 def refMap = "${tasks.compileJava.temporaryDir}" + File.separator + mixingConfigRefMap
 def mixinSrg = "${tasks.reobf.temporaryDir}" + File.separator + "mixins.srg"
 
+task generateAssets {
+    if(usesMixins.toBoolean()) {
+        new File(projectDir.toString() + "/src/main/resources/", mixinConfigJson).text = """{
+  "required": true,
+  "minVersion": "0.7.11",
+  "package": "${modGroup}.${mixinsPackage}",
+  "plugin": "${modGroup}.${mixinPlugin}",
+  "refmap": "${mixingConfigRefMap}",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8"
+}
+
+"""
+    }
+}
+
 shadowJar {
     if(usesMixins.toBoolean()) {
         from refMap
@@ -160,7 +200,6 @@ afterEvaluate {
                     "-AoutSrgFile=${mixinSrg}",
                     "-AoutRefMapFile=${refMap}",
                     // Elan: from what I understand they are just some linter configs so you get some warning on how to properly code
-                    "-Xlint:-sunapi",
                     "-XDenableSunApiLintControl",
                     "-XDignore.symbol.file"
             ]
@@ -195,10 +234,7 @@ processResources
                 expand "minecraftVersion": project.minecraft.version,
                         "modVersion": versionDetails().lastTag,
                         "modId": modId,
-                        "modName": modName,
-                        "modDescription": modDescription,
-                        "modUrl": modUrl,
-                        "modCredits": modCredits
+                        "modName": modName
             }
 
             // copy everything else, thats not the mcmod.info
@@ -221,11 +257,11 @@ task devJar(type: Jar) {
 
 task apiJar(type: Jar) {
     from (sourceSets.main.allJava) {
-        include apiPackage + '/**'
+        include modGroup.toString().replaceAll("\\.", "/") + "/" + apiPackage.toString() + '/**'
     }
 
     from (sourceSets.main.output) {
-        include apiPackage + '/**'
+        include modGroup.toString().replaceAll("\\.", "/") + "/" + apiPackage.toString() + '/**'
     }
 
     from (sourceSets.main.resources.srcDirs) {

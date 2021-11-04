@@ -47,6 +47,6 @@ public class VP {
     }
 
     private static String formatMessage(String message) {
-        return "[" + Tags.VISUALPROSPECTING + "] " + message;
+        return "[" + Tags.MODNAME + "] " + message;
     }
 }
