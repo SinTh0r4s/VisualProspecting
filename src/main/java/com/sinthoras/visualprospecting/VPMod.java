@@ -6,10 +6,10 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 
 
-@Mod(modid = Tags.MODID, version = Tags.VERSION, name = Tags.VISUALPROSPECTING, acceptedMinecraftVersions = "[1.7.10]", dependencies = "required-after:spongemixins@[1.1.0,);")
+@Mod(modid = Tags.MODID, version = Tags.VERSION, name = Tags.MODNAME, acceptedMinecraftVersions = "[1.7.10]", dependencies = "required-after:spongemixins@[1.1.0,);")
 public class VPMod {
 
-    @SidedProxy(clientSide= Tags.COM_SINTHORAS_VISUALPROSPECTING + ".hooks.HooksClient", serverSide= Tags.COM_SINTHORAS_VISUALPROSPECTING + ".hooks.HooksShared")
+    @SidedProxy(clientSide= Tags.GROUPNAME + ".hooks.HooksClient", serverSide= Tags.GROUPNAME + ".hooks.HooksShared")
     public static HooksShared proxy;
 
     @Mod.EventHandler

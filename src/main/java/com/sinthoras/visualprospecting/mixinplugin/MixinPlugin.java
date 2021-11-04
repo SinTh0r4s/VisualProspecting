@@ -1,8 +1,10 @@
 package com.sinthoras.visualprospecting.mixinplugin;
 
-import com.google.common.collect.Lists;
-import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.Tags;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
+import net.minecraft.launchwrapper.Launch;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.lib.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -10,12 +12,18 @@ import ru.timeconqueror.spongemixins.MinecraftURLClassPath;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import static com.sinthoras.visualprospecting.Utils.isDevelopmentEnvironment;
+import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.VANILLA;
 
 public class MixinPlugin implements IMixinConfigPlugin {
+
+    private static final Logger LOG = LogManager.getLogger(Tags.MODID + " mixins");
+
     @Override
     public void onLoad(String mixinPackage) {
 
@@ -36,69 +44,46 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
     }
 
+    // This method return a List<String> of mixins. Every mixins in this list will be loaded.
     @Override
     public List<String> getMixins() {
         final boolean loadClientSideOnlyClasses = FMLLaunchHandler.side().isClient();
-        final boolean isDevelopmentEnvironment = isDevelopmentEnvironment();
+        final boolean isDevelopmentEnvironment = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 
-        if (isDevelopmentEnvironment == false && loadJar("gregtech") == false) {
-            VP.error("Could not load gregtech's jar!");
-            return null;
-        }
-        List<String> mixins = Lists.newArrayList(
-                "GT_Block_Ores_AbstractMixin",
-                "GT_MetaTileEntity_AdvSeismicProspectorMixin",
-                "GT_MetaTileEntity_ScannerMixin",
-                "ItemEditableBookMixin",
-                "WorldGenContainerMixin"
-        );
-
-        if (loadClientSideOnlyClasses && (isDevelopmentEnvironment || loadJar("journeymap-1.7.10"))) {
-            VP.info("Found JourneyMap! Integrating now...");
-            mixins.add("journeymap.FullscreenMixin");
-            mixins.add("journeymap.FullscreenActionsMixin");
-            mixins.add("journeymap.RenderWaypointBeaconMixin");
-            mixins.add("journeymap.WaypointManagerMixin");
-
-            if(isDevelopmentEnvironment || loadJar("tcnodetracker-1.7.10")) {
-                VP.info("Found TCNodeTracker! Integrating now...");
-                mixins.add("journeymap.tcnodetracker.GuiMainMixin");
+        List<TargetedMod> loadedMods = Arrays.stream(TargetedMod.values())
+                .filter(mod -> mod == VANILLA
+                        || (mod.loadInDevelopment && isDevelopmentEnvironment)
+                        || loadJar(mod.jarNameBeginsWith))
+                .collect(Collectors.toList());
+        for (TargetedMod mod : TargetedMod.values()) {
+            if(loadedMods.contains(mod)) {
+                LOG.info("Found " + mod.modName + "! Integrating now...");
             }
             else {
-                VP.info("Could not find TCNodeTracker! Skipping integration....");
+                LOG.info("Could not find " + mod.modName + "! Skipping integration....");
             }
-        } else {
-            VP.info("Could not find JourneyMap! Skipping integration....");
         }
 
-        if(loadJar("bartworks")) {
-            VP.info("Found Bartworks! Integrating now...");
-            mixins.add("bartworks.WorldGenContainerMixin");
+        List<String> mixins = new ArrayList<>();
+        for (Mixin mixin : Mixin.values()) {
+            if (loadedMods.containsAll(mixin.targetedMods)
+                    && (mixin.clientSideOnly == false || loadClientSideOnlyClasses)) {
+                mixins.add(mixin.mixinClass);
+                LOG.debug("Loading mixin: " + mixin.mixinClass);
+            }
         }
-        else {
-            VP.info("Could not find Bartworks! Skipping integration....");
-        }
-
-        if(loadJar("GalacticGreg")) {
-            VP.info("Found GalacticGreg! Integrating now...");
-            mixins.add("galacticgreg.GT_Worldgenerator_SpaceMixin");
-        }
-        else {
-            VP.info("Could not find GalacticGreg! Skipping integration....");
-        }
-
         return mixins;
     }
 
-    public boolean loadJar(final String jarName) {
+    private boolean loadJar(final String jarNameBeginsWith) {
         try {
-            File jar = MinecraftURLClassPath.getJarInModPath(jarName);
+            File jar = MinecraftURLClassPath.getJarInModPath(jarNameBeginsWith);
             if(jar == null) {
-                VP.info("Jar not found: " + jarName);
+                LOG.info("Jar not found: " + jarNameBeginsWith);
                 return false;
             }
 
-            VP.info("Attempting to add " + jar.toString() + " to the URL Class Path");
+            LOG.info("Attempting to add " + jar + " to the URL Class Path");
             if(!jar.exists()) {
                 throw new FileNotFoundException(jar.toString());
             }
