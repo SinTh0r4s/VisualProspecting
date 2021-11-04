@@ -46,11 +46,11 @@ public class MixinPlugin implements IMixinConfigPlugin {
             return null;
         }
         List<String> mixins = Lists.newArrayList(
-                "GT_Block_Ores_AbstractMixin",
-                "GT_MetaTileEntity_AdvSeismicProspectorMixin",
-                "GT_MetaTileEntity_ScannerMixin",
-                "ItemEditableBookMixin",
-                "WorldGenContainerMixin"
+                "gregtech.GT_Block_Ores_AbstractMixin",
+                "gregtech.GT_MetaTileEntity_AdvSeismicProspectorMixin",
+                "gregtech.GT_MetaTileEntity_ScannerMixin",
+                "gregtech.WorldGenContainerMixin",
+                "minecraft.ItemEditableBookMixin"
         );
 
         if (loadClientSideOnlyClasses && (isDevelopmentEnvironment || loadJar("journeymap-1.7.10"))) {
@@ -90,7 +90,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
         return mixins;
     }
 
-    public boolean loadJar(final String jarName) {
+    private boolean loadJar(final String jarName) {
         try {
             File jar = MinecraftURLClassPath.getJarInModPath(jarName);
             if(jar == null) {
