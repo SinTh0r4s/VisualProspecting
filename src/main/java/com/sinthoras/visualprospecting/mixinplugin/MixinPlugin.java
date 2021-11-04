@@ -22,7 +22,7 @@ import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.VANILLA;
 
 public class MixinPlugin implements IMixinConfigPlugin {
 
-    private static Logger LOG = LogManager.getLogger(Tags.MODID + " mixins");
+    private static final Logger LOG = LogManager.getLogger(Tags.MODID + " mixins");
 
     @Override
     public void onLoad(String mixinPackage) {
