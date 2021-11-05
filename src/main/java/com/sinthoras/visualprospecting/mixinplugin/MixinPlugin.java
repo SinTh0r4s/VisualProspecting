@@ -1,7 +1,6 @@
 package com.sinthoras.visualprospecting.mixinplugin;
 
 import com.sinthoras.visualprospecting.Tags;
-import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import net.minecraft.launchwrapper.Launch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
