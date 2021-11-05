@@ -34,20 +34,20 @@ Does VisualProspecting run with other maps? - I runs just fine, but it has no vi
 #### Required Mods:
  - Minecraft Forge
     - Injected class: [_ItemEditableBook_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/minecraft/ItemEditableBookMixin.java)
- - GregTech5-Unofficial
+ - [GregTech5-Unofficial](https://github.com/GTNewHorizons/GT5-Unofficial)
     - Injected classes: [_GT_Block_Ores_Abstract_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/gregtech/GT_Block_Ores_AbstractMixin.java), [_GT_MetaTileEntity_AdvSeismicProspector_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/gregtech/GT_MetaTileEntity_AdvSeismicProspectorMixin.java), [_GT_MetaTileEntity_Scanner_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/gregtech/GT_MetaTileEntity_ScannerMixin.java), [_GT_Worldgenerator.WorldGenContainer_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/gregtech/WorldGenContainerMixin.java)
- - SpongeMixin
+ - [SpongeMixins](https://github.com/GTNewHorizons/SpongeMixins)
  - [Enklumne](https://github.com/Hugobros3/Enklume) _by Hugobros3_
     - Automatically shipped. No manual handling is required.
 #### Optional Mods:
- - JourneyMap: Visualizes prospected ore veins and oil fields on custom overlay, that can be toggled on and off.
+ - [JourneyMap](https://www.curseforge.com/minecraft/mc-mods/journeymap/files/2367915): Visualizes prospected ore veins and oil fields on custom overlay, that can be toggled on and off.
     - Injected classes: [_Fullscreen_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/FullscreenMixin.java), [_FullscreenActions_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/FullscreenActionsMixin.java), [_RenderWaypointBeacon_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/RenderWaypointBeaconMixin.java), [_WaypointManager_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/WaypointManagerMixin.java)
- - TCNodeTracker: Visualizes tracked aura nodes in JourneyMap. Requires JourneyMap  
+ - [TCNodeTracker](https://github.com/GTNewHorizons/TCNodeTracker): Visualizes tracked aura nodes in JourneyMap. Requires JourneyMap  
     - Injected class: [_GuiMain_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/tcnodetracker/GuiMainMixin.java)
- - NEI: Ores on JourneyMap are highlighted according to NEI search if active (double click on search field).
- - GalacticGreg: Injects a notification call into ore vein generation.
+ - [NEI](https://github.com/GTNewHorizons/NotEnoughItems): Ores on JourneyMap are highlighted according to NEI search if active (double click on search field).
+ - [GalacticGreg](https://github.com/GTNewHorizons/GalacticGregGT5): Injects a notification call into ore vein generation.
     - Injected class: [_GT_Worldgenerator_Space_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/galacticgreg/GT_Worldgenerator_SpaceMixin.java)
- - Bartworks: Injects a notification call into ore vein generation.
+ - [Bartworks](https://github.com/GTNewHorizons/bartworks): Injects a notification call into ore vein generation.
     - Injected class: [_BW_WordGenerator.WorldGenContainer_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/bartworks/WorldGenContainerMixin.java)
 
 ### Add Visual Prospecting as API
