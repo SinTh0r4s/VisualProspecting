@@ -79,6 +79,10 @@ public class Utils {
         return chunkCoord & 0xFFFFFFF8;
     }
 
+    public static double journeyMapScaleToLinear(final int jzoom) {
+        return Math.pow(2, jzoom);
+    }
+
     public static boolean isSmallOreId(short metaData) {
         return metaData >= VP.gregTechSmallOreMinimumMeta;
     }

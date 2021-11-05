@@ -12,7 +12,7 @@ import thaumcraft.client.lib.UtilsFX;
 
 public class DrawUtils {
 
-    public static void drawGradientRect(int minPixelX, int minPixelY, int maxPixelX, int maxPixelY, int colorA, int colorB)
+    public static void drawGradientRect(double minPixelX, double minPixelY, double maxPixelX, double maxPixelY, double z, int colorA, int colorB)
     {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_BLEND);
@@ -27,22 +27,26 @@ public class DrawUtils {
         float green = (colorA >> 8 & 255) / 255.0f;
         float blue = (colorA & 255) / 255.0f;
         tessellator.setColorRGBA_F(red, green, blue, alpha);
-        tessellator.addVertex(maxPixelX, minPixelY, 300);
-        tessellator.addVertex(minPixelX, minPixelY, 300);
+        tessellator.addVertex(maxPixelX, minPixelY, z);
+        tessellator.addVertex(minPixelX, minPixelY, z);
 
         alpha = (colorB >> 24 & 255) / 255.0f;
         red = (colorB >> 16 & 255) / 255.0f;
         green = (colorB >> 8 & 255) / 255.0f;
         blue = (colorB & 255) / 255.0f;
         tessellator.setColorRGBA_F(red, green, blue, alpha);
-        tessellator.addVertex(minPixelX, maxPixelY, 300);
-        tessellator.addVertex(maxPixelX, maxPixelY, 300);
+        tessellator.addVertex(minPixelX, maxPixelY, z);
+        tessellator.addVertex(maxPixelX, maxPixelY, z);
 
         tessellator.draw();
         GL11.glShadeModel(GL11.GL_FLAT);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
+    }
+
+    public static void drawGradientRect(double minPixelX, double minPixelY, double maxPixelX, double maxPixelY, int colorA, int colorB) {
+        drawGradientRect(minPixelX, minPixelY, maxPixelX, maxPixelY, 300, colorA, colorB);
     }
 
     public static void drawQuad(ResourceLocation texture, double x, double y, double width, double height, int color, float alpha) {

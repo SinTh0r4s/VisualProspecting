@@ -71,6 +71,13 @@ public class MixinPlugin implements IMixinConfigPlugin {
             VP.info("Could not find JourneyMap! Skipping integration....");
         }
 
+        if (loadClientSideOnlyClasses && (isDevelopmentEnvironment || loadJar("XaerosWorldMap"))) {
+            VP.info("Found Xaero's World Map! Integrating now...");
+            mixins.add("xaeromap.GuiMapMixin");
+        } else {
+            VP.info("Could not find Xaero's World Map! Skipping integration...");
+        }
+
         if(loadJar("bartworks")) {
             VP.info("Found Bartworks! Integrating now...");
             mixins.add("bartworks.WorldGenContainerMixin");
