@@ -47,7 +47,6 @@ public class MixinPlugin implements IMixinConfigPlugin {
     // This method return a List<String> of mixins. Every mixins in this list will be loaded.
     @Override
     public List<String> getMixins() {
-        final boolean loadClientSideOnlyClasses = FMLLaunchHandler.side().isClient();
         final boolean isDevelopmentEnvironment = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 
         List<TargetedMod> loadedMods = Arrays.stream(TargetedMod.values())
@@ -66,8 +65,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
         List<String> mixins = new ArrayList<>();
         for (Mixin mixin : Mixin.values()) {
-            if (loadedMods.containsAll(mixin.targetedMods)
-                    && (mixin.clientSideOnly == false || loadClientSideOnlyClasses)) {
+            if (loadedMods.containsAll(mixin.targetedMods)) {
                 mixins.add(mixin.mixinClass);
                 LOG.debug("Loading mixin: " + mixin.mixinClass);
             }

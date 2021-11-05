@@ -13,30 +13,27 @@ public enum Mixin {
     // Exception: Tags.java, as long as it is used for Strings only!
     //
 
-    WorldGenContainerMixin("bartworks.WorldGenContainerMixin", false, BARTWORKS),
+    WorldGenContainerMixin("bartworks.WorldGenContainerMixin", BARTWORKS),
 
-    GT_Worldgenerator_SpaceMixin("galacticgreg.GT_Worldgenerator_SpaceMixin", false, GALACTICGREG),
+    GT_Worldgenerator_SpaceMixin("galacticgreg.GT_Worldgenerator_SpaceMixin", GALACTICGREG),
 
-    GT_Block_Ores_AbstractMixin("gregtech.GT_Block_Ores_AbstractMixin", false, GREGTECH),
-    GT_MetaTileEntity_AdvSeismicProspectorMixin("gregtech.GT_MetaTileEntity_AdvSeismicProspectorMixin", false, GREGTECH),
-    GT_MetaTileEntity_ScannerMixin("gregtech.GT_MetaTileEntity_ScannerMixin", false, GREGTECH),
-    GT_WorldGenContainerMixin("gregtech.WorldGenContainerMixin", false, GREGTECH),
+    GT_Block_Ores_AbstractMixin("gregtech.GT_Block_Ores_AbstractMixin", GREGTECH),
+    GT_MetaTileEntity_AdvSeismicProspectorMixin("gregtech.GT_MetaTileEntity_AdvSeismicProspectorMixin", GREGTECH),
+    GT_MetaTileEntity_ScannerMixin("gregtech.GT_MetaTileEntity_ScannerMixin", GREGTECH),
+    GT_WorldGenContainerMixin("gregtech.WorldGenContainerMixin", GREGTECH),
 
-    FullscreenMixin("journeymap.FullscreenMixin", true, JOURNEYMAP),
-    FullscreenActionsMixin("journeymap.FullscreenActionsMixin", true, JOURNEYMAP),
-    RenderWaypointBeaconMixin("journeymap.RenderWaypointBeaconMixin", true, JOURNEYMAP),
-    WaypointManagerMixin("journeymap.WaypointManagerMixin", true, JOURNEYMAP),
+    FullscreenMixin("journeymap.FullscreenMixin", JOURNEYMAP),
+    FullscreenActionsMixin("journeymap.FullscreenActionsMixin", JOURNEYMAP),
+    RenderWaypointBeaconMixin("journeymap.RenderWaypointBeaconMixin", JOURNEYMAP),
+    WaypointManagerMixin("journeymap.WaypointManagerMixin", JOURNEYMAP),
 
-    GuiMainMixin("journeymap.tcnodetracker.GuiMainMixin", true, JOURNEYMAP, TCNODETRACKER);
+    GuiMainMixin("journeymap.tcnodetracker.GuiMainMixin", JOURNEYMAP, TCNODETRACKER);
 
     public final String mixinClass;
     public final List<TargetedMod> targetedMods;
-    // Injecting into @SideOnly(Side.Client) classes will crash the server. Flag them as clientSideOnly!
-    public final boolean clientSideOnly;
 
-    Mixin(String mixinClass, boolean clientSideOnly, TargetedMod... targetedMods) {
+    Mixin(String mixinClass, TargetedMod... targetedMods) {
         this.mixinClass = mixinClass;
         this.targetedMods = Arrays.asList(targetedMods);
-        this.clientSideOnly = clientSideOnly;
     }
 }
