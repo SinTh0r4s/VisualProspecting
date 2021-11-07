@@ -114,7 +114,7 @@ public class OreVeinRenderStep implements InteractableRenderStep {
 	public void onDoubleClick() {
 		if(Utils.isXaerosMinimapInstalled()) {
 			FakeWaypointManager.toggleWaypoint(FakeWaypointManager.ORE_VEINS_WAYPOINT, oreVeinPosition.getBlockX(), 65, oreVeinPosition.getBlockZ(),
-					I18n.format("visualprospecting.tracked", I18n.format(oreVeinPosition.veinType.name)), "!", 15);
+					I18n.format("visualprospecting.tracked", I18n.format(oreVeinPosition.veinType.name)), "!", 15, oreVeinPosition.dimensionId);
 		}
 	}
 

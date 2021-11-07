@@ -11,8 +11,8 @@ public class FakeWaypointManager {
 	public static final int ORE_VEINS_WAYPOINT = 0;
 	public static final int TC_NODES_WAYPOINT = 1;
 
-	public static void addWaypoint(int index, int x, int y, int z, String name, String symbol, int color) {
-		waypointsTable.put(index, new Waypoint(x, y, z, name, symbol, color));
+	public static void addWaypoint(int index, int x, int y, int z, String name, String symbol, int color, int dimID) {
+		waypointsTable.put(index, new WaypointWithDimension(x, y, z, name, symbol, color, dimID));
 	}
 
 	public static void removeWaypoint(int index) {
@@ -34,12 +34,20 @@ public class FakeWaypointManager {
 		return wp.getX() == x && wp.getY() == y && wp.getZ() == z;
 	}
 
-	public static void toggleWaypoint(int index, int x, int y, int z, String name, String symbol, int color) {
+	public static void toggleWaypoint(int index, int x, int y, int z, String name, String symbol, int color, int dimID) {
 		if(isWaypointAtCoords(index, x, y, z)) {
 			removeWaypoint(index);
 		}
 		else {
-			addWaypoint(index, x, y, z, name, symbol, color);
+			addWaypoint(index, x, y, z, name, symbol, color, dimID);
+		}
+	}
+
+	public static void notifyDimension(int dimID) {
+		for(Waypoint wp : waypointsTable.values()) {
+			if(wp instanceof WaypointWithDimension) {
+				((WaypointWithDimension) wp).notifyDimension(dimID);
+			}
 		}
 	}
 }

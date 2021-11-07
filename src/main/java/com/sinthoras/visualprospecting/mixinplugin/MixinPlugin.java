@@ -74,6 +74,13 @@ public class MixinPlugin implements IMixinConfigPlugin {
         if (loadClientSideOnlyClasses && (isDevelopmentEnvironment || loadJar("XaerosWorldMap"))) {
             VP.info("Found Xaero's World Map! Integrating now...");
             mixins.add("xaeromap.GuiMapMixin");
+
+            if (isDevelopmentEnvironment || loadJar("XaerosMinimap")) {
+                VP.info("Found Xaero's Minimap! Integrating now...");
+                mixins.add("xaeromap.WaypointsIngameRendererMixin");
+            } else {
+                VP.info("Could not find Xaero's Minimap! Skipping integration...");
+            }
         } else {
             VP.info("Could not find Xaero's World Map! Skipping integration...");
         }
