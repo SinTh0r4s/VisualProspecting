@@ -7,6 +7,7 @@ import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.database.ClientCache;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.gui.DrawUtils;
+import com.sinthoras.visualprospecting.gui.xaeromap.FakeWaypointManager;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
@@ -28,7 +29,7 @@ public class OreVeinRenderStep implements InteractableRenderStep {
 	private final OreVeinPosition oreVeinPosition;
 	private final ResourceLocation depletedTextureLocation = new ResourceLocation(Tags.MODID, "textures/depleted.png");
 	private final IIcon blockStoneIcon = Blocks.stone.getIcon(0, 0);
-	private final int iconSize = 32;
+	private final double iconSize = 32;
 	private double iconX;
 	private double iconY;
 
@@ -38,7 +39,7 @@ public class OreVeinRenderStep implements InteractableRenderStep {
 
 	@Override
 	public void draw(GuiScreen gui, double cameraX, double cameraZ, double scale) {
-		final int iconSizeHalf = iconSize / 2;
+		final double iconSizeHalf = iconSize / 2;
 		final double scaleForGui = Math.max(1.0D, scale);
 		this.iconX = (oreVeinPosition.getBlockX() - cameraX) * scaleForGui - iconSizeHalf;
 		this.iconY = (oreVeinPosition.getBlockZ() - cameraZ) * scaleForGui - iconSizeHalf;
@@ -63,6 +64,15 @@ public class OreVeinRenderStep implements InteractableRenderStep {
 			DrawUtils.drawSimpleLabel(gui, text, 0, -iconSizeHalf - gui.mc.fontRenderer.FONT_HEIGHT - 5, fontColor, 0xB4000000, true);
 		}
 
+		if(Utils.isXaerosMinimapInstalled() && FakeWaypointManager.isWaypointAtCoords(FakeWaypointManager.ORE_VEINS_WAYPOINT, oreVeinPosition.getBlockX(), 65, oreVeinPosition.getBlockZ())) {
+            final double thickness = iconSize / 8;
+            final int color = 0xFFFFD700;
+            DrawUtils.drawGradientRect(-iconSizeHalf - thickness, -iconSizeHalf - thickness, iconSizeHalf, -iconSizeHalf, color, color);
+            DrawUtils.drawGradientRect(iconSizeHalf, -iconSizeHalf - thickness, iconSizeHalf + thickness, iconSizeHalf, color, color);
+            DrawUtils.drawGradientRect(-iconSizeHalf, iconSizeHalf, iconSizeHalf + thickness, iconSizeHalf + thickness, color, color);
+            DrawUtils.drawGradientRect(-iconSizeHalf - thickness, -iconSizeHalf, -iconSizeHalf, iconSizeHalf + thickness, color, color);
+        }
+
 		GL11.glPopMatrix();
 	}
 
@@ -84,9 +94,9 @@ public class OreVeinRenderStep implements InteractableRenderStep {
 		if(oreVeinPosition.isDepleted()) {
 			tooltip.add(EnumChatFormatting.RED + I18n.format("visualprospecting.depleted"));
 		}
-		/*if(isWaypoint(OreVeinLayer.instance.getActiveWaypoint())) {
+		if(Utils.isXaerosMinimapInstalled() && FakeWaypointManager.isWaypointAtCoords(FakeWaypointManager.ORE_VEINS_WAYPOINT, oreVeinPosition.getBlockX(), 65, oreVeinPosition.getBlockZ())) {
 			tooltip.add(EnumChatFormatting.GOLD + I18n.format("visualprospecting.iswaypoint"));
-		}*/
+		}
 		tooltip.add(EnumChatFormatting.WHITE + I18n.format(oreVeinPosition.veinType.name));
 		if(!oreVeinPosition.isDepleted()) {
 			tooltip.addAll(oreVeinPosition.veinType.getOreMaterialNames().stream().map(materialName -> EnumChatFormatting.GRAY + materialName).collect(Collectors.toList()));
@@ -102,7 +112,10 @@ public class OreVeinRenderStep implements InteractableRenderStep {
 
 	@Override
 	public void onDoubleClick() {
-		VP.info("got double click!");
+		if(Utils.isXaerosMinimapInstalled()) {
+			FakeWaypointManager.toggleWaypoint(FakeWaypointManager.ORE_VEINS_WAYPOINT, oreVeinPosition.getBlockX(), 65, oreVeinPosition.getBlockZ(),
+					I18n.format("visualprospecting.tracked", I18n.format(oreVeinPosition.veinType.name)), "!", 15);
+		}
 	}
 
 	@Override
