@@ -67,10 +67,10 @@ public class OreVeinRenderStep implements InteractableRenderStep {
 		if(Utils.isXaerosMinimapInstalled() && FakeWaypointManager.isWaypointAtCoords(FakeWaypointManager.ORE_VEINS_WAYPOINT, oreVeinPosition.getBlockX(), 65, oreVeinPosition.getBlockZ())) {
             final double thickness = iconSize / 8;
             final int color = 0xFFFFD700;
-            DrawUtils.drawGradientRect(-iconSizeHalf - thickness, -iconSizeHalf - thickness, iconSizeHalf, -iconSizeHalf, color, color);
-            DrawUtils.drawGradientRect(iconSizeHalf, -iconSizeHalf - thickness, iconSizeHalf + thickness, iconSizeHalf, color, color);
-            DrawUtils.drawGradientRect(-iconSizeHalf, iconSizeHalf, iconSizeHalf + thickness, iconSizeHalf + thickness, color, color);
-            DrawUtils.drawGradientRect(-iconSizeHalf - thickness, -iconSizeHalf, -iconSizeHalf, iconSizeHalf + thickness, color, color);
+            DrawUtils.drawGradientRect(-iconSizeHalf - thickness, -iconSizeHalf - thickness, iconSizeHalf, -iconSizeHalf, 0, color, color);
+            DrawUtils.drawGradientRect(iconSizeHalf, -iconSizeHalf - thickness, iconSizeHalf + thickness, iconSizeHalf, 0, color, color);
+            DrawUtils.drawGradientRect(-iconSizeHalf, iconSizeHalf, iconSizeHalf + thickness, iconSizeHalf + thickness, 0, color, color);
+            DrawUtils.drawGradientRect(-iconSizeHalf - thickness, -iconSizeHalf, -iconSizeHalf, iconSizeHalf + thickness, 0, color, color);
         }
 
 		GL11.glPopMatrix();

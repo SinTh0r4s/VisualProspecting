@@ -1,12 +1,12 @@
 package com.sinthoras.visualprospecting.gui.xaeromap;
 
 import com.sinthoras.visualprospecting.Utils;
+import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.database.ClientCache;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
+import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import com.sinthoras.visualprospecting.database.veintypes.VeinType;
-import com.sinthoras.visualprospecting.gui.xaeromap.rendersteps.InteractableRenderStep;
-import com.sinthoras.visualprospecting.gui.xaeromap.rendersteps.OreVeinRenderStep;
-import com.sinthoras.visualprospecting.gui.xaeromap.rendersteps.RenderStep;
+import com.sinthoras.visualprospecting.gui.xaeromap.rendersteps.*;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -26,11 +26,16 @@ public class RenderStepManager {
 	public static void render(GuiScreen gui, double cameraX, double cameraZ, double scale) {
 		renderSteps.clear();
 
+		int minBlockX = (int) (cameraX - (double)(gui.mc.displayWidth / 2) / scale);
+		int minBlockZ = (int) (cameraZ - (double)(gui.mc.displayHeight / 2) / scale);
+		int maxBlockX = (int) (cameraX + (double)(gui.mc.displayWidth / 2) / scale);
+		int maxBlockZ = (int) (cameraZ + (double)(gui.mc.displayHeight / 2) / scale);
+
 		if (Buttons.oreVeinsEnabled) {
-			final int minOreChunkX = Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk((int) (cameraX - (double)(gui.mc.displayWidth / 2) / scale)));
-			final int minOreChunkZ = Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk((int) (cameraZ - (double)(gui.mc.displayHeight / 2) / scale)));
-			final int maxOreChunkX = Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk((int) (cameraX + (double)(gui.mc.displayWidth / 2) / scale)));
-			final int maxOreChunkZ = Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk((int) (cameraZ + (double)(gui.mc.displayHeight / 2) / scale)));
+			final int minOreChunkX = Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk(minBlockX));
+			final int minOreChunkZ = Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk(minBlockZ));
+			final int maxOreChunkX = Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk(maxBlockX));
+			final int maxOreChunkZ = Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk(maxBlockZ));
 			final int playerDimensionId = Minecraft.getMinecraft().thePlayer.dimension;
 
 			for (int chunkX = minOreChunkX; chunkX <= maxOreChunkX; chunkX = Utils.mapToCenterOreChunkCoord(chunkX + 3)) {
@@ -44,7 +49,27 @@ public class RenderStepManager {
 		}
 
 		if (Buttons.undergroundFluidsEnabled) {
-			//todo
+			final int minUndergroundFluidX = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(minBlockX));
+			final int minUndergroundFluidZ = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(minBlockZ));
+			final int maxUndergroundFluidX = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(maxBlockX));
+			final int maxUndergroundFluidZ = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(maxBlockZ));
+			final int playerDimensionId = Minecraft.getMinecraft().thePlayer.dimension;
+
+			for (int chunkX = minUndergroundFluidX; chunkX <= maxUndergroundFluidX; chunkX += VP.undergroundFluidSizeChunkX) {
+				for (int chunkZ = minUndergroundFluidZ; chunkZ <= maxUndergroundFluidZ; chunkZ += VP.undergroundFluidSizeChunkZ) {
+					final UndergroundFluidPosition undergroundFluid = ClientCache.instance.getUndergroundFluid(playerDimensionId, chunkX, chunkZ);
+					if (undergroundFluid.isProspected()) {
+						final int minAmountInField = undergroundFluid.getMinProduction();
+						final int maxAmountInField = undergroundFluid.getMaxProduction();
+						for (int offsetChunkX = 0; offsetChunkX < VP.undergroundFluidSizeChunkX; offsetChunkX++) {
+							for (int offsetChunkZ = 0; offsetChunkZ < VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
+								renderSteps.add(new UndergroundFluidChunkRenderStep(chunkX + offsetChunkX, chunkZ + offsetChunkZ, undergroundFluid.fluid, undergroundFluid.chunks[offsetChunkX][offsetChunkZ], minAmountInField, maxAmountInField));
+							}
+						}
+						renderSteps.add(new UndergroundFluidRenderStep(undergroundFluid));
+					}
+				}
+			}
 		}
 
 		if (Buttons.thaumcraftNodesEnabled) {
