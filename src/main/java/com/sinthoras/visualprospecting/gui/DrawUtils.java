@@ -1,6 +1,7 @@
 package com.sinthoras.visualprospecting.gui;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -9,6 +10,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.client.lib.UtilsFX;
+
+import java.util.List;
 
 public class DrawUtils {
 
@@ -109,6 +112,49 @@ public class DrawUtils {
         GL11.glScaled(scale, scale, scale);
         UtilsFX.drawTag((centerPixelX - pixelSize / 2) / scale, (centerPixelY - pixelSize / 2) / scale, aspect, amount, 0, 0.01, GL11.GL_ONE_MINUS_SRC_ALPHA, 1.0F, false);
         GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glPopMatrix();
+    }
+
+    public static void drawSimpleLabel(GuiScreen gui, String text, double textX, double textY, int fontColor, int bgColor, boolean centered) {
+        GL11.glPushMatrix();
+        double dTextX = textX - (double) (int) textX;
+        double dTextY = textY - (double) (int) textY;
+        double textWidth = gui.mc.fontRenderer.getStringWidth(text);
+        double xOffsetL = centered ? -textWidth / 2.0 - 2 : -2;
+        double xOffsetR = centered ? textWidth / 2.0 + 2 : textWidth + 2;
+        GL11.glTranslated(dTextX, dTextY, 0.0D);
+        drawGradientRect((int) textX + xOffsetL, (int) textY - 2, (int) textX + xOffsetR, (int) textY + gui.mc.fontRenderer.FONT_HEIGHT + 2, 0, bgColor, bgColor);
+        if (centered)
+            gui.drawCenteredString(gui.mc.fontRenderer, text, (int) textX, (int) textY, fontColor);
+        else
+            gui.drawString(gui.mc.fontRenderer, text, (int) textX, (int) textY, fontColor);
+        GL11.glPopMatrix();
+    }
+
+    public static void drawSimpleTooltip(GuiScreen gui, List<String> text, double x, double y, int fontColor, int bgColor) {
+        if(text.isEmpty()) return;
+
+        int maxTextWidth = 0;
+        for (String str : text) {
+            int strWidth = gui.mc.fontRenderer.getStringWidth(str);
+            if(strWidth > maxTextWidth)
+                maxTextWidth = strWidth;
+        }
+
+        int boxWidth = maxTextWidth + 6;
+        int boxHeight = text.size() * (gui.mc.fontRenderer.FONT_HEIGHT + 2) + 6;
+
+        double dx = x - (double) (int) x;
+        double dy = y - (double) (int) y;
+
+        GL11.glPushMatrix();
+
+        drawGradientRect(x, y, x + boxWidth, y + boxHeight, bgColor, bgColor);
+        GL11.glTranslated(dx, dy, 301);
+        for (int i = 0; i < text.size(); i++) {
+            gui.drawString(gui.mc.fontRenderer, text.get(i), (int) x + 3, (int) y + 3 + i * (gui.mc.fontRenderer.FONT_HEIGHT + 2), fontColor);
+        }
+
         GL11.glPopMatrix();
     }
 

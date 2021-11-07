@@ -1,24 +1,14 @@
 package com.sinthoras.visualprospecting.mixins.xaeromap;
 
-import com.sinthoras.visualprospecting.Config;
-import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.Utils;
-import com.sinthoras.visualprospecting.database.ClientCache;
-import com.sinthoras.visualprospecting.database.OreVeinPosition;
-import com.sinthoras.visualprospecting.database.veintypes.VeinType;
-import com.sinthoras.visualprospecting.gui.DrawUtils;
+import com.sinthoras.visualprospecting.VP;
+import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
 import com.sinthoras.visualprospecting.gui.xaeromap.Buttons;
-import gregtech.api.GregTech_API;
-import gregtech.api.enums.Materials;
-import gregtech.api.enums.OrePrefixes;
+import com.sinthoras.visualprospecting.gui.xaeromap.RenderStepManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.entity.player.EntityPlayer;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,22 +17,25 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import xaero.map.MapProcessor;
 import xaero.map.gui.CursorBox;
 import xaero.map.gui.GuiMap;
 import xaero.map.gui.GuiTexturedButton;
 import xaero.map.gui.ScreenBase;
-
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
+import xaero.map.misc.Misc;
 
 @Mixin(value = GuiMap.class, remap = false)
 public abstract class GuiMapMixin extends ScreenBase {
 
+	@Unique private int oldMouseX = 0;
+    @Unique private int oldMouseY = 0;
+	@Unique private long timeLastClick = 0;
+
 	protected GuiMapMixin(GuiScreen parent, GuiScreen escape) {
 		super(parent, escape);
 	}
-
-	@Shadow public abstract void drawArrowOnMap(double x, double z, float angle, double sc);
 
 	@Shadow private double cameraX;
 
@@ -50,9 +43,35 @@ public abstract class GuiMapMixin extends ScreenBase {
 
 	@Shadow private double scale;
 
-	@Shadow protected abstract void setColourBuffer(float r, float g, float b, float a);
-
 	@Shadow public abstract void addGuiButton(GuiButton b);
+
+	@Shadow private int screenScale;
+
+	@Inject(method = "<init>",
+			at = @At("RETURN")
+	)
+	private void injectConstruct(GuiScreen parent, GuiScreen escape, MapProcessor mapProcessor, EntityPlayer player, CallbackInfo ci) {
+		VeinTypeCaching.recalculateNEISearch();
+	}
+
+	@Inject(method = "drawScreen",
+			at = @At(value = "INVOKE",
+					target = "Lorg/lwjgl/opengl/GL11;glPushMatrix()V",
+					ordinal = 1
+			),
+			locals = LocalCapture.CAPTURE_FAILEXCEPTION
+	)
+	// why is this method so long. this isnt even 1/5 of the way through and look at how many locals there are already
+	private void injectPreRender(int scaledMouseX, int scaledMouseY, float partialTicks, CallbackInfo ci, Minecraft mc, long startTime, long passed, double passedScrolls,
+								  int direction, Object var12, boolean mapLoaded, boolean noWorldMapEffect, int mouseXPos, int mouseYPos, double scaleMultiplier,
+								  double oldMousePosZ, double preScale, double fboScale, double secondaryScale, double mousePosX, double mousePosZ, int mouseFromCentreX,
+								  int mouseFromCentreY, double oldMousePosX, int textureLevel, int leveledRegionShift) {
+		// snap the camera to whole pixel values. works around a rendering issue
+		cameraX = Math.round(cameraX * scale) / scale;
+		cameraZ = Math.round(cameraZ * scale) / scale;
+
+		RenderStepManager.updateHovered(mousePosX, mousePosZ, cameraX, cameraZ, scale);
+	}
 
 	@Inject(method = "drawScreen",
 			at = @At(value = "INVOKE",
@@ -69,60 +88,15 @@ public abstract class GuiMapMixin extends ScreenBase {
 			)
 	)
 	private void injectDraw(int scaledMouseX, int scaledMouseY, float partialTicks, CallbackInfo ci) {
-		final int minOreChunkX = Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk((int) (cameraX - (double)(mc.displayWidth / 2) / scale)));
-		final int minOreChunkZ = Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk((int) (cameraZ - (double)(mc.displayHeight / 2) / scale)));
-		final int maxOreChunkX = Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk((int) (cameraX + (double)(mc.displayWidth / 2) / scale)));
-		final int maxOreChunkZ = Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk((int) (cameraZ + (double)(mc.displayHeight / 2) / scale)));
-		final int playerDimensionId = Minecraft.getMinecraft().thePlayer.dimension;
+		RenderStepManager.render(this, cameraX, cameraZ, scale);
+	}
 
-		for (int chunkX = minOreChunkX; chunkX <= maxOreChunkX; chunkX = Utils.mapToCenterOreChunkCoord(chunkX + 3)) {
-			for (int chunkZ = minOreChunkZ; chunkZ <= maxOreChunkZ; chunkZ = Utils.mapToCenterOreChunkCoord(chunkZ + 3)) {
-				final OreVeinPosition oreVeinPosition = ClientCache.instance.getOreVein(playerDimensionId, chunkX, chunkZ);
-				if (oreVeinPosition.veinType != VeinType.NO_VEIN) {
-					final ResourceLocation depletedTextureLocation = new ResourceLocation(Tags.MODID, "textures/depleted.png");
-					double iconSize = 32;
-					final double iconSizeHalf = iconSize / 2;
-					final double scaleForGui = Math.max(1, scale);
-					final Point2D.Double blockAsPixel = new Point2D.Double(oreVeinPosition.getBlockX(), oreVeinPosition.getBlockZ());
-					final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() - cameraX, blockAsPixel.getY() - cameraZ);
-
-					double iconX = pixel.getX() * scaleForGui - iconSizeHalf;
-					double iconY = pixel.getY() * scaleForGui - iconSizeHalf;
-
-					final IIcon blockIcon = Blocks.stone.getIcon(0, 0);
-					GL11.glPushMatrix();
-					GL11.glScaled(1 / scaleForGui, 1 / scaleForGui, 1);
-					DrawUtils.drawQuad(blockIcon, iconX, iconY, iconSize, iconSize, 0xFFFFFF, 255);
-
-					DrawUtils.drawQuad(getIconFromPrimaryOre(oreVeinPosition), iconX, iconY, iconSize, iconSize, getColor(oreVeinPosition), 255);
-
-					if(!oreVeinPosition.veinType.isHighlighted() || oreVeinPosition.isDepleted()) {
-						//DrawUtil.drawRectangle(iconX, iconY, iconSize, iconSize, 0x000000, 150);
-						DrawUtils.drawGradientRect(iconX, iconY, iconX + iconSize, iconY + iconSize, zLevel, 0x96000000, 0x96000000);
-						if(oreVeinPosition.isDepleted()) {
-							DrawUtils.drawQuad(depletedTextureLocation, iconX, iconY, iconSize, iconSize, 0xFFFFFF, 255);
-						}
-					}
-
-					if(scale >= Utils.journeyMapScaleToLinear(Config.minZoomLevelForOreLabel) && !oreVeinPosition.isDepleted()) {
-						final int fontColor = oreVeinPosition.veinType.isHighlighted() ? 0xFFFFFF : 0x7F7F7F;
-						//DrawUtil.drawLabel(I18n.format(oreVeinPosition.veinType.name), pixel.getX(), pixel.getY() - iconSize, DrawUtil.HAlign.Center, DrawUtil.VAlign.Middle, 0, 180, fontColor, 255, fontScale, false, rotation);
-						//GL11.glTranslated(pixel.getX() * scale - (((int)pixel.getX()) * scale), pixel.getY() * scale - (((int) pixel.getY()) * scale), 0);
-						double textX = pixel.getX() * scaleForGui;
-						double textY = pixel.getY() * scaleForGui - iconSizeHalf - mc.fontRenderer.FONT_HEIGHT - 5;
-						int intTextX = (int)Math.floor(textX);
-						int intTextY = (int)Math.floor(textY);
-						double dTextX = textX - (double)intTextX;
-						double dTextY = textY - (double)intTextY;
-						GL11.glTranslated(dTextX, dTextY, 0.0D);
-						drawCenteredString(mc.fontRenderer, I18n.format(oreVeinPosition.veinType.name), intTextX, intTextY, fontColor);
-					}
-
-					GL11.glPopMatrix();
-				}
-			}
-		}
-
+	@Inject(method = "drawScreen",
+			at = @At(value = "TAIL"
+			)
+	)
+	private void injectDrawTooltip(int scaledMouseX, int scaledMouseY, float partialTicks, CallbackInfo ci) {
+		RenderStepManager.drawTooltip(this, cameraX, cameraZ, scale, screenScale);
 	}
 
 	@Inject(method = "initGui",
@@ -144,13 +118,29 @@ public abstract class GuiMapMixin extends ScreenBase {
 		}
 	}
 
-	@Unique private IIcon getIconFromPrimaryOre(OreVeinPosition oreVeinPosition) {
-		Materials aMaterial = GregTech_API.sGeneratedMaterials[oreVeinPosition.veinType.primaryOreMeta];
-		return aMaterial.mIconSet.mTextures[OrePrefixes.ore.mTextureIndex].getIcon();
+	@Inject(method = "onInputPress",
+			at = @At("TAIL")
+	)
+	private void injectListenKeypress(boolean mouse, int code, CallbackInfoReturnable<Boolean> cir) {
+		if (Misc.inputMatchesKeyBinding(mouse, code, VP.keyAction)) {
+			RenderStepManager.doActionKeyPress();
+		}
 	}
 
-	@Unique private int getColor(OreVeinPosition oreVeinPosition) {
-		Materials aMaterial = GregTech_API.sGeneratedMaterials[oreVeinPosition.veinType.primaryOreMeta];
-		return (aMaterial.mRGBa[0] << 16) | (aMaterial.mRGBa[1]) << 8 | aMaterial.mRGBa[2];
+	@Inject(method = "mapClicked",
+			at = @At("TAIL")
+	)
+	private void injectListenClick(int button, int x, int y, CallbackInfo ci) {
+		if (button == 0) {
+			final long timestamp = System.currentTimeMillis();
+			final boolean isDoubleClick = x == oldMouseX && y == oldMouseY && timestamp - timeLastClick < 500;
+			oldMouseX = x;
+			oldMouseY = y;
+			timeLastClick = isDoubleClick ? 0 : timestamp;
+
+			if (isDoubleClick) {
+				RenderStepManager.doDoubleClick();
+			}
+		}
 	}
 }
