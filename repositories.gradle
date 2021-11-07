@@ -1,14 +1,14 @@
 repositories {
     maven {
         name = "CodeChicken"
-        url = "http://chickenbones.net/maven/"
+        url = "https://chickenbones.net/maven/"
     }
     maven {
         url = "https://jitpack.io"
     }
     maven {
         name = "ic2"
-        url = "http://maven.ic2.player.to/"
+        url = "https://maven.ic2.player.to/"
     }
     maven {
         url "https://cursemaven.com"
