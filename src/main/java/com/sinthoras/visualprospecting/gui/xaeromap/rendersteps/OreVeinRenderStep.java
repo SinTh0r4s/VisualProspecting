@@ -64,7 +64,7 @@ public class OreVeinRenderStep implements InteractableRenderStep {
 			DrawUtils.drawSimpleLabel(gui, text, 0, -iconSizeHalf - gui.mc.fontRenderer.FONT_HEIGHT - 5, fontColor, 0xB4000000, true);
 		}
 
-		if(Utils.isXaerosMinimapInstalled() && FakeWaypointManager.isWaypointAtCoords(FakeWaypointManager.ORE_VEINS_WAYPOINT, oreVeinPosition.getBlockX(), 65, oreVeinPosition.getBlockZ())) {
+		if(isWaypoint()) {
             final double thickness = iconSize / 8;
             final int color = 0xFFFFD700;
             DrawUtils.drawGradientRect(-iconSizeHalf - thickness, -iconSizeHalf - thickness, iconSizeHalf, -iconSizeHalf, 0, color, color);
@@ -94,7 +94,7 @@ public class OreVeinRenderStep implements InteractableRenderStep {
 		if(oreVeinPosition.isDepleted()) {
 			tooltip.add(EnumChatFormatting.RED + I18n.format("visualprospecting.depleted"));
 		}
-		if(Utils.isXaerosMinimapInstalled() && FakeWaypointManager.isWaypointAtCoords(FakeWaypointManager.ORE_VEINS_WAYPOINT, oreVeinPosition.getBlockX(), 65, oreVeinPosition.getBlockZ())) {
+		if(isWaypoint()) {
 			tooltip.add(EnumChatFormatting.GOLD + I18n.format("visualprospecting.iswaypoint"));
 		}
 		tooltip.add(EnumChatFormatting.WHITE + I18n.format(oreVeinPosition.veinType.name));
@@ -131,5 +131,9 @@ public class OreVeinRenderStep implements InteractableRenderStep {
 	private int getColor() {
 		Materials aMaterial = GregTech_API.sGeneratedMaterials[oreVeinPosition.veinType.primaryOreMeta];
 		return (aMaterial.mRGBa[0] << 16) | (aMaterial.mRGBa[1]) << 8 | aMaterial.mRGBa[2];
+	}
+
+	private boolean isWaypoint() {
+		return Utils.isXaerosMinimapInstalled() && FakeWaypointManager.isWaypointAtCoords(FakeWaypointManager.ORE_VEINS_WAYPOINT, oreVeinPosition.getBlockX(), 65, oreVeinPosition.getBlockZ());
 	}
 }

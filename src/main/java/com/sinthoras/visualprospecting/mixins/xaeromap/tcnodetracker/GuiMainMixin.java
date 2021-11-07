@@ -1,9 +1,9 @@
-package com.sinthoras.visualprospecting.mixins.journeymap.tcnodetracker;
+package com.sinthoras.visualprospecting.mixins.xaeromap.tcnodetracker;
 
+import com.dyonovan.tcnodetracker.TCNodeTracker;
 import com.dyonovan.tcnodetracker.gui.GuiMain;
 import com.dyonovan.tcnodetracker.lib.AspectLoc;
-import com.sinthoras.visualprospecting.gui.journeymap.layers.ThaumcraftNodeLayer;
-import journeymap.client.model.Waypoint;
+import com.sinthoras.visualprospecting.gui.xaeromap.FakeWaypointManager;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import org.spongepowered.asm.lib.Opcodes;
@@ -14,56 +14,62 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.awt.*;
 
-@Mixin(GuiMain.class)
+@Mixin(value = GuiMain.class, remap = false)
 public class GuiMainMixin {
 
-    @Shadow(remap = false)
-    private int low;
+    @Shadow private int low;
 
     @Inject(method = "actionPerformed",
             at = @At(value = "FIELD",
                     target = "Lcom/dyonovan/tcnodetracker/TCNodeTracker;zMarker:I",
                     opcode = Opcodes.PUTSTATIC,
-                    shift = At.Shift.AFTER,
-                    remap = false),
-            remap = true,
+                    shift = At.Shift.AFTER),
             require = 1,
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void onWaypointSet(GuiButton button, CallbackInfo callbackInfo, int i) {
         final AspectLoc aspect = GuiMain.aspectList.get(low + i);
-        ThaumcraftNodeLayer.instance.setActiveWaypoint(new Waypoint(I18n.format("visualprospecting.tracked", I18n.format("tile.blockAiry.0.name")),
+        /*ThaumcraftNodeLayer.instance.setActiveWaypoint(new Waypoint(I18n.format("visualprospecting.tracked", I18n.format("tile.blockAiry.0.name")),
                 aspect.x,
                 aspect.y,
                 aspect.z,
                 new Color(0xFFFFFF),
                 Waypoint.Type.Normal,
-                aspect.dimID));
+                aspect.dimID));*/
+        FakeWaypointManager.toggleWaypoint(FakeWaypointManager.TC_NODES_WAYPOINT, aspect.x, aspect.y, aspect.z,
+                I18n.format("visualprospecting.tracked", I18n.format("tile.blockAiry.0.name")), "@", 15, aspect.dimID);
+        if (FakeWaypointManager.hasWaypoint(FakeWaypointManager.TC_NODES_WAYPOINT)) {
+            TCNodeTracker.xMarker = aspect.x;
+            TCNodeTracker.yMarker = aspect.y;
+            TCNodeTracker.zMarker = aspect.z;
+        }
+        else {
+            TCNodeTracker.yMarker = -1;
+        }
     }
 
     @Inject(method = "actionPerformed",
             at = @At(value = "FIELD",
                     target = "Lcom/dyonovan/tcnodetracker/TCNodeTracker;doGui:Z",
                     opcode = Opcodes.PUTSTATIC,
-                    ordinal = 0,
-                    remap = false),
-            remap = true,
+                    ordinal = 0),
             require = 1)
     private void onWaypointClear(CallbackInfo callbackInfo) {
-        ThaumcraftNodeLayer.instance.clearActiveWaypoint();
+        //ThaumcraftNodeLayer.instance.clearActiveWaypoint();
+        FakeWaypointManager.removeWaypoint(FakeWaypointManager.TC_NODES_WAYPOINT);
+        TCNodeTracker.yMarker = -1;
     }
 
     @Inject(method = "actionPerformed",
             at = @At(value = "FIELD",
                     target = "Lcom/dyonovan/tcnodetracker/TCNodeTracker;doGui:Z",
                     opcode = Opcodes.PUTSTATIC,
-                    ordinal = 1,
-                    remap = false),
-            remap = true,
+                    ordinal = 1),
             require = 1,
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void onWaypointDelete(GuiButton button, CallbackInfo callbackInfo, int i, int k, int j) {
-        ThaumcraftNodeLayer.instance.clearActiveWaypoint();
+        //ThaumcraftNodeLayer.instance.clearActiveWaypoint();
+        FakeWaypointManager.removeWaypoint(FakeWaypointManager.TC_NODES_WAYPOINT);
+        TCNodeTracker.yMarker = -1;
     }
 }

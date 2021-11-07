@@ -1,5 +1,7 @@
 package com.sinthoras.visualprospecting.gui.xaeromap;
 
+import com.dyonovan.tcnodetracker.TCNodeTracker;
+import com.dyonovan.tcnodetracker.lib.NodeList;
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.database.ClientCache;
@@ -30,13 +32,13 @@ public class RenderStepManager {
 		int minBlockZ = (int) (cameraZ - (double)(gui.mc.displayHeight / 2) / scale);
 		int maxBlockX = (int) (cameraX + (double)(gui.mc.displayWidth / 2) / scale);
 		int maxBlockZ = (int) (cameraZ + (double)(gui.mc.displayHeight / 2) / scale);
+		final int playerDimensionId = Minecraft.getMinecraft().thePlayer.dimension;
 
 		if (Buttons.oreVeinsEnabled) {
 			final int minOreChunkX = Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk(minBlockX));
 			final int minOreChunkZ = Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk(minBlockZ));
 			final int maxOreChunkX = Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk(maxBlockX));
 			final int maxOreChunkZ = Utils.mapToCenterOreChunkCoord(Utils.coordBlockToChunk(maxBlockZ));
-			final int playerDimensionId = Minecraft.getMinecraft().thePlayer.dimension;
 
 			for (int chunkX = minOreChunkX; chunkX <= maxOreChunkX; chunkX = Utils.mapToCenterOreChunkCoord(chunkX + 3)) {
 				for (int chunkZ = minOreChunkZ; chunkZ <= maxOreChunkZ; chunkZ = Utils.mapToCenterOreChunkCoord(chunkZ + 3)) {
@@ -53,7 +55,6 @@ public class RenderStepManager {
 			final int minUndergroundFluidZ = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(minBlockZ));
 			final int maxUndergroundFluidX = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(maxBlockX));
 			final int maxUndergroundFluidZ = Utils.mapToCornerUndergroundFluidChunkCoord(Utils.coordBlockToChunk(maxBlockZ));
-			final int playerDimensionId = Minecraft.getMinecraft().thePlayer.dimension;
 
 			for (int chunkX = minUndergroundFluidX; chunkX <= maxUndergroundFluidX; chunkX += VP.undergroundFluidSizeChunkX) {
 				for (int chunkZ = minUndergroundFluidZ; chunkZ <= maxUndergroundFluidZ; chunkZ += VP.undergroundFluidSizeChunkZ) {
@@ -73,7 +74,13 @@ public class RenderStepManager {
 		}
 
 		if (Buttons.thaumcraftNodesEnabled) {
-			//todo
+			for (NodeList node : TCNodeTracker.nodelist) {
+				if(node.dim == playerDimensionId
+						&& node.x >= minBlockX && node.x <= maxBlockX
+						&& node.z >= minBlockZ && node.z <= maxBlockZ) {
+					renderSteps.add(new ThaumcraftNodeRenderStep(node));
+				}
+			}
 		}
 
 		for (RenderStep step : renderSteps) {

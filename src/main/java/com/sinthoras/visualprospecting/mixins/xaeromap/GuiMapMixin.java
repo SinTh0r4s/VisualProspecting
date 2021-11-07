@@ -92,7 +92,17 @@ public abstract class GuiMapMixin extends ScreenBase {
 	}
 
 	@Inject(method = "drawScreen",
-			at = @At(value = "TAIL"
+			at = @At(value = "INVOKE",
+					target = "Lorg/lwjgl/opengl/GL11;glTranslated(DDD)V"
+			),
+			slice = @Slice(
+					from = @At(value = "FIELD",
+							target = "Lnet/minecraft/client/Minecraft;currentScreen:Lnet/minecraft/client/gui/GuiScreen;",
+							opcode = Opcodes.GETFIELD
+					),
+					to = @At(value = "INVOKE",
+							target = "Lxaero/map/gui/CursorBox;drawBox(IIII)V"
+					)
 			)
 	)
 	private void injectDrawTooltip(int scaledMouseX, int scaledMouseY, float partialTicks, CallbackInfo ci) {

@@ -78,6 +78,14 @@ public class MixinPlugin implements IMixinConfigPlugin {
             if (isDevelopmentEnvironment || loadJar("XaerosMinimap")) {
                 VP.info("Found Xaero's Minimap! Integrating now...");
                 mixins.add("xaeromap.WaypointsIngameRendererMixin");
+
+                if(isDevelopmentEnvironment || loadJar("tcnodetracker-1.7.10")) {
+                    VP.info("Found TCNodeTracker! Integrating now...");
+                    mixins.add("xaeromap.tcnodetracker.GuiMainMixin");
+                }
+                else {
+                    VP.info("Could not find TCNodeTracker! Skipping integration....");
+                }
             } else {
                 VP.info("Could not find Xaero's Minimap! Skipping integration...");
             }
