@@ -54,7 +54,8 @@ public abstract class GuiMapMixin extends ScreenBase {
 		VeinTypeCaching.recalculateNEISearch();
 	}
 
-	@Inject(method = "drawScreen",
+	// method = "drawScreen"
+	@Inject(method = "func_73863_a",
 			at = @At(value = "INVOKE",
 					target = "Lorg/lwjgl/opengl/GL11;glPushMatrix()V",
 					ordinal = 1
@@ -73,7 +74,8 @@ public abstract class GuiMapMixin extends ScreenBase {
 		RenderStepManager.updateHovered(mousePosX, mousePosZ, cameraX, cameraZ, scale);
 	}
 
-	@Inject(method = "drawScreen",
+	// method = "drawScreen"
+	@Inject(method = "func_73863_a",
 			at = @At(value = "INVOKE",
 					target = "Lorg/lwjgl/opengl/GL11;glEnable(I)V",
 					ordinal = 1,
@@ -91,13 +93,15 @@ public abstract class GuiMapMixin extends ScreenBase {
 		RenderStepManager.render(this, cameraX, cameraZ, scale);
 	}
 
-	@Inject(method = "drawScreen",
+	// method = drawScreen
+	@Inject(method = "func_73863_a",
 			at = @At(value = "INVOKE",
 					target = "Lorg/lwjgl/opengl/GL11;glTranslated(DDD)V"
 			),
 			slice = @Slice(
 					from = @At(value = "FIELD",
-							target = "Lnet/minecraft/client/Minecraft;currentScreen:Lnet/minecraft/client/gui/GuiScreen;",
+							// target = "Lnet/minecraft/client/Minecraft;currentScreen:Lnet/minecraft/client/gui/GuiScreen;"
+							target = "Lnet/minecraft/client/Minecraft;field_71462_r:Lnet/minecraft/client/gui/GuiScreen;",
 							opcode = Opcodes.GETFIELD
 					),
 					to = @At(value = "INVOKE",
@@ -109,7 +113,8 @@ public abstract class GuiMapMixin extends ScreenBase {
 		RenderStepManager.drawTooltip(this, cameraX, cameraZ, scale, screenScale);
 	}
 
-	@Inject(method = "initGui",
+	// method = "initGui"
+	@Inject(method = "func_73866_w_",
 			at = @At(value = "INVOKE",
 					target = "Lorg/lwjgl/input/Keyboard;enableRepeatEvents(Z)V"
 			)

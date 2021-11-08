@@ -115,10 +115,15 @@ dependencies {
     compile("codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev")
 
     compile("curse.maven:journeymap-32274:2367915")
-    // need to use deobfuscated jars else dev env *will* crash on world load
-    // grab regular jars, run them through BON2, and dump them in libs/
-    compile files("libs/xaeros-minimap-263420-3502000-deobf")
-    compile files("libs/xaeros-world-map-317780-3502011-deobf")
+
+    compile("curse.maven:xaeros-minimap-263420:3502000")
+    compile("curse.maven:xaeros-world-map-317780:3502011")
+    // need to use deobfuscated jars in dev env or it *will* crash on world load
+    // grab regular jars, run them through BON2, dump them in libs/, comment out maven gets above, and rename targets in mixin classes to commented values
+    // also need to use obfuscated jars for building
+    // fucking annoying, why cant xaero just provide a dev jar
+    //compile files("libs/xaeros-minimap-263420-3502000-deobf")
+    //compile files("libs/xaeros-world-map-317780-3502011-deobf")
 
     compile("com.github.GTNewHorizons:TCNodeTracker:latest")
 
