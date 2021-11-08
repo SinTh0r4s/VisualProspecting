@@ -8,13 +8,11 @@ import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.gui.DrawUtils;
 import com.sinthoras.visualprospecting.gui.xaeromap.FakeWaypointManager;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.client.lib.UtilsFX;
@@ -105,10 +103,7 @@ public class ThaumcraftNodeRenderStep implements InteractableRenderStep {
             pixelY = gui.mc.displayHeight - tooltipHeight - 6;
         }
 
-        //GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-        //RenderHelper.disableStandardItemLighting();
-        //GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
 
         // Draw background
         final int backgroundColor = 0xF0100010;
@@ -117,17 +112,8 @@ public class ThaumcraftNodeRenderStep implements InteractableRenderStep {
         DrawUtils.drawGradientRect(pixelX - 3, pixelY - 3, pixelX + tooltipWidth + 3, pixelY + tooltipHeight + 3, backgroundColor, backgroundColor);
         DrawUtils.drawGradientRect(pixelX - 4, pixelY - 3, pixelX - 3, pixelY + tooltipHeight + 3, backgroundColor, backgroundColor);
         DrawUtils.drawGradientRect(pixelX + tooltipWidth + 3, pixelY - 3, pixelX + tooltipWidth + 4, pixelY + tooltipHeight + 3, backgroundColor, backgroundColor);
-/*
 
-        int verdunGreen = 0x505000FF;
-        int borderColor = 0x5028007F;
-        DrawUtils.drawGradientRect(pixelX - 3, pixelY - 3 + 1, pixelX - 3 + 1, pixelY + tooltipHeight + 3 - 1, verdunGreen, borderColor);
-        DrawUtils.drawGradientRect(pixelX + tooltipWidth + 2, pixelY - 3 + 1, pixelX + tooltipWidth + 3, pixelY + tooltipHeight + 3 - 1, verdunGreen, borderColor);
-        DrawUtils.drawGradientRect(pixelX - 3, pixelY - 3, pixelX + tooltipWidth + 3, pixelY - 3 + 1, verdunGreen, verdunGreen);
-        DrawUtils.drawGradientRect(pixelX - 3, pixelY + tooltipHeight + 2, pixelX + tooltipWidth + 3, pixelY + tooltipHeight + 3, borderColor, borderColor);
-*/
-
-        // Draw text
+		// Draw text
         int offset = 0;
         if(gui.mc.fontRenderer.getBidiFlag()) {
             if(isWaypoint) {
@@ -173,11 +159,8 @@ public class ThaumcraftNodeRenderStep implements InteractableRenderStep {
         }
 
         GL11.glDisable(GL11.GL_LIGHTING);
-        //GL11.glEnable(GL11.GL_DEPTH_TEST);
-        //RenderHelper.enableStandardItemLighting();
-        //GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 
-        GL11.glPopMatrix();
+		GL11.glPopMatrix();
 	}
 
 	@Override

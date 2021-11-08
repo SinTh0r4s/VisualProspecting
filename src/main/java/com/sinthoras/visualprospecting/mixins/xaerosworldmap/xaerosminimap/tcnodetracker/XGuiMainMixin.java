@@ -31,13 +31,6 @@ public class XGuiMainMixin {
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void onWaypointSet(GuiButton button, CallbackInfo callbackInfo, int i) {
         final AspectLoc aspect = GuiMain.aspectList.get(low + i);
-        /*ThaumcraftNodeLayer.instance.setActiveWaypoint(new Waypoint(I18n.format("visualprospecting.tracked", I18n.format("tile.blockAiry.0.name")),
-                aspect.x,
-                aspect.y,
-                aspect.z,
-                new Color(0xFFFFFF),
-                Waypoint.Type.Normal,
-                aspect.dimID));*/
         FakeWaypointManager.toggleWaypoint(FakeWaypointManager.TC_NODES_WAYPOINT, aspect.x, aspect.y, aspect.z,
                 I18n.format("visualprospecting.tracked", I18n.format("tile.blockAiry.0.name")), "@", 15, aspect.dimID);
         if (FakeWaypointManager.hasWaypoint(FakeWaypointManager.TC_NODES_WAYPOINT)) {
@@ -59,7 +52,6 @@ public class XGuiMainMixin {
             ),
             require = 1)
     private void onWaypointClear(CallbackInfo callbackInfo) {
-        //ThaumcraftNodeLayer.instance.clearActiveWaypoint();
         FakeWaypointManager.removeWaypoint(FakeWaypointManager.TC_NODES_WAYPOINT);
         TCNodeTracker.yMarker = -1;
     }
@@ -74,7 +66,6 @@ public class XGuiMainMixin {
             require = 1,
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void onWaypointDelete(GuiButton button, CallbackInfo callbackInfo, int i, int k, int j) {
-        //ThaumcraftNodeLayer.instance.clearActiveWaypoint();
         FakeWaypointManager.removeWaypoint(FakeWaypointManager.TC_NODES_WAYPOINT);
         TCNodeTracker.yMarker = -1;
     }
