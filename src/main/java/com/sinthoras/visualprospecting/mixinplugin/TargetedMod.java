@@ -12,6 +12,8 @@ public enum TargetedMod {
     VANILLA("Minecraft", "unused", true),
     GREGTECH("GregTech", "gregtech", true),
     JOURNEYMAP("JourneyMap", "journeymap-1.7.10", true),
+    XAEROWORLDMAP("Xaero's World Map", "XaerosWorldMap", true),
+    XAEROMINIMAP("Xaero's Minimap", "Xaeros_Minimap", true),
     TCNODETRACKER("TCNodeTracker", "tcnodetracker-1.7.10", true),
     BARTWORKS("Bartworks", "bartworks", false),
     GALACTICGREG("GalacticGreg", "GalacticGreg", false);

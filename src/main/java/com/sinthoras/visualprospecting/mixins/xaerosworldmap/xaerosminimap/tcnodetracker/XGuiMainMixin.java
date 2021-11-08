@@ -1,4 +1,4 @@
-package com.sinthoras.visualprospecting.mixins.xaeromap.tcnodetracker;
+package com.sinthoras.visualprospecting.mixins.xaerosworldmap.xaerosminimap.tcnodetracker;
 
 import com.dyonovan.tcnodetracker.TCNodeTracker;
 import com.dyonovan.tcnodetracker.gui.GuiMain;
@@ -15,16 +15,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 
-@Mixin(value = GuiMain.class, remap = false)
-public class GuiMainMixin {
+@Mixin(value = GuiMain.class)
+public class XGuiMainMixin {
 
-    @Shadow private int low;
+    @Shadow(remap = false) private int low;
 
     @Inject(method = "actionPerformed",
             at = @At(value = "FIELD",
                     target = "Lcom/dyonovan/tcnodetracker/TCNodeTracker;zMarker:I",
                     opcode = Opcodes.PUTSTATIC,
-                    shift = At.Shift.AFTER),
+                    shift = At.Shift.AFTER,
+                    remap = false
+            ),
             require = 1,
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void onWaypointSet(GuiButton button, CallbackInfo callbackInfo, int i) {
@@ -52,7 +54,9 @@ public class GuiMainMixin {
             at = @At(value = "FIELD",
                     target = "Lcom/dyonovan/tcnodetracker/TCNodeTracker;doGui:Z",
                     opcode = Opcodes.PUTSTATIC,
-                    ordinal = 0),
+                    ordinal = 0,
+                    remap = false
+            ),
             require = 1)
     private void onWaypointClear(CallbackInfo callbackInfo) {
         //ThaumcraftNodeLayer.instance.clearActiveWaypoint();
@@ -64,7 +68,9 @@ public class GuiMainMixin {
             at = @At(value = "FIELD",
                     target = "Lcom/dyonovan/tcnodetracker/TCNodeTracker;doGui:Z",
                     opcode = Opcodes.PUTSTATIC,
-                    ordinal = 1),
+                    ordinal = 1,
+                    remap = false
+            ),
             require = 1,
             locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void onWaypointDelete(GuiButton button, CallbackInfo callbackInfo, int i, int k, int j) {

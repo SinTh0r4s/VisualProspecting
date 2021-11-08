@@ -1,4 +1,4 @@
-package com.sinthoras.visualprospecting.mixins.xaeromap;
+package com.sinthoras.visualprospecting.mixins.xaerosworldmap.xaerosminimap;
 
 import com.sinthoras.visualprospecting.gui.xaeromap.FakeWaypointManager;
 import net.minecraft.client.Minecraft;

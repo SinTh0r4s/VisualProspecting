@@ -16,10 +16,9 @@ public class Buttons {
 	public static GuiButton thaumcraftNodeButton;
 	public static boolean thaumcraftNodesEnabled;
 	// yes it needs to be exactly 256x256 to render properly. dont ask why
-	public static ResourceLocation xTextures = new ResourceLocation(Tags.MODID, "textures/xtextures.png");
+	public static ResourceLocation buttonTextures = new ResourceLocation(Tags.MODID, "textures/xaerotextures.png");
 
 	public static void onOreVeinButton(GuiButton button) {
-		VP.info("ore vein button");
 		oreVeinsEnabled = !oreVeinsEnabled;
 		if (oreVeinsEnabled) {
 			undergroundFluidsEnabled = false;
@@ -28,7 +27,6 @@ public class Buttons {
 	}
 
 	public static void onUndergroundFluidButton(GuiButton button) {
-		VP.info("underground fluid button");
 		undergroundFluidsEnabled = !undergroundFluidsEnabled;
 		if (undergroundFluidsEnabled) {
 			oreVeinsEnabled = false;
@@ -37,7 +35,6 @@ public class Buttons {
 	}
 
 	public static void onThaumcraftNodeButton(GuiButton button) {
-		VP.info("tc node button");
 		thaumcraftNodesEnabled = !thaumcraftNodesEnabled;
 		if (thaumcraftNodesEnabled) {
 			oreVeinsEnabled = false;

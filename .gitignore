@@ -27,3 +27,6 @@ world/
 *.ipr
 *.iws
 src/main/resources/mixins.*.json
+
+#pretty sure the license forbids redistributing these
+/libs/xaeros*.jar

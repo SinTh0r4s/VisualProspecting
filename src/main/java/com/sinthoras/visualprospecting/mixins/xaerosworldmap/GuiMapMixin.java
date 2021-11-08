@@ -1,4 +1,4 @@
-package com.sinthoras.visualprospecting.mixins.xaeromap;
+package com.sinthoras.visualprospecting.mixins.xaerosworldmap;
 
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.VP;
@@ -54,7 +54,9 @@ public abstract class GuiMapMixin extends ScreenBase {
 		VeinTypeCaching.recalculateNEISearch();
 	}
 
-	// method = "drawScreen"
+	// apparently mixin can read the obfuscated names even with the deobf jar loaded. weird
+	// i guess all the errors mcdev shows here aren't real?
+	// deobf method = "drawScreen"
 	@Inject(method = "func_73863_a",
 			at = @At(value = "INVOKE",
 					target = "Lorg/lwjgl/opengl/GL11;glPushMatrix()V",
@@ -74,7 +76,7 @@ public abstract class GuiMapMixin extends ScreenBase {
 		RenderStepManager.updateHovered(mousePosX, mousePosZ, cameraX, cameraZ, scale);
 	}
 
-	// method = "drawScreen"
+	// deobf method = "drawScreen"
 	@Inject(method = "func_73863_a",
 			at = @At(value = "INVOKE",
 					target = "Lorg/lwjgl/opengl/GL11;glEnable(I)V",
@@ -93,14 +95,14 @@ public abstract class GuiMapMixin extends ScreenBase {
 		RenderStepManager.render(this, cameraX, cameraZ, scale);
 	}
 
-	// method = drawScreen
+	// deobf method = drawScreen
 	@Inject(method = "func_73863_a",
 			at = @At(value = "INVOKE",
 					target = "Lorg/lwjgl/opengl/GL11;glTranslated(DDD)V"
 			),
 			slice = @Slice(
 					from = @At(value = "FIELD",
-							// target = "Lnet/minecraft/client/Minecraft;currentScreen:Lnet/minecraft/client/gui/GuiScreen;"
+							// deobf target = "Lnet/minecraft/client/Minecraft;currentScreen:Lnet/minecraft/client/gui/GuiScreen;"
 							target = "Lnet/minecraft/client/Minecraft;field_71462_r:Lnet/minecraft/client/gui/GuiScreen;",
 							opcode = Opcodes.GETFIELD
 					),
@@ -113,7 +115,7 @@ public abstract class GuiMapMixin extends ScreenBase {
 		RenderStepManager.drawTooltip(this, cameraX, cameraZ, scale, screenScale);
 	}
 
-	// method = "initGui"
+	// deobf method = "initGui"
 	@Inject(method = "func_73866_w_",
 			at = @At(value = "INVOKE",
 					target = "Lorg/lwjgl/input/Keyboard;enableRepeatEvents(Z)V"
@@ -121,14 +123,14 @@ public abstract class GuiMapMixin extends ScreenBase {
 	)
 	private void injectInitButtons(CallbackInfo ci) {
 		Buttons.oreVeinButton = new GuiTexturedButton(0, height - 20, 20, 20, 0, 0, 16, 16,
-				Buttons.xTextures, Buttons::onOreVeinButton, new CursorBox("visualprospecting.button.orevein"));
+				Buttons.buttonTextures, Buttons::onOreVeinButton, new CursorBox("visualprospecting.button.orevein"));
 		addGuiButton(Buttons.oreVeinButton);
 		Buttons.undergroundFluidButton = new GuiTexturedButton(0, height - 40, 20, 20, 16, 0, 16, 16,
-				Buttons.xTextures, Buttons::onUndergroundFluidButton, new CursorBox("visualprospecting.button.undergroundfluid"));
+				Buttons.buttonTextures, Buttons::onUndergroundFluidButton, new CursorBox("visualprospecting.button.undergroundfluid"));
 		addGuiButton(Buttons.undergroundFluidButton);
 		if (Utils.isTCNodeTrackerInstalled()) {
 			Buttons.thaumcraftNodeButton = new GuiTexturedButton(0, height - 60, 20, 20, 32, 0, 16, 16,
-					Buttons.xTextures, Buttons::onThaumcraftNodeButton, new CursorBox("visualprospecting.button.nodes"));
+					Buttons.buttonTextures, Buttons::onThaumcraftNodeButton, new CursorBox("visualprospecting.button.nodes"));
 			addGuiButton(Buttons.thaumcraftNodeButton);
 		}
 	}
