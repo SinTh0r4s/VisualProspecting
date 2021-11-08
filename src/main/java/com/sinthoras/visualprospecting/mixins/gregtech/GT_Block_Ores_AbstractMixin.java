@@ -1,4 +1,4 @@
-package com.sinthoras.visualprospecting.mixins;
+package com.sinthoras.visualprospecting.mixins.gregtech;
 
 import com.sinthoras.visualprospecting.database.ClientCache;
 import gregtech.api.items.GT_Generic_Block;

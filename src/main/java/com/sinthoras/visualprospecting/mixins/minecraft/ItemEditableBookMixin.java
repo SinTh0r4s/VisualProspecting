@@ -1,4 +1,4 @@
-package com.sinthoras.visualprospecting.mixins;
+package com.sinthoras.visualprospecting.mixins.minecraft;
 
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Tags;

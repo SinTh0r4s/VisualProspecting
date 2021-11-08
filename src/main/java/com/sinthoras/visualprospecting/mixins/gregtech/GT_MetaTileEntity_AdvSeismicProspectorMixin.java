@@ -1,4 +1,4 @@
-package com.sinthoras.visualprospecting.mixins;
+package com.sinthoras.visualprospecting.mixins.gregtech;
 
 import com.sinthoras.visualprospecting.ServerTranslations;
 import com.sinthoras.visualprospecting.VP;

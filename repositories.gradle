@@ -1,0 +1,20 @@
+repositories {
+    maven {
+        name = "CodeChicken"
+        url = "https://chickenbones.net/maven/"
+    }
+    maven {
+        url = "https://jitpack.io"
+    }
+    maven {
+        name = "ic2"
+        url = "https://maven.ic2.player.to/"
+    }
+    maven {
+        url "https://cursemaven.com"
+    }
+    maven {
+        name = "sponge"
+        url = "https://repo.spongepowered.org/repository/maven-public"
+    }
+}

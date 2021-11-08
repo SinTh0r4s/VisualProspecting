@@ -1,16 +1,16 @@
 [
-{
-  "modid": "visualprospecting",
-  "name": "VisualProspecting",
-  "description": "GregTech 5 Unofficial convenience mod for easy GT Ore Vein and underground fluid tracking. Includes visualization for JourneyMap.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "https://github.com/SinTh0r4s/VisualProspecting",
-  "updateUrl": "",
-  "authorList": ["SinTh0r4s"],
-  "credits": "Special thanks to basdxz and Houstonruss for contributing CI and textures!",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
-}
+    {
+      "modid": "${modId}",
+      "name": "${modName}",
+      "description": "GregTech 5 Unofficial convenience mod for easy GT Ore Vein and underground fluid tracking. Includes visualization for JourneyMap.",
+      "version": "${modVersion}",
+      "mcversion": "${minecraftVersion}",
+      "url": "https://github.com/SinTh0r4s/VisualProspecting",
+      "updateUrl": "",
+      "authorList": ["SinTh0r4s"],
+      "credits": "Special thanks to basdxz and Houstonruss for contributing CI and textures!",
+      "logoFile": "",
+      "screenshots": [],
+      "dependencies": []
+    }
 ]
