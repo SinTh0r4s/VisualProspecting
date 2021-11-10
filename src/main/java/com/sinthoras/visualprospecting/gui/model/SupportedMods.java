@@ -1,6 +1,6 @@
 package com.sinthoras.visualprospecting.gui.model;
 
-public enum SupportedMap {
+public enum SupportedMods {
     TCNodeTracker,
 
     JourneyMap,

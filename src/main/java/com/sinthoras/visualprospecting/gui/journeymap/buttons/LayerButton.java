@@ -1,6 +1,6 @@
 package com.sinthoras.visualprospecting.gui.journeymap.buttons;
 
-import com.sinthoras.visualprospecting.gui.model.SupportedMap;
+import com.sinthoras.visualprospecting.gui.model.SupportedMods;
 import com.sinthoras.visualprospecting.gui.model.buttons.*;
 import journeymap.client.ui.theme.ThemeToggle;
 
@@ -12,7 +12,7 @@ public class LayerButton extends com.sinthoras.visualprospecting.gui.model.butto
     private boolean isActive = false;
 
     public LayerButton(ButtonManager manager) {
-        super(manager, SupportedMap.JourneyMap);
+        super(manager, SupportedMods.JourneyMap);
         this.manager = manager;
     }
 

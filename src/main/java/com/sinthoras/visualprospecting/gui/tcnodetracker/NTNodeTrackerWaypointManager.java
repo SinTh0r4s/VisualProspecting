@@ -1,16 +1,14 @@
 package com.sinthoras.visualprospecting.gui.tcnodetracker;
 
 import com.dyonovan.tcnodetracker.TCNodeTracker;
-import com.sinthoras.visualprospecting.gui.model.SupportedMap;
+import com.sinthoras.visualprospecting.gui.model.SupportedMods;
 import com.sinthoras.visualprospecting.gui.model.layers.ThaumcraftNodeLayerManager;
 import com.sinthoras.visualprospecting.gui.model.waypoints.Waypoint;
 
 public class NTNodeTrackerWaypointManager extends com.sinthoras.visualprospecting.gui.model.waypoints.WaypointManager {
 
-    public static final NTNodeTrackerWaypointManager instance = new NTNodeTrackerWaypointManager();
-
     public NTNodeTrackerWaypointManager() {
-        super(ThaumcraftNodeLayerManager.instance, SupportedMap.TCNodeTracker);
+        super(ThaumcraftNodeLayerManager.instance, SupportedMods.TCNodeTracker);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.sinthoras.visualprospecting.gui.model;
 
 import com.sinthoras.visualprospecting.gui.model.buttons.*;
 import com.sinthoras.visualprospecting.gui.model.layers.*;
+import com.sinthoras.visualprospecting.gui.tcnodetracker.NTNodeTrackerWaypointManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ public class MapState {
         if(isTCNodeTrackerInstalled()) {
             buttons.add(ThaumcraftNodeButtonManager.instance);
             layers.add(ThaumcraftNodeLayerManager.instance);
+            new NTNodeTrackerWaypointManager();
         }
 
         buttons.add(UndergroundFluidButtonManager.instance);

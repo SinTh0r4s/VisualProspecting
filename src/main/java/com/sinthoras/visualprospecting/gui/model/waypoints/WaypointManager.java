@@ -1,11 +1,11 @@
 package com.sinthoras.visualprospecting.gui.model.waypoints;
 
-import com.sinthoras.visualprospecting.gui.model.SupportedMap;
+import com.sinthoras.visualprospecting.gui.model.SupportedMods;
 import com.sinthoras.visualprospecting.gui.model.layers.WaypointProviderManager;
 
 public abstract class WaypointManager {
 
-    public WaypointManager(WaypointProviderManager layerManager, SupportedMap map) {
+    public WaypointManager(WaypointProviderManager layerManager, SupportedMods map) {
         layerManager.registerWaypointManager(map, this);
     }
 

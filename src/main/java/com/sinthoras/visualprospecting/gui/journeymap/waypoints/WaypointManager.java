@@ -1,6 +1,6 @@
 package com.sinthoras.visualprospecting.gui.journeymap.waypoints;
 
-import com.sinthoras.visualprospecting.gui.model.SupportedMap;
+import com.sinthoras.visualprospecting.gui.model.SupportedMods;
 import com.sinthoras.visualprospecting.gui.model.layers.WaypointProviderManager;
 import com.sinthoras.visualprospecting.gui.model.waypoints.Waypoint;
 
@@ -11,7 +11,7 @@ public class WaypointManager extends com.sinthoras.visualprospecting.gui.model.w
     private journeymap.client.model.Waypoint jmWaypoint;
 
     public WaypointManager(WaypointProviderManager layerManager) {
-        super(layerManager, SupportedMap.JourneyMap);
+        super(layerManager, SupportedMods.JourneyMap);
     }
 
     @Override

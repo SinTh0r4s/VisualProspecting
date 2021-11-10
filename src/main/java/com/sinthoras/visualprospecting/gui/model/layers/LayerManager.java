@@ -1,7 +1,7 @@
 package com.sinthoras.visualprospecting.gui.model.layers;
 
 import com.sinthoras.visualprospecting.gui.model.MapState;
-import com.sinthoras.visualprospecting.gui.model.SupportedMap;
+import com.sinthoras.visualprospecting.gui.model.SupportedMods;
 import com.sinthoras.visualprospecting.gui.model.buttons.ButtonManager;
 import com.sinthoras.visualprospecting.gui.model.buttons.LayerButton;
 import com.sinthoras.visualprospecting.gui.model.locations.ILocationProvider;
@@ -18,7 +18,7 @@ public abstract class LayerManager {
     private boolean isLayerActive = false;
     protected boolean forceRefresh = false;
     private List<? extends ILocationProvider> visibleElements = new ArrayList<>();
-    protected Map<SupportedMap, LayerRenderer> layerRenderer = new EnumMap<>(SupportedMap.class);
+    protected Map<SupportedMods, LayerRenderer> layerRenderer = new EnumMap<>(SupportedMods.class);
 
     public LayerManager(ButtonManager buttonManager) {
         this.buttonManager = buttonManager;
@@ -84,11 +84,11 @@ public abstract class LayerManager {
         }
     }
 
-    public void registerLayerRenderer(SupportedMap map, LayerRenderer renderer) {
+    public void registerLayerRenderer(SupportedMods map, LayerRenderer renderer) {
         layerRenderer.put(map, renderer);
     }
 
-    public LayerRenderer getLayerRenderer(SupportedMap map) {
+    public LayerRenderer getLayerRenderer(SupportedMods map) {
         return layerRenderer.get(map);
     }
 }

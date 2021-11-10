@@ -1,6 +1,6 @@
 package com.sinthoras.visualprospecting.gui.model.layers;
 
-import com.sinthoras.visualprospecting.gui.model.SupportedMap;
+import com.sinthoras.visualprospecting.gui.model.SupportedMods;
 import com.sinthoras.visualprospecting.gui.model.waypoints.Waypoint;
 import com.sinthoras.visualprospecting.gui.model.buttons.ButtonManager;
 import com.sinthoras.visualprospecting.gui.model.locations.IWaypointAndLocationProvider;
@@ -14,7 +14,7 @@ import java.util.Map;
 public abstract class WaypointProviderManager extends LayerManager {
 
     private List<? extends IWaypointAndLocationProvider> visibleElements = new ArrayList<>();
-    private Map<SupportedMap, WaypointManager> waypointManagers = new EnumMap<>(SupportedMap.class);
+    private Map<SupportedMods, WaypointManager> waypointManagers = new EnumMap<>(SupportedMods.class);
 
     private Waypoint activeWaypoint = null;
 
@@ -38,11 +38,11 @@ public abstract class WaypointProviderManager extends LayerManager {
         return activeWaypoint != null;
     }
 
-    public void registerWaypointManager(SupportedMap map, WaypointManager waypointManager) {
+    public void registerWaypointManager(SupportedMods map, WaypointManager waypointManager) {
         waypointManagers.put(map, waypointManager);
     }
 
-    public WaypointManager getWaypointManager(SupportedMap map) {
+    public WaypointManager getWaypointManager(SupportedMods map) {
         return waypointManagers.get(map);
     }
 
@@ -59,6 +59,13 @@ public abstract class WaypointProviderManager extends LayerManager {
 
         if(forceRefresh || needsRegenerateVisibleElements(minBlockX, minBlockZ, maxBlockX, maxBlockZ)) {
             visibleElements = generateVisibleElements(minBlockX, minBlockZ, maxBlockX, maxBlockZ);
+
+            if(hasActiveWaypoint()) {
+                for (IWaypointAndLocationProvider element : visibleElements) {
+                    element.onWaypointUpdated(activeWaypoint);
+                }
+            }
+
             layerRenderer.values().forEach(layer -> layer.updateVisibleElements(visibleElements));
             forceRefresh = false;
         }

@@ -127,7 +127,9 @@ public abstract class FullscreenMixin extends JmUI {
         }
 
         for(LayerRenderer layerRenderer : JourneyMapState.instance.renderers) {
-            gridRenderer.draw(layerRenderer.getDrawStepsCachedForRendering(), xOffset, yOffset, drawScale, fontScale, 0.0);
+            if(layerRenderer.isLayerActive()) {
+                gridRenderer.draw(layerRenderer.getDrawStepsCachedForRendering(), xOffset, yOffset, drawScale, fontScale, 0.0);
+            }
         }
     }
 
