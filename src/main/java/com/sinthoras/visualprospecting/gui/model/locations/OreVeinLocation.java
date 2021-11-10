@@ -67,13 +67,13 @@ public class OreVeinLocation implements IWaypointAndLocationProvider {
     }
 
     @Override
-    public int getBlockX() {
-        return oreVeinPosition.getBlockX();
+    public double getBlockX() {
+        return oreVeinPosition.getBlockX() + 0.5;
     }
 
     @Override
-    public int getBlockZ() {
-        return oreVeinPosition.getBlockZ();
+    public double getBlockZ() {
+        return oreVeinPosition.getBlockZ() + 0.5;
     }
 
     public boolean isDepleted() {

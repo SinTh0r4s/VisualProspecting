@@ -23,11 +23,11 @@ public class UndergroundFluidChunkLocation implements ILocationProvider {
         this.minAmountInField = minAmountInField;
     }
 
-    public int getBlockX() {
+    public double getBlockX() {
         return blockX;
     }
 
-    public int getBlockZ() {
+    public double getBlockZ() {
         return blockZ;
     }
 

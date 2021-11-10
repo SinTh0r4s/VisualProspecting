@@ -61,17 +61,17 @@ public class ThaumcraftNodeLocation implements IWaypointAndLocationProvider {
     }
 
     @Override
-    public int getBlockX() {
-        return node.x;
+    public double getBlockX() {
+        return node.x + 0.5;
     }
 
-    public int getBlockY() {
-        return node.y;
+    public double getBlockY() {
+        return node.y + 0.5;
     }
 
     @Override
-    public int getBlockZ() {
-        return node.z;
+    public double getBlockZ() {
+        return node.z + 0.5;
     }
 
     @Override
@@ -102,6 +102,10 @@ public class ThaumcraftNodeLocation implements IWaypointAndLocationProvider {
                 && waypoint.blockX == node.x
                 && waypoint.blockY == node.y
                 && waypoint.blockZ== node.z;
+    }
+
+    public boolean belongsToNode(NodeList other) {
+        return node.x == other.x && node.y == other.y && node.z == other.z && node.dim == other.dim;
     }
 
     public Aspect getStrongestAspect() {

@@ -4,7 +4,7 @@ public interface ILocationProvider {
 
     int getDimensionId();
 
-    int getBlockX();
+    double getBlockX();
 
-    int getBlockZ();
+    double getBlockZ();
 }
