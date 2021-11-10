@@ -1,50 +1,42 @@
 package com.sinthoras.visualprospecting.gui.journeymap.buttons;
 
-import com.sinthoras.visualprospecting.gui.journeymap.MapState;
-import journeymap.client.ui.theme.ThemeButton;
+import com.sinthoras.visualprospecting.gui.model.SupportedMap;
+import com.sinthoras.visualprospecting.gui.model.buttons.*;
+import journeymap.client.ui.theme.ThemeToggle;
 
-public class LayerButton {
+public class LayerButton extends com.sinthoras.visualprospecting.gui.model.buttons.LayerButton {
 
-    private final String buttonTextKey;
-    private final String iconName;
+    private ThemeToggle button;
+    private final ButtonManager manager;
 
-    private boolean layerActive = false;
-    private ThemeButton guiButton = null;
+    private boolean isActive = false;
 
-    public LayerButton(String buttonTextKey, String iconName) {
-        this.buttonTextKey = buttonTextKey;
-        this.iconName = iconName;
+    public LayerButton(ButtonManager manager) {
+        super(manager, SupportedMap.JourneyMap);
+        this.manager = manager;
     }
 
-    public ThemeButton getGuiButton() {
-        return guiButton;
-    }
-
-    public void setGuiButton(ThemeButton guiButton) {
-        this.guiButton = guiButton;
-    }
-
-    public boolean isLayerActive() {
-        return layerActive;
-    }
-
-    protected void disableLayer() {
-        layerActive = false;
-        guiButton.setToggled(false, false);
-    }
-
-    public void setLayerActive(boolean layerActive) {
-        for(LayerButton button : MapState.instance.buttons) {
-            button.disableLayer();
+    @Override
+    public void updateState(boolean active) {
+        isActive = active;
+        if(button != null) {
+            button.setToggled(active, false);
         }
-        this.layerActive = layerActive;
+    }
+
+    public void setButton(ThemeToggle button) {
+        this.button = button;
     }
 
     public String getButtonTextKey() {
-        return buttonTextKey;
+        return manager.getButtonTextKey();
     }
 
     public String getIconName() {
-        return iconName;
+        return manager.getIconName();
+    }
+
+    public boolean isActive() {
+        return isActive;
     }
 }

@@ -4,11 +4,8 @@ import com.sinthoras.visualprospecting.database.ClientCache;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.database.ServerCache;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
-import com.sinthoras.visualprospecting.gui.journeymap.MapState;
+import com.sinthoras.visualprospecting.gui.journeymap.JourneyMapState;
 import com.sinthoras.visualprospecting.gui.journeymap.buttons.LayerButton;
-import com.sinthoras.visualprospecting.gui.journeymap.layers.InformationLayer;
-import com.sinthoras.visualprospecting.gui.journeymap.layers.OreVeinLayer;
-import com.sinthoras.visualprospecting.gui.journeymap.layers.UndergroundFluidLayer;
 import com.sinthoras.visualprospecting.network.ProspectingNotification;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -27,22 +24,23 @@ public class VisualProspecting_API {
     @SideOnly(Side.CLIENT)
     public static class LogicalClient {
 
-        public static void registerLayerButton(LayerButton button) {
+        // TODO
+        /*public static void registerLayerButton(LayerButton button) {
             if (isJourneyMapInstalled()) {
-                MapState.instance.buttons.add(button);
+                JourneyMapState.instance.buttons.add(button);
             }
         }
 
         public static void registerLayer(InformationLayer layer) {
             if (isJourneyMapInstalled()) {
-                MapState.instance.layers.add(layer);
+                JourneyMapState.instance.layers.add(layer);
             }
         }
 
         public static void openJourneyForOreVeinsMapAt(int blockX, int blockZ) {
             if (isJourneyMapInstalled()) {
                 OreVeinLayer.instance.activateLayer();
-                MapState.instance.openJourneyMapAt(blockX, blockZ);
+                JourneyMapState.instance.openJourneyMapAt(blockX, blockZ);
             }
         }
 
@@ -65,7 +63,7 @@ public class VisualProspecting_API {
                 UndergroundFluidLayer.instance.activateLayer();
                 MapState.instance.openJourneyMapAt(blockX, blockZ, zoom);
             }
-        }
+        }*/
 
         // This mechanic is limited to blocks the player can touch
         public static void triggerProspectingForOreBlock(EntityPlayer player, World world, int blockX, int blockY, int blockZ) {

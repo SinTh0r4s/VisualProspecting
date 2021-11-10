@@ -1,6 +1,6 @@
 package com.sinthoras.visualprospecting.gui.journeymap.drawsteps;
 
-import journeymap.client.model.Waypoint;
+import com.sinthoras.visualprospecting.gui.model.locations.IWaypointAndLocationProvider;
 import journeymap.client.render.draw.DrawStep;
 import net.minecraft.client.gui.FontRenderer;
 
@@ -12,11 +12,9 @@ public interface ClickableDrawStep extends DrawStep {
 
     void drawTooltip(FontRenderer fontRenderer, int mouseX, int mouseY, int displayWidth, int displayHeight);
 
-    boolean isMouseOver(int scaledMouseX, int scaledMouseY);
+    boolean isMouseOver(int mouseX, int mouseY);
 
     void onActionKeyPressed();
 
-    boolean isWaypoint(Waypoint waypoint);
-
-    Waypoint toWaypoint();
+    IWaypointAndLocationProvider getLocationProvider();
 }

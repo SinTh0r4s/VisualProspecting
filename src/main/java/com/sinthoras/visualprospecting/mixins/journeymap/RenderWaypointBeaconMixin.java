@@ -1,8 +1,7 @@
 package com.sinthoras.visualprospecting.mixins.journeymap;
 
-import com.sinthoras.visualprospecting.gui.journeymap.MapState;
-import com.sinthoras.visualprospecting.gui.journeymap.layers.InformationLayer;
-import com.sinthoras.visualprospecting.gui.journeymap.layers.WaypointProviderLayer;
+import com.sinthoras.visualprospecting.gui.journeymap.JourneyMapState;
+import com.sinthoras.visualprospecting.gui.journeymap.waypoints.WaypointManager;
 import journeymap.client.model.Waypoint;
 import journeymap.client.render.ingame.RenderWaypointBeacon;
 import net.minecraft.client.Minecraft;
@@ -29,10 +28,10 @@ public class RenderWaypointBeaconMixin {
             remap = false,
             require = 1)
     private static void onRenderAll(CallbackInfo callbackInfo) {
-        for(InformationLayer layer : MapState.instance.layers) {
-            if(layer instanceof WaypointProviderLayer) {
-                final Waypoint waypoint = ((WaypointProviderLayer) layer).getActiveWaypoint();
-                if(waypoint != null && waypoint.getDimensions().contains(mc.thePlayer.dimension)) {
+        for(WaypointManager waypointManager : JourneyMapState.instance.waypointManagers) {
+            if(waypointManager.hasWaypoint()) {
+                final Waypoint waypoint = waypointManager.getJmWaypoint();
+                if(waypoint.getDimensions().contains(mc.thePlayer.dimension)) {
                     doRender(waypoint);
                 }
             }

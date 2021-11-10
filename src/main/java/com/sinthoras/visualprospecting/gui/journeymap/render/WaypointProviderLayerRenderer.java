@@ -1,49 +1,26 @@
-package com.sinthoras.visualprospecting.gui.journeymap.layers;
+package com.sinthoras.visualprospecting.gui.journeymap.render;
 
 import com.sinthoras.visualprospecting.gui.journeymap.drawsteps.ClickableDrawStep;
-import com.sinthoras.visualprospecting.gui.journeymap.buttons.LayerButton;
-import journeymap.client.model.Waypoint;
+import com.sinthoras.visualprospecting.gui.model.layers.WaypointProviderManager;
+import com.sinthoras.visualprospecting.gui.model.locations.ILocationProvider;
 import net.minecraft.client.gui.FontRenderer;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class WaypointProviderLayer extends InformationLayer {
+public abstract class WaypointProviderLayerRenderer extends LayerRenderer {
+
+    private final WaypointProviderManager manager;
 
     private List<ClickableDrawStep> drawSteps = new ArrayList<>();
     private List<ClickableDrawStep> drawStepsReversed = new ArrayList<>();
 
     private ClickableDrawStep hoveredDrawStep = null;
-    private Waypoint activeWaypoint = null;
 
-
-    public WaypointProviderLayer(LayerButton layerButton) {
-        super(layerButton);
-    }
-
-    public Waypoint getActiveWaypoint() {
-        return activeWaypoint;
-    }
-
-    public void setActiveWaypoint(Waypoint waypoint) {
-        activeWaypoint = waypoint;
-    }
-
-    public void clearActiveWaypoint() {
-        activeWaypoint = null;
-    }
-
-    protected abstract List<ClickableDrawStep> generateDrawSteps(int minBlockX, int minBlockZ, int maxBlockX, int maxBlockZ);
-
-    @Override
-    public void recacheDrawSteps(int minBlockX, int minBlockZ, int maxBlockX, int maxBlockZ) {
-        if(forceRefresh || needsRegenerateDrawSteps(minBlockX, minBlockZ, maxBlockX, maxBlockZ)) {
-            drawSteps = generateDrawSteps(minBlockX, minBlockZ, maxBlockX, maxBlockZ);
-            drawStepsReversed = new ArrayList<>(drawSteps);
-            Collections.reverse(drawStepsReversed);
-            forceRefresh = false;
-        }
+    public WaypointProviderLayerRenderer(WaypointProviderManager manager) {
+        super(manager);
+        this.manager = manager;
     }
 
     @Override
@@ -51,9 +28,19 @@ public abstract class WaypointProviderLayer extends InformationLayer {
         return drawSteps;
     }
 
+    @Override
     public List<ClickableDrawStep> getDrawStepsCachedForRendering() {
         return drawStepsReversed;
     }
+
+    @Override
+    public void updateVisibleElements(List<? extends ILocationProvider> visibleElements) {
+        drawSteps = (List<ClickableDrawStep>) mapLocationProviderToDrawStep(visibleElements);
+        drawStepsReversed = new ArrayList<>(drawSteps);
+        Collections.reverse(drawStepsReversed);
+    }
+
+    protected abstract List<? extends ClickableDrawStep> mapLocationProviderToDrawStep(List<? extends ILocationProvider> visibleElements);
 
     public void onMouseMove(int mouseX, int mouseY) {
         hoveredDrawStep = null;
@@ -68,11 +55,11 @@ public abstract class WaypointProviderLayer extends InformationLayer {
     public boolean onMouseAction(boolean isDoubleClick) {
         if(hoveredDrawStep != null) {
             if(isDoubleClick) {
-                if(hoveredDrawStep.isWaypoint(activeWaypoint)) {
-                    clearActiveWaypoint();
+                if(hoveredDrawStep.getLocationProvider().isActiveAsWaypoint()) {
+                    manager.clearActiveWaypoint();
                 }
                 else {
-                    setActiveWaypoint(hoveredDrawStep.toWaypoint());
+                    manager.setActiveWaypoint(hoveredDrawStep.getLocationProvider().toWaypoint());
                 }
             }
             return true;
@@ -94,9 +81,13 @@ public abstract class WaypointProviderLayer extends InformationLayer {
     }
 
     public void onActionKeyPressed() {
-        if(isLayerActive() && hoveredDrawStep != null) {
+        if(manager.isLayerActive() && hoveredDrawStep != null) {
             hoveredDrawStep.onActionKeyPressed();
-            forceRefresh();
+            manager.forceRefresh();
         }
+    }
+
+    public boolean isLayerActive() {
+        return manager.isLayerActive();
     }
 }

@@ -1,10 +1,12 @@
 package com.sinthoras.visualprospecting.gui.journeymap.buttons;
 
+import com.sinthoras.visualprospecting.gui.model.buttons.ThaumcraftNodeButtonManager;
+
 public class ThaumcraftNodeButton extends LayerButton {
 
-    public static final ThaumcraftNodeButton instance = new ThaumcraftNodeButton("visualprospecting.button.nodes", "nodes");
+    public static final ThaumcraftNodeButton instance = new ThaumcraftNodeButton();
 
-    public ThaumcraftNodeButton(String buttonTextKey, String iconName) {
-        super(buttonTextKey, iconName);
+    public ThaumcraftNodeButton() {
+        super(ThaumcraftNodeButtonManager.instance);
     }
 }

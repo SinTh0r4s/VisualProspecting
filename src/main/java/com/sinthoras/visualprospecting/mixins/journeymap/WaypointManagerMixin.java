@@ -1,8 +1,8 @@
 package com.sinthoras.visualprospecting.mixins.journeymap;
 
-import com.sinthoras.visualprospecting.gui.journeymap.MapState;
-import com.sinthoras.visualprospecting.gui.journeymap.layers.InformationLayer;
-import com.sinthoras.visualprospecting.gui.journeymap.layers.WaypointProviderLayer;
+import com.sinthoras.visualprospecting.gui.model.MapState;
+import com.sinthoras.visualprospecting.gui.model.layers.LayerManager;
+import com.sinthoras.visualprospecting.gui.model.layers.WaypointProviderManager;
 import journeymap.client.ui.waypoint.WaypointManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,9 +16,9 @@ public class WaypointManagerMixin {
     @Inject(method = "toggleItems", at = @At("HEAD"), remap = false, require = 1, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void onToggleAllWaypoints(boolean enable, CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
         if(enable == false) {
-            for(InformationLayer layer : MapState.instance.layers) {
-                if(layer instanceof WaypointProviderLayer) {
-                    ((WaypointProviderLayer) layer).clearActiveWaypoint();
+            for(LayerManager layer : MapState.instance.layers) {
+                if(layer instanceof WaypointProviderManager) {
+                    ((WaypointProviderManager) layer).clearActiveWaypoint();
                 }
             }
         }
