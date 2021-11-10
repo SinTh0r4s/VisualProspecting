@@ -6,6 +6,12 @@ import com.sinthoras.visualprospecting.database.ServerCache;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import com.sinthoras.visualprospecting.gui.journeymap.JourneyMapState;
 import com.sinthoras.visualprospecting.gui.journeymap.buttons.LayerButton;
+import com.sinthoras.visualprospecting.gui.journeymap.render.LayerRenderer;
+import com.sinthoras.visualprospecting.gui.model.MapState;
+import com.sinthoras.visualprospecting.gui.model.buttons.ButtonManager;
+import com.sinthoras.visualprospecting.gui.model.layers.LayerManager;
+import com.sinthoras.visualprospecting.gui.model.layers.OreVeinLayerManager;
+import com.sinthoras.visualprospecting.gui.model.layers.UndergroundFluidLayerManager;
 import com.sinthoras.visualprospecting.network.ProspectingNotification;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -24,46 +30,57 @@ public class VisualProspecting_API {
     @SideOnly(Side.CLIENT)
     public static class LogicalClient {
 
-        // TODO
-        /*public static void registerLayerButton(LayerButton button) {
-            if (isJourneyMapInstalled()) {
-                JourneyMapState.instance.buttons.add(button);
+        // Register the logical button
+        public static void registerCustomButtonManager(ButtonManager customManager) {
+            MapState.instance.buttons.add(customManager);
+        }
+
+        // Register the logical layer
+        public static void registerCustomLayer(LayerManager customLayer) {
+            MapState.instance.layers.add(customLayer);
+        }
+
+        // Register visualization for logical button in JourneyMap
+        public static void registerJourneyMapButton(LayerButton customButton) {
+            if(isJourneyMapInstalled()) {
+                JourneyMapState.instance.buttons.add(customButton);
             }
         }
 
-        public static void registerLayer(InformationLayer layer) {
-            if (isJourneyMapInstalled()) {
-                JourneyMapState.instance.layers.add(layer);
+        // Add the JourneyMap renderer for a layer
+        public static void registerJourneyMapRenderer(LayerRenderer customRenderer) {
+            if(isJourneyMapInstalled()) {
+                JourneyMapState.instance.renderers.add(customRenderer);
             }
         }
 
         public static void openJourneyForOreVeinsMapAt(int blockX, int blockZ) {
             if (isJourneyMapInstalled()) {
-                OreVeinLayer.instance.activateLayer();
+                OreVeinLayerManager.instance.activateLayer();
                 JourneyMapState.instance.openJourneyMapAt(blockX, blockZ);
             }
         }
 
         public static void openJourneyForOreVeinsMapAt(int blockX, int blockZ, int zoom) {
             if (isJourneyMapInstalled()) {
-                OreVeinLayer.instance.activateLayer();
-                MapState.instance.openJourneyMapAt(blockX, blockZ, zoom);
+                OreVeinLayerManager.instance.activateLayer();
+                JourneyMapState.instance.openJourneyMapAt(blockX, blockZ, zoom);
             }
         }
 
         public static void openJourneyMapForUndergroundFluidsAt(int blockX, int blockZ) {
             if (isJourneyMapInstalled()) {
-                UndergroundFluidLayer.instance.activateLayer();
-                MapState.instance.openJourneyMapAt(blockX, blockZ);
+                UndergroundFluidLayerManager.instance.activateLayer();
+                JourneyMapState.instance.openJourneyMapAt(blockX, blockZ);
             }
         }
 
         public static void openJourneyMapForUndergroundFluidsAt(int blockX, int blockZ, int zoom) {
             if (isJourneyMapInstalled()) {
-                UndergroundFluidLayer.instance.activateLayer();
-                MapState.instance.openJourneyMapAt(blockX, blockZ, zoom);
+                UndergroundFluidLayerManager.instance.activateLayer();
+                JourneyMapState.instance.openJourneyMapAt(blockX, blockZ, zoom);
             }
-        }*/
+        }
 
         // This mechanic is limited to blocks the player can touch
         public static void triggerProspectingForOreBlock(EntityPlayer player, World world, int blockX, int blockY, int blockZ) {
