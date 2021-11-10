@@ -51,4 +51,12 @@ public class ThaumcraftNodeLayerManager extends WaypointProviderManager {
 
         return thaumcraftNodeLocations;
     }
+
+    public void deleteNode(ThaumcraftNodeLocation thaumcraftNodeLocation) {
+        TCNodeTracker.nodelist.removeIf(entry -> entry.x == thaumcraftNodeLocation.getBlockX() && entry.y == thaumcraftNodeLocation.getBlockY() && entry.z == thaumcraftNodeLocation.getBlockZ());
+        if(thaumcraftNodeLocation.isActiveAsWaypoint()) {
+            clearActiveWaypoint();
+        }
+        forceRefresh();
+    }
 }

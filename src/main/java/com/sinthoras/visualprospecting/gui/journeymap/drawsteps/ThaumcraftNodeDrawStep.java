@@ -2,6 +2,7 @@ package com.sinthoras.visualprospecting.gui.journeymap.drawsteps;
 
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.gui.DrawUtils;
+import com.sinthoras.visualprospecting.gui.model.layers.ThaumcraftNodeLayerManager;
 import com.sinthoras.visualprospecting.gui.model.locations.IWaypointAndLocationProvider;
 import com.sinthoras.visualprospecting.gui.model.locations.ThaumcraftNodeLocation;
 import journeymap.client.render.map.GridRenderer;
@@ -59,8 +60,7 @@ public class ThaumcraftNodeDrawStep implements ClickableDrawStep {
     }
 
     public void onActionKeyPressed() {
-        // TODO
-        //TCNodeTracker.nodelist.removeIf(entry -> entry.x == node.x && entry.y == node.y && entry.z == node.z);
+        ThaumcraftNodeLayerManager.instance.deleteNode(thaumcraftNodeLocation);
     }
 
     @Override

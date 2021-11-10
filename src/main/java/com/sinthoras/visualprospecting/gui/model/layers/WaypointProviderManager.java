@@ -16,7 +16,7 @@ public abstract class WaypointProviderManager extends LayerManager {
     private List<? extends IWaypointAndLocationProvider> visibleElements = new ArrayList<>();
     private Map<SupportedMods, WaypointManager> waypointManagers = new EnumMap<>(SupportedMods.class);
 
-    private Waypoint activeWaypoint = null;
+    protected Waypoint activeWaypoint = null;
 
     public WaypointProviderManager(ButtonManager buttonManager) {
         super(buttonManager);
