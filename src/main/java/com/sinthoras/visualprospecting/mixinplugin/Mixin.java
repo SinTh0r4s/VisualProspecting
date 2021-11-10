@@ -27,7 +27,9 @@ public enum Mixin {
     RenderWaypointBeaconMixin("journeymap.RenderWaypointBeaconMixin", JOURNEYMAP),
     WaypointManagerMixin("journeymap.WaypointManagerMixin", JOURNEYMAP),
 
-    GuiMainMixin("tcnodetracker.GuiMainMixin", TCNODETRACKER);
+    GuiMainMixin("tcnodetracker.GuiMainMixin", TCNODETRACKER),
+
+    ItemEditableBookMixin("minecraft.ItemEditableBookMixin", VANILLA);
 
     public final String mixinClass;
     public final List<TargetedMod> targetedMods;
