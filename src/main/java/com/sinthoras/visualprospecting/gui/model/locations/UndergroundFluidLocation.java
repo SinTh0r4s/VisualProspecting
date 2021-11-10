@@ -22,12 +22,12 @@ public class UndergroundFluidLocation implements ILocationProvider {
 
     @Override
     public double getBlockX() {
-        return undergroundFluidPosition.getBlockX();
+        return undergroundFluidPosition.getBlockX() + 0.5;
     }
 
     @Override
     public double getBlockZ() {
-        return undergroundFluidPosition.getBlockZ();
+        return undergroundFluidPosition.getBlockZ() + 0.5;
     }
 
     public int getMinProduction() {

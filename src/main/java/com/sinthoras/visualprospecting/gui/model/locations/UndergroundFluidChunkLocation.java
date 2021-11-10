@@ -24,11 +24,11 @@ public class UndergroundFluidChunkLocation implements ILocationProvider {
     }
 
     public double getBlockX() {
-        return blockX;
+        return blockX + 0.5;
     }
 
     public double getBlockZ() {
-        return blockZ;
+        return blockZ + 0.5;
     }
 
     public int getDimensionId() {
