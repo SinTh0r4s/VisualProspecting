@@ -1,5 +1,6 @@
 package com.sinthoras.visualprospecting.gui.model.buttons;
 
+import com.sinthoras.visualprospecting.gui.model.MapState;
 import com.sinthoras.visualprospecting.gui.model.SupportedMods;
 
 import java.util.EnumMap;
@@ -11,6 +12,7 @@ public class ButtonManager {
     private final String iconName;
 
     private Map<SupportedMods, LayerButton> buttons = new EnumMap<>(SupportedMods.class);
+    private boolean isActive = false;
 
     /*
     Provide textures in assets/journeymap/icon/theme/Vault/icon/<iconName>.png
@@ -40,5 +42,29 @@ public class ButtonManager {
 
     public String getIconName() {
         return iconName;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void activate() {
+        MapState.instance.buttons.forEach(ButtonManager::deactivate);
+        isActive = true;
+        updateState(true);
+    }
+
+    public void deactivate() {
+        isActive = false;
+        updateState(false);
+    }
+
+    public void toggle() {
+        if(isActive) {
+            deactivate();
+        }
+        else {
+            activate();
+        }
     }
 }

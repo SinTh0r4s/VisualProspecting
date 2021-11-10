@@ -31,27 +31,19 @@ public abstract class LayerManager {
     }
 
     public boolean isLayerActive() {
-        return isLayerActive;
+        return buttonManager.isActive();
     }
 
     public void activateLayer() {
-        MapState.instance.layers.forEach(LayerManager::deactivateLayer);
-        isLayerActive = true;
-        buttonManager.updateState(true);
+        buttonManager.activate();
     }
 
     public void deactivateLayer() {
-        isLayerActive = false;
-        buttonManager.updateState(false);
+        buttonManager.deactivate();
     }
 
     public void toggleLayer() {
-        if(isLayerActive) {
-            deactivateLayer();
-        }
-        else {
-            activateLayer();
-        }
+        buttonManager.toggle();
     }
 
     public void forceRefresh() {

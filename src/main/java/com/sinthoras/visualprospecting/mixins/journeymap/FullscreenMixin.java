@@ -148,7 +148,7 @@ public abstract class FullscreenMixin extends JmUI {
             layerButton.setButton(button);
             button.setToggled(layerButton.isActive(), false);
             button.addToggleListener((unused, toggled) -> {
-                MapState.instance.onButtonClicked(layerButton);
+                layerButton.toggle();
                 return true;
             });
             buttonList.add(button);

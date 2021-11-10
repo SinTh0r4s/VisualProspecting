@@ -39,4 +39,8 @@ public class LayerButton extends com.sinthoras.visualprospecting.gui.model.butto
     public boolean isActive() {
         return isActive;
     }
+
+    public void toggle() {
+        manager.toggle();
+    }
 }
