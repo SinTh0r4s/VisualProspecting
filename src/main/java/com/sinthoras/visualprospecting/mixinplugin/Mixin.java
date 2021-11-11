@@ -27,12 +27,12 @@ public enum Mixin {
     RenderWaypointBeaconMixin("journeymap.RenderWaypointBeaconMixin", JOURNEYMAP),
     WaypointManagerMixin("journeymap.WaypointManagerMixin", JOURNEYMAP),
 
-    GuiMainMixin("journeymap.tcnodetracker.GuiMainMixin", JOURNEYMAP, TCNODETRACKER),
+    GuiMainMixin("tcnodetracker.GuiMainMixin", TCNODETRACKER),
 
     GuiMapMixin("xaerosworldmap.GuiMapMixin", XAEROWORLDMAP),
     WaypointsIngameRendererMixin("xaerosworldmap.xaerosminimap.WaypointsIngameRendererMixin", XAEROWORLDMAP, XAEROMINIMAP),
-    XGuiMainMixin("xaerosworldmap.xaerosminimap.tcnodetracker.XGuiMainMixin", XAEROWORLDMAP, XAEROMINIMAP, TCNODETRACKER);
 
+    ItemEditableBookMixin("minecraft.ItemEditableBookMixin", VANILLA);
 
     public final String mixinClass;
     public final List<TargetedMod> targetedMods;

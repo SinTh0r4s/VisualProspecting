@@ -4,7 +4,10 @@ import com.sinthoras.visualprospecting.gui.journeymap.buttons.LayerButton;
 import com.sinthoras.visualprospecting.gui.journeymap.buttons.OreVeinButton;
 import com.sinthoras.visualprospecting.gui.journeymap.buttons.ThaumcraftNodeButton;
 import com.sinthoras.visualprospecting.gui.journeymap.buttons.UndergroundFluidButton;
-import com.sinthoras.visualprospecting.gui.journeymap.layers.*;
+import com.sinthoras.visualprospecting.gui.journeymap.render.*;
+import com.sinthoras.visualprospecting.gui.journeymap.waypoints.OreVeinWaypointManager;
+import com.sinthoras.visualprospecting.gui.journeymap.waypoints.ThaumcraftNodeWaypointManager;
+import com.sinthoras.visualprospecting.gui.journeymap.waypoints.WaypointManager;
 import journeymap.client.render.map.GridRenderer;
 
 import java.util.ArrayList;
@@ -13,24 +16,28 @@ import java.util.List;
 import static com.sinthoras.visualprospecting.Utils.isTCNodeTrackerInstalled;
 import static com.sinthoras.visualprospecting.gui.journeymap.Reflection.getJourneyMapGridRenderer;
 
-public class MapState {
-    public static final MapState instance = new MapState();
+public class JourneyMapState {
+
+    public static JourneyMapState instance = new JourneyMapState();
 
     public final List<LayerButton> buttons = new ArrayList<>();
-    public final List<InformationLayer> layers = new ArrayList<>();
+    public final List<LayerRenderer> renderers = new ArrayList<>();
+    public final List<WaypointManager> waypointManagers = new ArrayList<>();
 
-    public MapState() {
+    public JourneyMapState() {
         if(isTCNodeTrackerInstalled()) {
             buttons.add(ThaumcraftNodeButton.instance);
-            layers.add(ThaumcraftNodeLayer.instance);
+            renderers.add(ThaumcraftNodeRenderer.instance);
+            waypointManagers.add(ThaumcraftNodeWaypointManager.instance);
         }
 
         buttons.add(UndergroundFluidButton.instance);
-        layers.add(UndergroundFluidChunkLayer.instance);
-        layers.add(UndergroundFluidLayer.instance);
+        renderers.add(UndergroundFluidRenderer.instance);
+        renderers.add(UndergroundFluidChunkRenderer.instance);
 
         buttons.add(OreVeinButton.instance);
-        layers.add(OreVeinLayer.instance);
+        renderers.add(OreVeinRenderer.instance);
+        waypointManagers.add(OreVeinWaypointManager.instance);
     }
 
     public void openJourneyMapAt(int blockX, int blockZ) {

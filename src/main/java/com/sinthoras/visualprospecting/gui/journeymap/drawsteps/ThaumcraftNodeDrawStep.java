@@ -1,27 +1,18 @@
 package com.sinthoras.visualprospecting.gui.journeymap.drawsteps;
 
-import com.dyonovan.tcnodetracker.TCNodeTracker;
-import com.dyonovan.tcnodetracker.lib.NodeList;
 import com.sinthoras.visualprospecting.Tags;
-import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.gui.DrawUtils;
-import com.sinthoras.visualprospecting.gui.journeymap.layers.ThaumcraftNodeLayer;
-import journeymap.client.model.Waypoint;
+import com.sinthoras.visualprospecting.gui.model.layers.ThaumcraftNodeLayerManager;
+import com.sinthoras.visualprospecting.gui.model.locations.IWaypointAndLocationProvider;
+import com.sinthoras.visualprospecting.gui.model.locations.ThaumcraftNodeLocation;
 import journeymap.client.render.map.GridRenderer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectList;
-import thaumcraft.api.nodes.NodeType;
 import thaumcraft.client.lib.UtilsFX;
-import thaumcraft.common.config.ConfigBlocks;
-import thaumcraft.common.tiles.TileNode;
 
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -31,61 +22,31 @@ public class ThaumcraftNodeDrawStep implements ClickableDrawStep {
     private static final ResourceLocation markedTextureLocation = new ResourceLocation(Tags.MODID, "textures/node_marked.png");
     private static final ResourceLocation unmarkedTextureLocation = new ResourceLocation(Tags.MODID, "textures/node_unmarked.png");
 
-    private final NodeList node;
-    private final TileNode nodeTile;
+    private final ThaumcraftNodeLocation thaumcraftNodeLocation;
+
     private double centerPixelX = 0;
     private double centerPixelY = 0;
     private double clickableRadiusPixelSquared = 0;
-    private boolean mouseOver = false;
 
-    public ThaumcraftNodeDrawStep(NodeList node) {
-        this.node = node;
-
-        nodeTile = new TileNode();
-        final AspectList aspectList = new AspectList();
-        for(String aspectTag : node.aspect.keySet()) {
-            aspectList.add(Aspect.getAspect(aspectTag), node.aspect.get(aspectTag));
-        }
-        nodeTile.setAspects(aspectList);
-        switch(node.type) {
-            case "NORMAL":
-                nodeTile.setNodeType(NodeType.NORMAL);
-                break;
-            case "UNSTABLE":
-                nodeTile.setNodeType(NodeType.UNSTABLE);
-                break;
-            case "DARK":
-                nodeTile.setNodeType(NodeType.DARK);
-                break;
-            case "TAINTED":
-                nodeTile.setNodeType(NodeType.TAINTED);
-                break;
-            case "PURE":
-                nodeTile.setNodeType(NodeType.PURE);
-                break;
-            case "HUNGRY":
-                nodeTile.setNodeType(NodeType.HUNGRY);
-                break;
-        }
-        nodeTile.blockType = ConfigBlocks.blockAiry;
-        nodeTile.blockMetadata = 0;
+    public ThaumcraftNodeDrawStep(ThaumcraftNodeLocation thaumcraftNodeLocation) {
+        this.thaumcraftNodeLocation = thaumcraftNodeLocation;
     }
 
     @Override
     public void draw(double draggedPixelX, double draggedPixelY, GridRenderer gridRenderer, float drawScale, double fontScale, double rotation) {
         final double borderSize = 44 * fontScale;
         final double borderSizeHalf = borderSize / 2;
-        final Point2D.Double blockAsPixel = gridRenderer.getBlockPixelInGrid(node.x, node.z);
+        final Point2D.Double blockAsPixel = gridRenderer.getBlockPixelInGrid(thaumcraftNodeLocation.getBlockX(), thaumcraftNodeLocation.getBlockZ());
         final Point2D.Double pixel = new Point2D.Double(blockAsPixel.getX() + draggedPixelX, blockAsPixel.getY() + draggedPixelY);
         centerPixelX = pixel.getX();
         centerPixelY = pixel.getY();
         clickableRadiusPixelSquared = borderSizeHalf * borderSizeHalf;
 
         final int alpha = 204;
-        DrawUtils.drawQuad(isWaypoint(ThaumcraftNodeLayer.instance.getActiveWaypoint()) ? markedTextureLocation : unmarkedTextureLocation, pixel.getX() - borderSizeHalf, pixel.getY() - borderSizeHalf, borderSize, borderSize, 0xFFFFFF, alpha);
+        DrawUtils.drawQuad(thaumcraftNodeLocation.isActiveAsWaypoint() ? markedTextureLocation : unmarkedTextureLocation, pixel.getX() - borderSizeHalf, pixel.getY() - borderSizeHalf, borderSize, borderSize, 0xFFFFFF, alpha);
 
         final int aspectPixelDiameter = 32;
-        DrawUtils.drawAspect(pixel.getX(), pixel.getY(), aspectPixelDiameter, nodeTile.getAspects().getAspectsSortedAmount()[0], 0);
+        DrawUtils.drawAspect(pixel.getX(), pixel.getY(), aspectPixelDiameter, thaumcraftNodeLocation.getStrongestAspect(), 0);
     }
 
     public List<String> getTooltip() {
@@ -95,50 +56,35 @@ public class ThaumcraftNodeDrawStep implements ClickableDrawStep {
     public boolean isMouseOver(int mouseX, int mouseY) {
         final double deltaX = mouseX - centerPixelX;
         final double deltaY = mouseY - centerPixelY;
-        mouseOver = deltaX * deltaX + deltaY * deltaY <= clickableRadiusPixelSquared;
-        return mouseOver;
+        return deltaX * deltaX + deltaY * deltaY <= clickableRadiusPixelSquared;
     }
 
     public void onActionKeyPressed() {
-        TCNodeTracker.nodelist.removeIf(entry -> entry.x == node.x && entry.y == node.y && entry.z == node.z);
+        ThaumcraftNodeLayerManager.instance.deleteNode(thaumcraftNodeLocation);
     }
 
-    public boolean isWaypoint(Waypoint waypoint) {
-        return waypoint != null
-                && waypoint.getDimensions().contains(node.dim)
-                && waypoint.getX() == node.x
-                && waypoint.getY() == node.y
-                && waypoint.getZ() == node.z;
-    }
-
-    public Waypoint toWaypoint() {
-        return new Waypoint(I18n.format("visualprospecting.tracked", I18n.format("tile.blockAiry.0.name")),
-                node.x,
-                node.y,
-                node.z,
-                nodeTile.targetColor,
-                Waypoint.Type.Normal,
-                node.dim);
+    @Override
+    public IWaypointAndLocationProvider getLocationProvider() {
+        return thaumcraftNodeLocation;
     }
 
     public void drawTooltip(FontRenderer fontRenderer, int mouseX, int mouseY, int displayWidth, int displayHeight) {
-        final boolean isWaypoint = isWaypoint(ThaumcraftNodeLayer.instance.getActiveWaypoint());
-        final String asWaypoint = EnumChatFormatting.GOLD + I18n.format("visualprospecting.iswaypoint");
-        final String title = EnumChatFormatting.BOLD + I18n.format("tile.blockAiry.0.name");
-        final String nodeDescription = node.mod.equals("BLANK") ? EnumChatFormatting.GRAY + I18n.format("nodetype." + node.type + ".name")
-                : EnumChatFormatting.GRAY + I18n.format("nodetype." + node.type + ".name") + ", " + I18n.format("nodemod." + node.mod + ".name");
-        final String deleteHint = EnumChatFormatting.DARK_GRAY + I18n.format("visualprospecting.node.deletehint", Keyboard.getKeyName(VP.keyAction.getKeyCode()));
+        final boolean isWaypoint = thaumcraftNodeLocation.isActiveAsWaypoint();
+        final String activeWaypointHint = thaumcraftNodeLocation.getActiveWaypointHint();
+        final String title = thaumcraftNodeLocation.getTitle();
+        final String nodeDescription = thaumcraftNodeLocation.getDescription();
+        final String deleteHint = thaumcraftNodeLocation.getDeleteHint();
 
         int maxTextWidth = Math.max(Math.max(fontRenderer.getStringWidth(title), fontRenderer.getStringWidth(nodeDescription)), fontRenderer.getStringWidth(deleteHint));
         if(isWaypoint) {
-            maxTextWidth = Math.max(maxTextWidth, fontRenderer.getStringWidth(asWaypoint));
+            maxTextWidth = Math.max(maxTextWidth, fontRenderer.getStringWidth(activeWaypointHint));
         }
         if(fontRenderer.getBidiFlag()) {
             maxTextWidth = (int) Math.ceil(maxTextWidth * 1.25f);
         }
 
-        final int aspectRows = (nodeTile.getAspects().size() + 4) / 5;  // Equivalent to Math.ceil(size / 5)
-        final int aspectColumns = Math.min(nodeTile.getAspects().size(), 5);
+        final int aspectRows = (thaumcraftNodeLocation.getAspects().size() + 4) / 5;  // Equivalent to Math.ceil(size / 5)
+        final int aspectColumns = Math.min(thaumcraftNodeLocation.getAspects().size(), 5);
 
         int pixelX = mouseX + 12;
         int pixelY = mouseY - 12;
@@ -175,7 +121,7 @@ public class ThaumcraftNodeDrawStep implements ClickableDrawStep {
         int offset = 0;
         if(fontRenderer.getBidiFlag()) {
             if(isWaypoint) {
-                final int asWaypointWidth = (int) Math.ceil(fontRenderer.getStringWidth(asWaypoint) * 1.1f);
+                final int asWaypointWidth = (int) Math.ceil(fontRenderer.getStringWidth(activeWaypointHint) * 1.1f);
                 fontRenderer.drawString(title, pixelX + tooltipWidth - asWaypointWidth, pixelY, 0xFFFFFFFF);
                 offset += 12;
             }
@@ -190,7 +136,7 @@ public class ThaumcraftNodeDrawStep implements ClickableDrawStep {
         }
         else {
             if(isWaypoint) {
-                fontRenderer.drawString(asWaypoint, pixelX, pixelY, 0xFFFFFFFF);
+                fontRenderer.drawString(activeWaypointHint, pixelX, pixelY, 0xFFFFFFFF);
                 offset += 12;
             }
             fontRenderer.drawString(title, pixelX, pixelY + offset, 0xFFFFFFFF);
@@ -205,9 +151,9 @@ public class ThaumcraftNodeDrawStep implements ClickableDrawStep {
         int aspectY = 0;
 
 
-        for(Aspect aspect : nodeTile.getAspects().getAspectsSortedAmount()) {
+        for(Aspect aspect : thaumcraftNodeLocation.getAspects().getAspectsSortedAmount()) {
             GL11.glPushMatrix();
-            UtilsFX.drawTag(pixelX + aspectX * 16, pixelY + aspectY * 16 + offset + 10, aspect, nodeTile.getAspects().getAmount(aspect), 0, 0.01, 1, 1, false);
+            UtilsFX.drawTag(pixelX + aspectX * 16, pixelY + aspectY * 16 + offset + 10, aspect, thaumcraftNodeLocation.getAspects().getAmount(aspect), 0, 0.01, 1, 1, false);
             GL11.glPopMatrix();
             ++aspectX;
             if(aspectX >= 5) {
