@@ -17,22 +17,4 @@ repositories {
         name = "sponge"
         url = "https://repo.spongepowered.org/repository/maven-public"
     }
-
-    // IFU
-    maven {
-        name "Applecore"
-        url "http://www.ryanliptak.com/maven/"
-    }
-    ivy {
-        name "BuildCraft"
-        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
-    }
-    ivy {
-        name 'gtnh_download_source_stupid_underscore_typo'
-        artifactPattern "http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]_[revision].[ext]"
-    }
-    ivy {
-        name 'gtnh_download_source'
-        artifactPattern "http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]-[revision].[ext]"
-    }
 }
