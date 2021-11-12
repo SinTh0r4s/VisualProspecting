@@ -2,6 +2,7 @@ package com.sinthoras.visualprospecting.mixins.ifu;
 
 import com.encraft.dz.items.*;
 import com.sinthoras.visualprospecting.database.*;
+import gregtech.api.objects.*;
 import net.minecraft.block.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.*;
@@ -20,25 +21,25 @@ public class ItemOreFinderToolMixin extends Item {
   
   @Shadow
   private static int MAX_DAMAGE = 10;
-  
+
   @Inject(
       method = "onUpdate",
       at = @At(value = "FIELD", target = "Lcom/encraft/dz/items/ItemOreFinderTool;found:I", shift = Shift.AFTER),
-      locals = LocalCapture.PRINT //LocalCapture.CAPTURE_FAILSOFT
+      locals = LocalCapture.CAPTURE_FAILSOFT
   )
-  public void onOreFoundCallHook(ItemStack unused1,
-      World world,
-      Entity entity,
-      int unused2,
-      boolean unused3,
-      CallbackInfo ci//,
-//      int z1,
-//      int x1,
-//      int y1
+  public void onOreFoundCallHook(
+      ItemStack itemstack,
+      World world, Entity entity,
+      int par4, boolean par5,
+      CallbackInfo ci,
+      ItemStack searchItem, ItemData data, boolean vanilla, int id,
+      double cur_x, double cur_y, double cur_z, int min_x, int min_y, int min_z, int max_x, int max_y, int max_z,
+      boolean keepLooking,
+      int z1, int x1, int y1,
+      Block tBlock, int meta, ItemStack inWorld
   ) {
     if (!world.isRemote && entity instanceof EntityPlayer && found >= MAX_DAMAGE) {
-      int x = 0, y = 0, z = 0; // TODO: capture
-      ClientCache.instance.onOreInteracted(world, x, y, z, (EntityPlayer) entity);
+      ClientCache.instance.onOreInteracted(world, x1, y1, z1, (EntityPlayer) entity);
     }
   }
 
