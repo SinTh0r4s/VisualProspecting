@@ -11,6 +11,7 @@ public enum TargetedMod {
     // Replace with your injected mods here, but always keep VANILLA:
     VANILLA("Minecraft", "unused", true),
     GREGTECH("GregTech", "gregtech", true),
+    IFU("I will find you", "ifu", true),
     JOURNEYMAP("JourneyMap", "journeymap-1.7.10", true),
     TCNODETRACKER("TCNodeTracker", "tcnodetracker-1.7.10", true),
     BARTWORKS("Bartworks", "bartworks", false),

@@ -22,6 +22,8 @@ public enum Mixin {
     GT_MetaTileEntity_ScannerMixin("gregtech.GT_MetaTileEntity_ScannerMixin", GREGTECH),
     GT_WorldGenContainerMixin("gregtech.WorldGenContainerMixin", GREGTECH),
 
+    ItemOreFinderToolMixin("ifu.ItemOreFinderToolMixin", IFU),
+
     FullscreenMixin("journeymap.FullscreenMixin", JOURNEYMAP),
     FullscreenActionsMixin("journeymap.FullscreenActionsMixin", JOURNEYMAP),
     RenderWaypointBeaconMixin("journeymap.RenderWaypointBeaconMixin", JOURNEYMAP),

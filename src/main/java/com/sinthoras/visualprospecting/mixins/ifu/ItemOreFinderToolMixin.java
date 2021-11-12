@@ -26,17 +26,17 @@ public class ItemOreFinderToolMixin extends Item {
       at = @At(value = "FIELD", target = "Lcom/encraft/dz/items/ItemOreFinderTool;found:I", shift = Shift.AFTER),
       locals = LocalCapture.PRINT //LocalCapture.CAPTURE_FAILSOFT
   )
-  public void onOreFoundCallHook(ItemStack dataInWorld,
+  public void onOreFoundCallHook(ItemStack unused1,
       World world,
       Entity entity,
-      int unused1,
-      boolean unused2,
+      int unused2,
+      boolean unused3,
       CallbackInfo ci//,
 //      int z1,
 //      int x1,
 //      int y1
   ) {
-    if (entity instanceof EntityPlayer && found >= MAX_DAMAGE) {
+    if (!world.isRemote && entity instanceof EntityPlayer && found >= MAX_DAMAGE) {
       int x = 0, y = 0, z = 0; // TODO: capture
       ClientCache.instance.onOreInteracted(world, x, y, z, (EntityPlayer) entity);
     }
