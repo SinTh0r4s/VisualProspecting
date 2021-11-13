@@ -1,5 +1,8 @@
 package com.sinthoras.visualprospecting.mixinplugin;
 
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
+
+import com.github.bartimaeusnek.bartworks.API.SideReference.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,22 +25,43 @@ public enum Mixin {
     GT_MetaTileEntity_ScannerMixin("gregtech.GT_MetaTileEntity_ScannerMixin", GREGTECH),
     GT_WorldGenContainerMixin("gregtech.WorldGenContainerMixin", GREGTECH),
 
-    ItemOreFinderToolMixin("ifu.ItemOreFinderToolMixin", IFU),
+    ItemOreFinderToolMixin("ifu.ItemOreFinderToolMixin", Side.SERVER,  IFU),
 
-    FullscreenMixin("journeymap.FullscreenMixin", JOURNEYMAP),
-    FullscreenActionsMixin("journeymap.FullscreenActionsMixin", JOURNEYMAP),
-    RenderWaypointBeaconMixin("journeymap.RenderWaypointBeaconMixin", JOURNEYMAP),
-    WaypointManagerMixin("journeymap.WaypointManagerMixin", JOURNEYMAP),
+    FullscreenMixin("journeymap.FullscreenMixin", Side.CLIENT, JOURNEYMAP),
+    FullscreenActionsMixin("journeymap.FullscreenActionsMixin", Side.CLIENT, JOURNEYMAP),
+    RenderWaypointBeaconMixin("journeymap.RenderWaypointBeaconMixin", Side.CLIENT, JOURNEYMAP),
+    WaypointManagerMixin("journeymap.WaypointManagerMixin", Side.CLIENT, JOURNEYMAP),
 
-    GuiMainMixin("tcnodetracker.GuiMainMixin", TCNODETRACKER),
+    GuiMainMixin("tcnodetracker.GuiMainMixin", Side.CLIENT, TCNODETRACKER),
 
     ItemEditableBookMixin("minecraft.ItemEditableBookMixin", VANILLA);
 
     public final String mixinClass;
     public final List<TargetedMod> targetedMods;
+    private final Side side;
+
+    Mixin(String mixinClass, Side side, TargetedMod... targetedMods) {
+        this.mixinClass = mixinClass;
+        this.targetedMods = Arrays.asList(targetedMods);
+        this.side = side;
+    }
 
     Mixin(String mixinClass, TargetedMod... targetedMods) {
         this.mixinClass = mixinClass;
         this.targetedMods = Arrays.asList(targetedMods);
+        this.side = Side.BOTH;
     }
+
+    public boolean shouldLoad(List<TargetedMod> loadedMods) {
+        return (side == Side.BOTH
+                || side == Side.SERVER && FMLLaunchHandler.side().isServer()
+                || side == Side.CLIENT && FMLLaunchHandler.side().isClient())
+                && loadedMods.containsAll(targetedMods);
+    }
+}
+
+enum Side {
+    BOTH,
+    CLIENT,
+    SERVER;
 }
