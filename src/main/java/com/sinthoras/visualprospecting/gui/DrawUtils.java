@@ -70,10 +70,10 @@ public class DrawUtils {
 
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(x, y + height, 0.0D, 0.0, 1.0);
-        tessellator.addVertexWithUV(x + width, y + height, 0.0D, 1.0, 1.0);
-        tessellator.addVertexWithUV(x + width, y, 0.0D, 1.0, 0.0);
-        tessellator.addVertexWithUV(x, y, 0.0D, 0.0, 0.0);
+        tessellator.addVertexWithUV(x, y + height, 0.0, 0.0, 1.0);
+        tessellator.addVertexWithUV(x + width, y + height, 0.0, 1.0, 1.0);
+        tessellator.addVertexWithUV(x + width, y, 0.0, 1.0, 0.0);
+        tessellator.addVertexWithUV(x, y, 0.0, 0.0, 0.0);
         tessellator.draw();
 
     }
@@ -96,10 +96,10 @@ public class DrawUtils {
 
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(x, y + height, 0.0D, icon.getMinU(), icon.getMaxV());
-        tessellator.addVertexWithUV(x + width, y + height, 0.0D, icon.getMaxU(), icon.getMaxV());
-        tessellator.addVertexWithUV(x + width, y, 0.0D, icon.getMaxU(), icon.getMinV());
-        tessellator.addVertexWithUV(x, y, 0.0D, icon.getMinU(), icon.getMinV());
+        tessellator.addVertexWithUV(x, y + height, 0.0, icon.getMinU(), icon.getMaxV());
+        tessellator.addVertexWithUV(x + width, y + height, 0.0, icon.getMaxU(), icon.getMaxV());
+        tessellator.addVertexWithUV(x + width, y, 0.0, icon.getMaxU(), icon.getMinV());
+        tessellator.addVertexWithUV(x, y, 0.0, icon.getMinU(), icon.getMinV());
         tessellator.draw();
 
     }
@@ -122,7 +122,7 @@ public class DrawUtils {
         double textWidth = gui.mc.fontRenderer.getStringWidth(text);
         double xOffsetL = centered ? -textWidth / 2.0 - 2 : -2;
         double xOffsetR = centered ? textWidth / 2.0 + 2 : textWidth + 2;
-        GL11.glTranslated(dTextX, dTextY, 0.0D);
+        GL11.glTranslated(dTextX, dTextY, 0.0);
         drawGradientRect((int) textX + xOffsetL, (int) textY - 2, (int) textX + xOffsetR, (int) textY + gui.mc.fontRenderer.FONT_HEIGHT + 2, 0, bgColor, bgColor);
         if (centered)
             gui.drawCenteredString(gui.mc.fontRenderer, text, (int) textX, (int) textY, fontColor);
