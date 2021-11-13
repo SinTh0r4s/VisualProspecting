@@ -5,7 +5,6 @@ import com.sinthoras.visualprospecting.*;
 import com.sinthoras.visualprospecting.database.*;
 import gregtech.api.enums.*;
 import gregtech.api.objects.*;
-import gregtech.common.*;
 import java.util.*;
 import java.util.stream.*;
 import net.minecraft.block.*;
@@ -22,10 +21,10 @@ import org.spongepowered.asm.mixin.injection.callback.*;
 public class ItemOreFinderToolMixin extends Item {
 
   @Shadow
-  private static int found = 0;
+  private static int found;
   
   @Shadow
-  private static int MAX_DAMAGE = 10;
+  private static int MAX_DAMAGE;
 
   @Inject(
       method = "onUpdate",
@@ -46,34 +45,20 @@ public class ItemOreFinderToolMixin extends Item {
       int z1, int x1, int y1, 
       Block tBlock, int meta, ItemStack inWorld, ItemData dataInWorld, List<OrePrefixes> oreTypes
   ) {
-    if(vanilla) return;
-    oreFoundAt(world, entity, z1, x1, dataInWorld);
+    if (vanilla || world.isRemote || found < MAX_DAMAGE || !(entity instanceof EntityPlayer)) return;
+    
+    final short foundMaterialMetaItemSubId = (short) dataInWorld.mMaterial.mMaterial.mMetaItemSubID;
+    final List<OreVeinPosition> discoveredOreVeins = listAssociateVeins( foundMaterialMetaItemSubId, x1, z1, world);
+    VisualProspecting_API.LogicalServer.sendProspectionResultsToClient((EntityPlayerMP) entity, discoveredOreVeins, Collections.emptyList());
   }
 
-  private void oreFoundAt(World world, Entity entity, int z1, int x1, ItemData foundItemData) {
-    if (!world.isRemote && entity instanceof EntityPlayer && found >= MAX_DAMAGE) {
-      final int foundMaterialMetaItemSubId = foundItemData.mMaterial.mMaterial.mMetaItemSubID;
-      final List<String> matchingVeinNames = 
-          GT_Worldgen_GT_Ore_Layer.sList
-              .stream()
-              .filter(layer -> 
-                  layer.mPrimaryMeta == foundMaterialMetaItemSubId 
-                      || layer.mSecondaryMeta == foundMaterialMetaItemSubId 
-                      || layer.mBetweenMeta == foundMaterialMetaItemSubId 
-                      || layer.mSporadicMeta == foundMaterialMetaItemSubId
-              ).map(layer -> layer.mWorldGenName)
-              .collect(Collectors.toList()); // TODO: make a cache for all materials [mMetaItemSubID] -> Set<VeinNames>
-      
-      final List<OreVeinPosition> allOreVeinsInChunk = VisualProspecting_API.LogicalServer.prospectOreVeinsWithinRadius(world.provider.dimensionId, x1, z1, 1); // TODO: increase radius to 16-48?
-      final List<OreVeinPosition> discoveredOreVeins = allOreVeinsInChunk.stream().filter(it -> matchingVeinNames.contains(it.veinType.name)).collect(Collectors.toList());
-      
-      VisualProspecting_API.LogicalServer.sendProspectionResultsToClient((EntityPlayerMP) entity, discoveredOreVeins, Collections.emptyList());
-     
-      // TODO: remove debug code
-      final String allVeinNames = allOreVeinsInChunk.stream().map(it -> it.veinType.name).collect(Collectors.joining(","));
-      final String discoveredVeinNames = discoveredOreVeins.stream().map(it -> it.veinType.name).collect(Collectors.joining(","));
-      System.out.println(">>>>>> Searching for: " + foundMaterialMetaItemSubId + ", discovered: " + discoveredVeinNames + ", all veins: " + allVeinNames);
-    }
+  private List<OreVeinPosition> listAssociateVeins(short foundMaterialMetaItemSubId, int x, int z, World world) {
+    return VisualProspecting_API
+        .LogicalServer
+        .prospectOreVeinsWithinRadius(world.provider.dimensionId, x, z, 24)
+        .stream()
+        .filter(it -> it.veinType.containsOre(foundMaterialMetaItemSubId))
+        .collect(Collectors.toList());
   }
 
 }
