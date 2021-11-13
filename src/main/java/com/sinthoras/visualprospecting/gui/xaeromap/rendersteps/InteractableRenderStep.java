@@ -1,5 +1,6 @@
 package com.sinthoras.visualprospecting.gui.xaeromap.rendersteps;
 
+import com.sinthoras.visualprospecting.gui.model.locations.IWaypointAndLocationProvider;
 import net.minecraft.client.gui.GuiScreen;
 
 public interface InteractableRenderStep extends RenderStep {
@@ -11,5 +12,7 @@ public interface InteractableRenderStep extends RenderStep {
 	void onDoubleClick();
 
 	void onActionButton();
+
+	IWaypointAndLocationProvider getLocationProvider();
 
 }

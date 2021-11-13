@@ -1,6 +1,7 @@
 package com.sinthoras.visualprospecting.mixins.xaerosworldmap.xaerosminimap;
 
-import com.sinthoras.visualprospecting.gui.xaeromap.FakeWaypointManager;
+import com.sinthoras.visualprospecting.gui.xaeromap.XaeroMapState;
+import com.sinthoras.visualprospecting.gui.xaeromap.waypoints.WaypointManager;
 import net.minecraft.client.Minecraft;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,6 +27,10 @@ public class WaypointsIngameRendererMixin {
 			)
 	)
 	private void injectPreRenderCustomWaypoints(XaeroMinimapSession sets, float modCustomWaypoints, CallbackInfo ci) {
-		FakeWaypointManager.notifyDimension(Minecraft.getMinecraft().renderViewEntity.dimension);
+		for (WaypointManager manager : XaeroMapState.instance.waypointManagers) {
+			if (manager.hasWaypoint()) {
+				manager.getXWaypoint().notifyDimension(Minecraft.getMinecraft().renderViewEntity.dimension);
+			}
+		}
 	}
 }

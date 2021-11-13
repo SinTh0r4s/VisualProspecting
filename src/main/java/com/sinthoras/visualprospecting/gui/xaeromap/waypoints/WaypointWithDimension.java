@@ -1,4 +1,4 @@
-package com.sinthoras.visualprospecting.gui.xaeromap;
+package com.sinthoras.visualprospecting.gui.xaeromap.waypoints;
 
 import xaero.common.minimap.waypoints.Waypoint;
 
@@ -15,6 +15,10 @@ public class WaypointWithDimension extends Waypoint {
 
 	public void notifyDimension(int newDimID) {
 		currentDim = newDimID;
+	}
+
+	public int getDimID() {
+		return dimID;
 	}
 
 	@Override

@@ -1,20 +1,14 @@
 package com.sinthoras.visualprospecting.gui.xaeromap.rendersteps;
 
-import com.dyonovan.tcnodetracker.TCNodeTracker;
-import com.dyonovan.tcnodetracker.lib.NodeList;
 import com.sinthoras.visualprospecting.Tags;
-import com.sinthoras.visualprospecting.Utils;
-import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.gui.DrawUtils;
-import com.sinthoras.visualprospecting.gui.xaeromap.FakeWaypointManager;
+import com.sinthoras.visualprospecting.gui.model.layers.ThaumcraftNodeLayerManager;
+import com.sinthoras.visualprospecting.gui.model.locations.IWaypointAndLocationProvider;
+import com.sinthoras.visualprospecting.gui.model.locations.ThaumcraftNodeLocation;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import thaumcraft.api.aspects.Aspect;
-import thaumcraft.api.aspects.AspectList;
 import thaumcraft.client.lib.UtilsFX;
 
 public class ThaumcraftNodeRenderStep implements InteractableRenderStep {
@@ -22,18 +16,14 @@ public class ThaumcraftNodeRenderStep implements InteractableRenderStep {
 	private static final ResourceLocation markedTextureLocation = new ResourceLocation(Tags.MODID, "textures/node_marked.png");
     private static final ResourceLocation unmarkedTextureLocation = new ResourceLocation(Tags.MODID, "textures/node_unmarked.png");
 
-    private final NodeList node;
-    private final AspectList aspectList;
+    private final ThaumcraftNodeLocation thaumcraftNodeLocation;
+
     private double centerPixelX = 0;
     private double centerPixelY = 0;
     private double clickableRadiusPixelSquared = 0;
 
-	public ThaumcraftNodeRenderStep(NodeList node) {
-		this.node = node;
-		aspectList = new AspectList();
-        for(String aspectTag : node.aspect.keySet()) {
-            aspectList.add(Aspect.getAspect(aspectTag), node.aspect.get(aspectTag));
-        }
+	public ThaumcraftNodeRenderStep(ThaumcraftNodeLocation thaumcraftNodeLocation) {
+		this.thaumcraftNodeLocation = thaumcraftNodeLocation;
 	}
 
 	@Override
@@ -41,19 +31,19 @@ public class ThaumcraftNodeRenderStep implements InteractableRenderStep {
 		final double borderSize = 44;
         final double borderSizeHalf = borderSize / 2;
         final double scaleForGui = Math.max(0.5D, scale);
-        centerPixelX = (node.x - cameraX) * scaleForGui;
-        centerPixelY = (node.z - cameraZ) * scaleForGui;
+        centerPixelX = (thaumcraftNodeLocation.getBlockX() - cameraX) * scaleForGui;
+        centerPixelY = (thaumcraftNodeLocation.getBlockZ() - cameraZ) * scaleForGui;
         clickableRadiusPixelSquared = borderSizeHalf * borderSizeHalf;
 
         GL11.glPushMatrix();
-		GL11.glTranslated(node.x - cameraX, node.z - cameraZ, 0);
+		GL11.glTranslated(thaumcraftNodeLocation.getBlockX() - cameraX, thaumcraftNodeLocation.getBlockZ() - cameraZ, 0);
 		GL11.glScaled(1 / scaleForGui, 1 / scaleForGui, 1);
 
         final int alpha = 204;
-        DrawUtils.drawQuad(isWaypoint() ? markedTextureLocation : unmarkedTextureLocation, -borderSizeHalf, -borderSizeHalf, borderSize, borderSize, 0xFFFFFF, alpha);
+        DrawUtils.drawQuad(thaumcraftNodeLocation.isActiveAsWaypoint() ? markedTextureLocation : unmarkedTextureLocation, -borderSizeHalf, -borderSizeHalf, borderSize, borderSize, 0xFFFFFF, alpha);
 
         final int aspectPixelDiameter = 32;
-        DrawUtils.drawAspect(0, 0, aspectPixelDiameter, aspectList.getAspectsSortedAmount()[0], 0);
+        DrawUtils.drawAspect(0, 0, aspectPixelDiameter, thaumcraftNodeLocation.getStrongestAspect(), 0);
 
         GL11.glPopMatrix();
 	}
@@ -74,12 +64,11 @@ public class ThaumcraftNodeRenderStep implements InteractableRenderStep {
 		mouseX = ((mouseX - cameraX) * scale + gui.mc.displayWidth / 2.0) / scaleAdj;
 		mouseY = ((mouseY - cameraZ) * scale + gui.mc.displayHeight / 2.0) / scaleAdj;
 
-		final boolean isWaypoint = isWaypoint();
-        final String asWaypoint = EnumChatFormatting.GOLD + I18n.format("visualprospecting.iswaypoint");
-        final String title = EnumChatFormatting.BOLD + I18n.format("tile.blockAiry.0.name");
-        final String nodeDescription = node.mod.equals("BLANK") ? EnumChatFormatting.GRAY + I18n.format("nodetype." + node.type + ".name")
-                : EnumChatFormatting.GRAY + I18n.format("nodetype." + node.type + ".name") + ", " + I18n.format("nodemod." + node.mod + ".name");
-        final String deleteHint = EnumChatFormatting.DARK_GRAY + I18n.format("visualprospecting.node.deletehint", Keyboard.getKeyName(VP.keyAction.getKeyCode()));
+		final boolean isWaypoint = thaumcraftNodeLocation.isActiveAsWaypoint();
+        final String asWaypoint = thaumcraftNodeLocation.getActiveWaypointHint();
+        final String title = thaumcraftNodeLocation.getTitle();
+        final String nodeDescription = thaumcraftNodeLocation.getDescription();
+        final String deleteHint = thaumcraftNodeLocation.getDeleteHint();
 
         int maxTextWidth = Math.max(Math.max(gui.mc.fontRenderer.getStringWidth(title), gui.mc.fontRenderer.getStringWidth(nodeDescription)), gui.mc.fontRenderer.getStringWidth(deleteHint));
         if(isWaypoint) {
@@ -89,8 +78,8 @@ public class ThaumcraftNodeRenderStep implements InteractableRenderStep {
             maxTextWidth = (int) Math.ceil(maxTextWidth * 1.25f);
         }
 
-        final int aspectRows = (aspectList.size() + 4) / 5;  // Equivalent to Math.ceil(size / 5)
-        final int aspectColumns = Math.min(aspectList.size(), 5);
+        final int aspectRows = (thaumcraftNodeLocation.getAspects().size() + 4) / 5;  // Equivalent to Math.ceil(size / 5)
+        final int aspectColumns = Math.min(thaumcraftNodeLocation.getAspects().size(), 5);
 
         int pixelX = (int) (mouseX + 12);
         int pixelY = (int) (mouseY - 12);
@@ -147,9 +136,9 @@ public class ThaumcraftNodeRenderStep implements InteractableRenderStep {
         int aspectY = 0;
 
 
-        for(Aspect aspect : aspectList.getAspectsSortedAmount()) {
+        for(Aspect aspect : thaumcraftNodeLocation.getAspects().getAspectsSortedAmount()) {
             GL11.glPushMatrix();
-            UtilsFX.drawTag(pixelX + aspectX * 16, pixelY + aspectY * 16 + offset + 10, aspect, aspectList.getAmount(aspect), 0, 0.01, 1, 1, false);
+            UtilsFX.drawTag(pixelX + aspectX * 16, pixelY + aspectY * 16 + offset + 10, aspect, thaumcraftNodeLocation.getAspects().getAmount(aspect), 0, 0.01, 1, 1, false);
             GL11.glPopMatrix();
             ++aspectX;
             if(aspectX >= 5) {
@@ -165,26 +154,16 @@ public class ThaumcraftNodeRenderStep implements InteractableRenderStep {
 
 	@Override
 	public void onDoubleClick() {
-		if(Utils.isXaerosMinimapInstalled()) {
-			FakeWaypointManager.toggleWaypoint(FakeWaypointManager.TC_NODES_WAYPOINT, node.x, node.y, node.z,
-					I18n.format("visualprospecting.tracked", I18n.format("tile.blockAiry.0.name")), "@", 15, node.dim);
-			if (FakeWaypointManager.hasWaypoint(FakeWaypointManager.TC_NODES_WAYPOINT)) {
-				TCNodeTracker.xMarker = node.x;
-				TCNodeTracker.yMarker = node.y;
-				TCNodeTracker.zMarker = node.z;
-			}
-			else {
-				TCNodeTracker.yMarker = -1;
-			}
-		}
+
 	}
 
 	@Override
 	public void onActionButton() {
-		TCNodeTracker.nodelist.removeIf(entry -> entry.x == node.x && entry.y == node.y && entry.z == node.z);
+		ThaumcraftNodeLayerManager.instance.deleteNode(thaumcraftNodeLocation);
 	}
 
-	private boolean isWaypoint() {
-		return Utils.isXaerosMinimapInstalled() && FakeWaypointManager.isWaypointAtCoords(FakeWaypointManager.TC_NODES_WAYPOINT, node.x, node.y, node.z);
+	@Override
+	public IWaypointAndLocationProvider getLocationProvider() {
+		return thaumcraftNodeLocation;
 	}
 }

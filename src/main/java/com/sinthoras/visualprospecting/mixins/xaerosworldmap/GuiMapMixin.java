@@ -1,14 +1,19 @@
 package com.sinthoras.visualprospecting.mixins.xaerosworldmap;
 
-import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
-import com.sinthoras.visualprospecting.gui.xaeromap.Buttons;
-import com.sinthoras.visualprospecting.gui.xaeromap.RenderStepManager;
+import com.sinthoras.visualprospecting.gui.model.MapState;
+import com.sinthoras.visualprospecting.gui.model.layers.LayerManager;
+import com.sinthoras.visualprospecting.gui.xaeromap.XaeroMapState;
+import com.sinthoras.visualprospecting.gui.xaeromap.buttons.LayerButton;
+import com.sinthoras.visualprospecting.gui.xaeromap.buttons.SizedGuiTexturedButton;
+import com.sinthoras.visualprospecting.gui.xaeromap.renderers.InteractableLayerRenderer;
+import com.sinthoras.visualprospecting.gui.xaeromap.renderers.LayerRenderer;
+import com.sinthoras.visualprospecting.gui.xaeromap.rendersteps.RenderStep;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,10 +27,11 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import xaero.map.MapProcessor;
 import xaero.map.gui.CursorBox;
 import xaero.map.gui.GuiMap;
-import xaero.map.gui.GuiTexturedButton;
 import xaero.map.gui.ScreenBase;
 import xaero.map.misc.Misc;
 
+// stop yelling at me it just works
+@SuppressWarnings({"MixinAnnotationTarget", "UnresolvedMixinReference"})
 @Mixin(value = GuiMap.class, remap = false)
 public abstract class GuiMapMixin extends ScreenBase {
 
@@ -51,7 +57,7 @@ public abstract class GuiMapMixin extends ScreenBase {
 			at = @At("RETURN")
 	)
 	private void injectConstruct(GuiScreen parent, GuiScreen escape, MapProcessor mapProcessor, EntityPlayer player, CallbackInfo ci) {
-		VeinTypeCaching.recalculateNEISearch();
+		MapState.instance.layers.forEach(LayerManager::onOpenMap);
 	}
 
 	// apparently mixin can read the obfuscated names even with the deobf jar loaded. weird
@@ -73,7 +79,11 @@ public abstract class GuiMapMixin extends ScreenBase {
 		cameraX = Math.round(cameraX * scale) / scale;
 		cameraZ = Math.round(cameraZ * scale) / scale;
 
-		RenderStepManager.updateHovered(mousePosX, mousePosZ, cameraX, cameraZ, scale);
+		for (LayerRenderer layer : XaeroMapState.instance.renderers) {
+			if (layer instanceof InteractableLayerRenderer) {
+				((InteractableLayerRenderer) layer).updateHovered(mousePosX, mousePosZ, cameraX, cameraZ, scale);
+			}
+		}
 	}
 
 	// deobf method = "drawScreen"
@@ -92,7 +102,20 @@ public abstract class GuiMapMixin extends ScreenBase {
 			)
 	)
 	private void injectDraw(int scaledMouseX, int scaledMouseY, float partialTicks, CallbackInfo ci) {
-		RenderStepManager.render(this, cameraX, cameraZ, scale);
+		for(LayerManager layerManager : MapState.instance.layers) {
+            if(layerManager.isLayerActive()) {
+            	// +20s are to work around precision loss from casting to int and right-shifting
+                layerManager.recacheVisibleElements((int) cameraX, (int) cameraZ, (int) (mc.displayWidth / scale) + 20, (int) (mc.displayHeight / scale) + 20);
+            }
+        }
+
+		for (LayerRenderer renderer : XaeroMapState.instance.renderers) {
+			if (renderer.isLayerActive()) {
+				for (RenderStep step : renderer.getRenderSteps()) {
+					step.draw(this, cameraX, cameraZ, scale);
+				}
+			}
+		}
 	}
 
 	// deobf method = drawScreen
@@ -112,7 +135,11 @@ public abstract class GuiMapMixin extends ScreenBase {
 			)
 	)
 	private void injectDrawTooltip(int scaledMouseX, int scaledMouseY, float partialTicks, CallbackInfo ci) {
-		RenderStepManager.drawTooltip(this, cameraX, cameraZ, scale, screenScale);
+		for (LayerRenderer layer : XaeroMapState.instance.renderers) {
+			if (layer instanceof InteractableLayerRenderer && layer.isLayerActive()) {
+				((InteractableLayerRenderer) layer).drawTooltip(this, cameraX, cameraZ, scale, screenScale);
+			}
+		}
 	}
 
 	// deobf method = "initGui"
@@ -122,16 +149,12 @@ public abstract class GuiMapMixin extends ScreenBase {
 			)
 	)
 	private void injectInitButtons(CallbackInfo ci) {
-		Buttons.oreVeinButton = new GuiTexturedButton(0, height - 20, 20, 20, 0, 0, 16, 16,
-				Buttons.buttonTextures, Buttons::onOreVeinButton, new CursorBox("visualprospecting.button.orevein"));
-		addGuiButton(Buttons.oreVeinButton);
-		Buttons.undergroundFluidButton = new GuiTexturedButton(0, height - 40, 20, 20, 16, 0, 16, 16,
-				Buttons.buttonTextures, Buttons::onUndergroundFluidButton, new CursorBox("visualprospecting.button.undergroundfluid"));
-		addGuiButton(Buttons.undergroundFluidButton);
-		if (Utils.isTCNodeTrackerInstalled()) {
-			Buttons.thaumcraftNodeButton = new GuiTexturedButton(0, height - 60, 20, 20, 32, 0, 16, 16,
-					Buttons.buttonTextures, Buttons::onThaumcraftNodeButton, new CursorBox("visualprospecting.button.nodes"));
-			addGuiButton(Buttons.thaumcraftNodeButton);
+		for (int i = 0; i < XaeroMapState.instance.buttons.size(); i++) {
+			LayerButton layerButton = XaeroMapState.instance.buttons.get(i);
+			GuiButton button = new SizedGuiTexturedButton(0, height - 20 * (i + 1), 20, 20, 0, 0, 16, 16,
+					new ResourceLocation("xaeroworldmap", "textures/" + layerButton.getIconName() + ".png"), (btn) -> layerButton.toggle(),
+					new CursorBox(layerButton.getButtonTextKey()));
+			addGuiButton(button);
 		}
 	}
 
@@ -140,7 +163,11 @@ public abstract class GuiMapMixin extends ScreenBase {
 	)
 	private void injectListenKeypress(boolean mouse, int code, CallbackInfoReturnable<Boolean> cir) {
 		if (Misc.inputMatchesKeyBinding(mouse, code, VP.keyAction)) {
-			RenderStepManager.doActionKeyPress();
+			for (LayerRenderer layer : XaeroMapState.instance.renderers) {
+				if (layer instanceof InteractableLayerRenderer) {
+					((InteractableLayerRenderer) layer).doActionKeyPress();
+				}
+			}
 		}
 	}
 
@@ -156,7 +183,11 @@ public abstract class GuiMapMixin extends ScreenBase {
 			timeLastClick = isDoubleClick ? 0 : timestamp;
 
 			if (isDoubleClick) {
-				RenderStepManager.doDoubleClick();
+				for (LayerRenderer layer : XaeroMapState.instance.renderers) {
+					if (layer instanceof InteractableLayerRenderer && layer.isLayerActive()) {
+						((InteractableLayerRenderer) layer).doDoubleClick();
+					}
+				}
 			}
 		}
 	}

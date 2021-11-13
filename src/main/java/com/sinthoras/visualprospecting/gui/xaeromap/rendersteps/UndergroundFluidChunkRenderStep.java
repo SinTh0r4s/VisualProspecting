@@ -4,46 +4,37 @@ import com.sinthoras.visualprospecting.Config;
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.gui.DrawUtils;
+import com.sinthoras.visualprospecting.gui.model.locations.UndergroundFluidChunkLocation;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.fluids.Fluid;
 import org.lwjgl.opengl.GL11;
 
 public class UndergroundFluidChunkRenderStep implements RenderStep{
-	private final int blockX;
-	private final int blockZ;
-	private final Fluid fluid;
-	private final int fluidAmount;
-	private final int maxAmountInField;
-	private final int minAmountInField;
+	private final UndergroundFluidChunkLocation undergroundFluidChunkLocation;
 
-	public UndergroundFluidChunkRenderStep(int chunkX, int chunkZ, Fluid fluid, int fluidAmount, int minAmountInField, int maxAmountInField) {
-		blockX = Utils.coordChunkToBlock(chunkX);
-		blockZ = Utils.coordChunkToBlock(chunkZ);
-		this.fluid = fluid;
-		this.fluidAmount = fluidAmount;
-		this.maxAmountInField = maxAmountInField;
-		this.minAmountInField = minAmountInField;
+	public UndergroundFluidChunkRenderStep(UndergroundFluidChunkLocation location) {
+		undergroundFluidChunkLocation = location;
 	}
 
 	private String getFluidAmountFormatted() {
-		if(fluidAmount >= 1000) {
-			return (fluidAmount / 1000) + "kL";
+		if(undergroundFluidChunkLocation.getFluidAmount() >= 1000) {
+			return (undergroundFluidChunkLocation.getFluidAmount() / 1000) + "kL";
 		}
-		return fluidAmount + "L";
+		return undergroundFluidChunkLocation.getFluidAmount() + "L";
 	}
 
 	@Override
 	public void draw(GuiScreen gui, double cameraX, double cameraZ, double scale) {
-        if (fluidAmount > 0 && scale >= Utils.journeyMapScaleToLinear(Config.minZoomLevelForUndergroundFluidDetails)) {
+        if (undergroundFluidChunkLocation.getFluidAmount() > 0 && scale >= Utils.journeyMapScaleToLinear(Config.minZoomLevelForUndergroundFluidDetails)) {
 			GL11.glPushMatrix();
-			GL11.glTranslated(blockX - cameraX, blockZ - cameraZ, 0);
+			GL11.glTranslated(undergroundFluidChunkLocation.getBlockX() - 0.5 - cameraX, undergroundFluidChunkLocation.getBlockZ() - 0.5 - cameraZ, 0);
 
-			float alpha = ((float)(fluidAmount - minAmountInField)) / (maxAmountInField - minAmountInField + 1);
+			float alpha = ((float)(undergroundFluidChunkLocation.getFluidAmount() - undergroundFluidChunkLocation.getMinAmountInField())) /
+					(undergroundFluidChunkLocation.getMaxAmountInField() - undergroundFluidChunkLocation.getMinAmountInField() + 1);
             alpha *= alpha * 204;
-            int fluidColor = fluid.getColor() | (((int) alpha) << 24);
+            int fluidColor = undergroundFluidChunkLocation.getFluid().getColor() | (((int) alpha) << 24);
 			DrawUtils.drawGradientRect(0, 0, VP.chunkWidth, VP.chunkDepth, 0, fluidColor, fluidColor);
 
-            if(fluidAmount >= maxAmountInField) {
+            if(undergroundFluidChunkLocation.getFluidAmount() >= undergroundFluidChunkLocation.getMaxAmountInField()) {
                 final int borderColor = 0xCCFFD700;
 				DrawUtils.drawGradientRect(0, 0, 15, 1, 0, borderColor, borderColor);
 				DrawUtils.drawGradientRect(15, 0, 16, 15, 0, borderColor, borderColor);
