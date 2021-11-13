@@ -3,10 +3,9 @@ package com.sinthoras.visualprospecting.database.cachebuilder;
 import com.sinthoras.visualprospecting.Config;
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.VP;
+import net.minecraft.server.MinecraftServer;
 
 import java.text.DecimalFormat;
-
-import static com.sinthoras.visualprospecting.database.cachebuilder.Reflection.renderUserMessage;
 
 public class AnalysisProgressTracker {
 
@@ -49,7 +48,7 @@ public class AnalysisProgressTracker {
                     + (numberOfRegionFiles == 0 ? 0 : ((regionFilesProcessed * 100) / numberOfRegionFiles)) + "%";
             VP.info(message);
             if(Utils.isLogicalClient()) {
-                renderUserMessage(message + "%");  // Escape % for String.format
+                MinecraftServer.getServer().userMessage = message + "%";  // Escape % for String.format
             }
 
         }
@@ -63,7 +62,7 @@ public class AnalysisProgressTracker {
         final String message = "Parsing complete! Thank you for your patience.  - Duration: " + format.format(elapsedTimeMS / 1000) + "sec";
         VP.info(message);
         if(Utils.isLogicalClient()) {
-            renderUserMessage(message);
+            MinecraftServer.getServer().userMessage = message;
         }
     }
 }
