@@ -3,7 +3,6 @@ package com.sinthoras.visualprospecting.gui.xaeromap.renderers;
 import com.sinthoras.visualprospecting.gui.model.layers.ThaumcraftNodeLayerManager;
 import com.sinthoras.visualprospecting.gui.model.locations.ILocationProvider;
 import com.sinthoras.visualprospecting.gui.model.locations.ThaumcraftNodeLocation;
-import com.sinthoras.visualprospecting.gui.xaeromap.rendersteps.RenderStep;
 import com.sinthoras.visualprospecting.gui.xaeromap.rendersteps.ThaumcraftNodeRenderStep;
 
 import java.util.ArrayList;

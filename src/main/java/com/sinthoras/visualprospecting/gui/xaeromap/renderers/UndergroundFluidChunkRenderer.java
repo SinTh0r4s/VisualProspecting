@@ -3,10 +3,7 @@ package com.sinthoras.visualprospecting.gui.xaeromap.renderers;
 import com.sinthoras.visualprospecting.gui.model.layers.UndergroundFluidChunkLayerManager;
 import com.sinthoras.visualprospecting.gui.model.locations.ILocationProvider;
 import com.sinthoras.visualprospecting.gui.model.locations.UndergroundFluidChunkLocation;
-import com.sinthoras.visualprospecting.gui.model.locations.UndergroundFluidLocation;
-import com.sinthoras.visualprospecting.gui.xaeromap.rendersteps.RenderStep;
 import com.sinthoras.visualprospecting.gui.xaeromap.rendersteps.UndergroundFluidChunkRenderStep;
-import com.sinthoras.visualprospecting.gui.xaeromap.rendersteps.UndergroundFluidRenderStep;
 
 import java.util.ArrayList;
 import java.util.List;

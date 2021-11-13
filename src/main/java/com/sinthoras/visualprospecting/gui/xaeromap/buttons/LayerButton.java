@@ -2,7 +2,6 @@ package com.sinthoras.visualprospecting.gui.xaeromap.buttons;
 
 import com.sinthoras.visualprospecting.gui.model.SupportedMods;
 import com.sinthoras.visualprospecting.gui.model.buttons.ButtonManager;
-import net.minecraft.client.gui.GuiButton;
 
 public class LayerButton extends com.sinthoras.visualprospecting.gui.model.buttons.LayerButton {
 

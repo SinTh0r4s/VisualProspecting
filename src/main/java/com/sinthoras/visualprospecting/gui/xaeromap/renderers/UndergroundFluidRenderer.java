@@ -1,6 +1,5 @@
 package com.sinthoras.visualprospecting.gui.xaeromap.renderers;
 
-import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import com.sinthoras.visualprospecting.gui.model.layers.UndergroundFluidLayerManager;
 import com.sinthoras.visualprospecting.gui.model.locations.ILocationProvider;
 import com.sinthoras.visualprospecting.gui.model.locations.UndergroundFluidLocation;
