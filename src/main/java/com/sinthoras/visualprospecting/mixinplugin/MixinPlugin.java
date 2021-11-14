@@ -3,7 +3,6 @@ package com.sinthoras.visualprospecting.mixinplugin;
 import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.VANILLA;
 import static java.nio.file.Files.walk;
 
-import com.google.common.io.Files;
 import com.sinthoras.visualprospecting.Tags;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import net.minecraft.launchwrapper.Launch;
 import org.apache.logging.log4j.LogManager;
@@ -56,8 +54,9 @@ public class MixinPlugin implements IMixinConfigPlugin {
         List<TargetedMod> loadedMods = Arrays.stream(TargetedMod.values())
                 .filter(mod -> mod == VANILLA
                         || (mod.loadInDevelopment && isDevelopmentEnvironment)
-                        || attemptLoadingJar(mod.jarNamePrefix))
+                        || loadJarOf(mod))
                 .collect(Collectors.toList());
+        
         for (TargetedMod mod : TargetedMod.values()) {
             if(loadedMods.contains(mod)) {
                 LOG.info("Found " + mod.modName + "! Integrating now...");
@@ -77,11 +76,11 @@ public class MixinPlugin implements IMixinConfigPlugin {
         return mixins;
     }
 
-    private boolean attemptLoadingJar(final String namePrefix) {
+    private boolean loadJarOf(final TargetedMod mod) {
         try {
-            File jar = findJarInModPathBy(namePrefix);
+            File jar = findJarOf(mod);
             if(jar == null) {
-                LOG.info("Jar not found: " + namePrefix);
+                LOG.info("Jar not found for " + mod);
                 return false;
             }
 
@@ -98,10 +97,10 @@ public class MixinPlugin implements IMixinConfigPlugin {
         }
     }
 
-    public static File findJarInModPathBy(final String namePrefix) {
+    public static File findJarOf(final TargetedMod mod) {
         try {
             return walk(MODS_DIRECTORY_PATH)
-                .filter(isJarWithIgnoringCase(namePrefix))
+                .filter(mod::isMatchingJar)
                 .map(Path::toFile)
                 .findFirst()
                 .orElse(null);
@@ -109,16 +108,6 @@ public class MixinPlugin implements IMixinConfigPlugin {
             e.printStackTrace();
             return null;
         }
-    }
-
-    private static Predicate<Path> isJarWithIgnoringCase(String namePrefix) {
-        final String namePrefixLowerCase = namePrefix.toLowerCase();
-        return (Path path) -> {
-            final String pathString = path.toString();
-            final String nameLowerCase = Files.getNameWithoutExtension(pathString).toLowerCase();
-            final String fileExtension = Files.getFileExtension(pathString);
-            return nameLowerCase.startsWith(namePrefixLowerCase) && "jar".equals(fileExtension);
-        };
     }
 
     @Override

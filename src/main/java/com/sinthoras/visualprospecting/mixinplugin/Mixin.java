@@ -1,11 +1,16 @@
 package com.sinthoras.visualprospecting.mixinplugin;
 
-import cpw.mods.fml.relauncher.FMLLaunchHandler;
+import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.BARTWORKS;
+import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.GALACTICGREG;
+import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.GREGTECH;
+import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.IFU;
+import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.JOURNEYMAP;
+import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.TCNODETRACKER;
+import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.VANILLA;
 
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.*;
 
 public enum Mixin {
 
@@ -24,7 +29,7 @@ public enum Mixin {
     GT_MetaTileEntity_ScannerMixin("gregtech.GT_MetaTileEntity_ScannerMixin", GREGTECH),
     GT_WorldGenContainerMixin("gregtech.WorldGenContainerMixin", GREGTECH),
 
-    ItemOreFinderToolMixin("ifu.ItemOreFinderToolMixin", Side.SERVER,  IFU),
+    ItemOreFinderToolMixin("ifu.ItemOreFinderToolMixin",  IFU),
 
     FullscreenMixin("journeymap.FullscreenMixin", Side.CLIENT, JOURNEYMAP),
     FullscreenActionsMixin("journeymap.FullscreenActionsMixin", Side.CLIENT, JOURNEYMAP),
