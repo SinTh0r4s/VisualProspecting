@@ -2,6 +2,7 @@ package com.sinthoras.visualprospecting.mixins.ifu;
 
 import com.encraft.dz.items.ItemOreFinderTool;
 import com.sinthoras.visualprospecting.VisualProspecting_API;
+import com.sinthoras.visualprospecting.VisualProspecting_API.LogicalServer;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.objects.ItemData;
@@ -34,7 +35,7 @@ public class ItemOreFinderToolMixin extends Item {
 
   @Inject(
       method = "onUpdate",
-      at = @At(value = "INVOKE", target = "Lcom/encraft/dz/items/ItemOreFinderTool;shouldKeepLooking()Z", shift = Shift.AFTER, remap = false),
+      at = @At(value = "INVOKE", target = "Lcom/encraft/dz/items/ItemOreFinderTool;shouldKeepLooking()Z", shift = Shift.AFTER, remap = false, ordinal = 0),
       locals = LocalCapture.CAPTURE_FAILHARD,
       remap = true
   )
@@ -54,9 +55,11 @@ public class ItemOreFinderToolMixin extends Item {
     if (vanilla || world.isRemote || didNotDetectSignificantOreCluster() || !(entity instanceof EntityPlayer)) return;
 
     final short foundMaterialMetaId = (short) dataInWorld.mMaterial.mMaterial.mMetaItemSubID;
+
     final int blockX = x1;
     final int blockZ = z1;
     final List<OreVeinPosition> discoveredOreVeins = listVeinsInProximityContaining(foundMaterialMetaId, blockX, blockZ, world);
+
     VisualProspecting_API.LogicalServer.sendProspectionResultsToClient((EntityPlayerMP) entity, discoveredOreVeins, Collections.emptyList());
   }
 
@@ -64,13 +67,11 @@ public class ItemOreFinderToolMixin extends Item {
     return found < MAX_DAMAGE;
   }
 
-  private List<OreVeinPosition> listVeinsInProximityContaining(short foundMaterialMetaItemSubId, int blocX, int blockZ, World world) {
-    return VisualProspecting_API
-        .LogicalServer
+  private List<OreVeinPosition> listVeinsInProximityContaining(short foundMaterialMetaId, int blocX, int blockZ, World world) {
+    return LogicalServer
         .prospectOreVeinsWithinRadius(world.provider.dimensionId, blocX, blockZ, 48)
         .stream()
-        .filter(it -> it.veinType.containsOre(foundMaterialMetaItemSubId))
+        .filter(it -> it.veinType.containsOre(foundMaterialMetaId))
         .collect(Collectors.toList());
   }
-
 }
