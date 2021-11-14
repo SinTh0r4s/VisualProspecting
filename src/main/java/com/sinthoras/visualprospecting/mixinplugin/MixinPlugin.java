@@ -1,6 +1,20 @@
 package com.sinthoras.visualprospecting.mixinplugin;
 
+import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.VANILLA;
+import static java.nio.file.Files.walk;
+
+import com.google.common.io.Files;
 import com.sinthoras.visualprospecting.Tags;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import net.minecraft.launchwrapper.Launch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,19 +23,10 @@ import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import ru.timeconqueror.spongemixins.MinecraftURLClassPath;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.VANILLA;
-
 public class MixinPlugin implements IMixinConfigPlugin {
 
     private static final Logger LOG = LogManager.getLogger(Tags.MODID + " mixins");
+    private static final Path MODS_DIRECTORY_PATH = new File(Launch.minecraftHome, "mods/").toPath();
 
     @Override
     public void onLoad(String mixinPackage) {
@@ -51,7 +56,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
         List<TargetedMod> loadedMods = Arrays.stream(TargetedMod.values())
                 .filter(mod -> mod == VANILLA
                         || (mod.loadInDevelopment && isDevelopmentEnvironment)
-                        || loadJar(mod.jarNameBeginsWith))
+                        || attemptLoadingJar(mod.jarNamePrefix))
                 .collect(Collectors.toList());
         for (TargetedMod mod : TargetedMod.values()) {
             if(loadedMods.contains(mod)) {
@@ -72,11 +77,11 @@ public class MixinPlugin implements IMixinConfigPlugin {
         return mixins;
     }
 
-    private boolean loadJar(final String jarNameBeginsWith) {
+    private boolean attemptLoadingJar(final String namePrefix) {
         try {
-            File jar = MinecraftURLClassPath.getJarInModPath(jarNameBeginsWith);
+            File jar = findJarInModPathBy(namePrefix);
             if(jar == null) {
-                LOG.info("Jar not found: " + jarNameBeginsWith);
+                LOG.info("Jar not found: " + namePrefix);
                 return false;
             }
 
@@ -91,6 +96,29 @@ public class MixinPlugin implements IMixinConfigPlugin {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static File findJarInModPathBy(final String namePrefix) {
+        try {
+            return walk(MODS_DIRECTORY_PATH)
+                .filter(isJarWithIgnoringCase(namePrefix))
+                .map(Path::toFile)
+                .findFirst()
+                .orElse(null);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static Predicate<Path> isJarWithIgnoringCase(String namePrefix) {
+        final String namePrefixLowerCase = namePrefix.toLowerCase();
+        return (Path path) -> {
+            final String pathString = path.toString();
+            final String nameLowerCase = Files.getNameWithoutExtension(pathString).toLowerCase();
+            final String fileExtension = Files.getFileExtension(pathString);
+            return nameLowerCase.startsWith(namePrefixLowerCase) && "jar".equals(fileExtension);
+        };
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.sinthoras.visualprospecting.mixinplugin;
 
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 
-import com.github.bartimaeusnek.bartworks.API.SideReference.*;
 import java.util.Arrays;
 import java.util.List;
 
