@@ -1,21 +1,27 @@
 package com.sinthoras.visualprospecting.mixins.ifu;
 
-import com.encraft.dz.items.*;
-import com.sinthoras.visualprospecting.*;
-import com.sinthoras.visualprospecting.database.*;
-import gregtech.api.enums.*;
-import gregtech.api.objects.*;
-import java.util.*;
-import java.util.stream.*;
-import net.minecraft.block.*;
-import net.minecraft.entity.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.item.*;
-import net.minecraft.world.*;
-import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.At.*;
-import org.spongepowered.asm.mixin.injection.callback.*;
+import com.encraft.dz.items.ItemOreFinderTool;
+import com.sinthoras.visualprospecting.VisualProspecting_API;
+import com.sinthoras.visualprospecting.database.OreVeinPosition;
+import gregtech.api.enums.OrePrefixes;
+import gregtech.api.objects.ItemData;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.At.Shift;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(value = ItemOreFinderTool.class, remap = false)
 public class ItemOreFinderToolMixin extends Item {
@@ -29,7 +35,7 @@ public class ItemOreFinderToolMixin extends Item {
   @Inject(
       method = "onUpdate",
       at = @At(value = "INVOKE", target = "Lcom/encraft/dz/items/ItemOreFinderTool;shouldKeepLooking()Z", shift = Shift.AFTER, remap = false),
-      locals = LocalCapture.CAPTURE_FAILSOFT,
+      locals = LocalCapture.CAPTURE_FAILHARD,
       remap = true
   )
   public void onGtOreFound(
@@ -45,17 +51,23 @@ public class ItemOreFinderToolMixin extends Item {
       int z1, int x1, int y1, 
       Block tBlock, int meta, ItemStack inWorld, ItemData dataInWorld, List<OrePrefixes> oreTypes
   ) {
-    if (vanilla || world.isRemote || found < MAX_DAMAGE || !(entity instanceof EntityPlayer)) return;
-    
-    final short foundMaterialMetaItemSubId = (short) dataInWorld.mMaterial.mMaterial.mMetaItemSubID;
-    final List<OreVeinPosition> discoveredOreVeins = listAssociateVeins( foundMaterialMetaItemSubId, x1, z1, world);
+    if (vanilla || world.isRemote || didNotDetectSignificantOreCluster() || !(entity instanceof EntityPlayer)) return;
+
+    final short foundMaterialMetaId = (short) dataInWorld.mMaterial.mMaterial.mMetaItemSubID;
+    final int blockX = x1;
+    final int blockZ = z1;
+    final List<OreVeinPosition> discoveredOreVeins = listVeinsInProximityContaining(foundMaterialMetaId, blockX, blockZ, world);
     VisualProspecting_API.LogicalServer.sendProspectionResultsToClient((EntityPlayerMP) entity, discoveredOreVeins, Collections.emptyList());
   }
 
-  private List<OreVeinPosition> listAssociateVeins(short foundMaterialMetaItemSubId, int x, int z, World world) {
+  private boolean didNotDetectSignificantOreCluster() {
+    return found < MAX_DAMAGE;
+  }
+
+  private List<OreVeinPosition> listVeinsInProximityContaining(short foundMaterialMetaItemSubId, int blocX, int blockZ, World world) {
     return VisualProspecting_API
         .LogicalServer
-        .prospectOreVeinsWithinRadius(world.provider.dimensionId, x, z, 24)
+        .prospectOreVeinsWithinRadius(world.provider.dimensionId, blocX, blockZ, 48)
         .stream()
         .filter(it -> it.veinType.containsOre(foundMaterialMetaItemSubId))
         .collect(Collectors.toList());
