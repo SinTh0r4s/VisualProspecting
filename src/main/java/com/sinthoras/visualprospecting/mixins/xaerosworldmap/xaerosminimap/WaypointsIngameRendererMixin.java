@@ -15,22 +15,22 @@ import xaero.common.minimap.waypoints.render.WaypointsIngameRenderer;
 @Mixin(value = WaypointsIngameRenderer.class, remap = false)
 public class WaypointsIngameRendererMixin {
 
-	@Inject(method = "render",
-			at = @At(value = "INVOKE",
-					target = "Lxaero/common/minimap/waypoints/render/WaypointsIngameRenderer;renderWaypointsList(Ljava/util/Collection;DDDLnet/minecraft/entity/Entity;Lnet/minecraft/client/renderer/Tessellator;DDDDFFDIFFLnet/minecraft/util/Vec3;D)V"
-			),
-			slice = @Slice(
-					from = @At(value = "FIELD",
-							target = "Lxaero/common/minimap/waypoints/WaypointsManager;customWaypoints:Ljava/util/Hashtable;",
-							opcode = Opcodes.GETSTATIC
-					)
-			)
-	)
-	private void injectPreRenderCustomWaypoints(XaeroMinimapSession sets, float modCustomWaypoints, CallbackInfo ci) {
-		for (WaypointManager manager : XaeroMapState.instance.waypointManagers) {
-			if (manager.hasWaypoint()) {
-				manager.getXWaypoint().notifyDimension(Minecraft.getMinecraft().renderViewEntity.dimension);
-			}
-		}
-	}
+    @Inject(method = "render",
+            at = @At(value = "INVOKE",
+                    target = "Lxaero/common/minimap/waypoints/render/WaypointsIngameRenderer;renderWaypointsList(Ljava/util/Collection;DDDLnet/minecraft/entity/Entity;Lnet/minecraft/client/renderer/Tessellator;DDDDFFDIFFLnet/minecraft/util/Vec3;D)V"
+            ),
+            slice = @Slice(
+                    from = @At(value = "FIELD",
+                            target = "Lxaero/common/minimap/waypoints/WaypointsManager;customWaypoints:Ljava/util/Hashtable;",
+                            opcode = Opcodes.GETSTATIC
+                    )
+            )
+    )
+    private void injectPreRenderCustomWaypoints(XaeroMinimapSession sets, float modCustomWaypoints, CallbackInfo ci) {
+        for (WaypointManager manager : XaeroMapState.instance.waypointManagers) {
+            if (manager.hasWaypoint()) {
+                manager.getXWaypoint().notifyDimension(Minecraft.getMinecraft().renderViewEntity.dimension);
+            }
+        }
+    }
 }

@@ -58,10 +58,6 @@ public class Utils {
         return Loader.isModLoaded("XaeroWorldMap");
     }
 
-    public static boolean isXaerosMinimapInstalled() {
-        return Loader.isModLoaded("XaeroMinimap");
-    }
-
     public static int coordBlockToChunk(int blockCoord) {
         return blockCoord < 0 ? -((-blockCoord - 1) >> 4) - 1 : blockCoord >> 4;
     }

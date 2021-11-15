@@ -4,9 +4,9 @@ import com.sinthoras.visualprospecting.gui.model.buttons.UndergroundFluidButtonM
 
 public class UndergroundFluidButton extends LayerButton {
 
-	public static final UndergroundFluidButton instance = new UndergroundFluidButton();
+    public static final UndergroundFluidButton instance = new UndergroundFluidButton();
 
-	public UndergroundFluidButton() {
-		super(UndergroundFluidButtonManager.instance);
-	}
+    public UndergroundFluidButton() {
+        super(UndergroundFluidButtonManager.instance);
+    }
 }

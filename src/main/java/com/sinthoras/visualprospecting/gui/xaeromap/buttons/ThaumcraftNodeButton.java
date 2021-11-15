@@ -4,9 +4,9 @@ import com.sinthoras.visualprospecting.gui.model.buttons.ThaumcraftNodeButtonMan
 
 public class ThaumcraftNodeButton extends LayerButton {
 
-	public static final ThaumcraftNodeButton instance = new ThaumcraftNodeButton();
+    public static final ThaumcraftNodeButton instance = new ThaumcraftNodeButton();
 
-	public ThaumcraftNodeButton() {
-		super(ThaumcraftNodeButtonManager.instance);
-	}
+    public ThaumcraftNodeButton() {
+        super(ThaumcraftNodeButtonManager.instance);
+    }
 }

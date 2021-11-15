@@ -10,40 +10,40 @@ import java.util.Hashtable;
 
 public class WaypointManager extends com.sinthoras.visualprospecting.gui.model.waypoints.WaypointManager {
 
-	private static final Hashtable<Integer, xaero.common.minimap.waypoints.Waypoint> xWaypointTable = WaypointsManager.getCustomWaypoints(Tags.MODID);
+    private static final Hashtable<Integer, xaero.common.minimap.waypoints.Waypoint> xWaypointTable = WaypointsManager.getCustomWaypoints(Tags.MODID);
 
-	private WaypointWithDimension xWaypoint;
-	private final WaypointTypes id;
+    private WaypointWithDimension xWaypoint;
+    private final WaypointType waypointType;
 
-	public WaypointManager(WaypointProviderManager layerManager, WaypointTypes id) {
-		super(layerManager, SupportedMods.XaeroMap);
-		this.id = id;
-	}
+    public WaypointManager(WaypointProviderManager layerManager, WaypointType waypointType) {
+        super(layerManager, SupportedMods.XaeroMap);
+        this.waypointType = waypointType;
+    }
 
-	@Override
-	public void clearActiveWaypoint() {
-		xWaypoint = null;
-		xWaypointTable.remove(id.ordinal());
-	}
+    @Override
+    public void clearActiveWaypoint() {
+        xWaypoint = null;
+        xWaypointTable.remove(waypointType.ordinal());
+    }
 
-	public boolean hasWaypoint() {
-		return xWaypoint != null;
-	}
+    public boolean hasWaypoint() {
+        return xWaypoint != null;
+    }
 
-	public WaypointWithDimension getXWaypoint() {
-		return xWaypoint;
-	}
+    public WaypointWithDimension getXWaypoint() {
+        return xWaypoint;
+    }
 
-	@Override
-	public void updateActiveWaypoint(Waypoint waypoint) {
-		if (!hasWaypoint() || waypoint.blockX != xWaypoint.getX() || waypoint.blockY != xWaypoint.getY() ||
-				waypoint.blockZ != xWaypoint.getZ() || waypoint.dimensionId != xWaypoint.getDimID()) {
-			xWaypoint = new WaypointWithDimension(waypoint.blockX, waypoint.blockY, waypoint.blockZ, waypoint.label, getSymbol(waypoint), 15, waypoint.dimensionId);
-			xWaypointTable.put(id.ordinal(), xWaypoint);
-		}
-	}
+    @Override
+    public void updateActiveWaypoint(Waypoint waypoint) {
+        if (!hasWaypoint() || waypoint.blockX != xWaypoint.getX() || waypoint.blockY != xWaypoint.getY() ||
+                waypoint.blockZ != xWaypoint.getZ() || waypoint.dimensionId != xWaypoint.getDimID()) {
+            xWaypoint = new WaypointWithDimension(waypoint.blockX, waypoint.blockY, waypoint.blockZ, waypoint.label, getSymbol(waypoint), 15, waypoint.dimensionId);
+            xWaypointTable.put(waypointType.ordinal(), xWaypoint);
+        }
+    }
 
-	protected String getSymbol(Waypoint waypoint) {
-		return waypoint.label.substring(0, 1);
-	}
+    protected String getSymbol(Waypoint waypoint) {
+        return waypoint.label.substring(0, 1);
+    }
 }

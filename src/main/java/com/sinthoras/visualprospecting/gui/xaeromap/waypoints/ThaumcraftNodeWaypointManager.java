@@ -5,14 +5,14 @@ import com.sinthoras.visualprospecting.gui.model.waypoints.Waypoint;
 
 public class ThaumcraftNodeWaypointManager extends WaypointManager {
 
-	public static ThaumcraftNodeWaypointManager instance = new ThaumcraftNodeWaypointManager();
+    public static ThaumcraftNodeWaypointManager instance = new ThaumcraftNodeWaypointManager();
 
-	public ThaumcraftNodeWaypointManager() {
-		super(ThaumcraftNodeLayerManager.instance, WaypointTypes.TC_NODES_WAYPOINT);
-	}
+    public ThaumcraftNodeWaypointManager() {
+        super(ThaumcraftNodeLayerManager.instance, WaypointType.TC_NODES_WAYPOINT);
+    }
 
-	@Override
-	protected String getSymbol(Waypoint waypoint) {
-		return "@";
-	}
+    @Override
+    protected String getSymbol(Waypoint waypoint) {
+        return "@";
+    }
 }

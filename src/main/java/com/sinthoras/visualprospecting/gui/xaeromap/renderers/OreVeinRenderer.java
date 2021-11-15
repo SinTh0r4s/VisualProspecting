@@ -9,29 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OreVeinRenderer extends InteractableLayerRenderer {
-	public static OreVeinRenderer instance = new OreVeinRenderer();
+    public static OreVeinRenderer instance = new OreVeinRenderer();
 
-	public OreVeinRenderer() {
-		super(OreVeinLayerManager.instance);
-	}
+    public OreVeinRenderer() {
+        super(OreVeinLayerManager.instance);
+    }
 
-	@Override
-	protected List<OreVeinRenderStep> generateRenderSteps(List<? extends ILocationProvider> visibleElements) {
-		final List<OreVeinRenderStep> renderSteps = new ArrayList<>();
+    @Override
+    protected List<OreVeinRenderStep> generateRenderSteps(List<? extends ILocationProvider> visibleElements) {
+        final List<OreVeinRenderStep> renderSteps = new ArrayList<>();
         visibleElements.stream()
                 .map(element -> (OreVeinLocation) element)
                 .forEach(location -> renderSteps.add(new OreVeinRenderStep(location)));
         return renderSteps;
-	}
-
-	@Override
-	public void doDoubleClick() {
-		if (hovered != null) {
-			if (hovered.getLocationProvider().isActiveAsWaypoint()) {
-				manager.clearActiveWaypoint();
-			} else {
-				manager.setActiveWaypoint(hovered.getLocationProvider().toWaypoint());
-			}
-		}
-	}
+    }
 }

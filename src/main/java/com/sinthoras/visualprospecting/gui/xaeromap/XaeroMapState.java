@@ -15,25 +15,25 @@ import java.util.List;
 import static com.sinthoras.visualprospecting.Utils.isTCNodeTrackerInstalled;
 
 public class XaeroMapState {
-	public static XaeroMapState instance = new XaeroMapState();
+    public static XaeroMapState instance = new XaeroMapState();
 
-	public final List<LayerButton> buttons = new ArrayList<>();
-	public final List<LayerRenderer> renderers = new ArrayList<>();
-	public final List<WaypointManager> waypointManagers = new ArrayList<>();
+    public final List<LayerButton> buttons = new ArrayList<>();
+    public final List<LayerRenderer> renderers = new ArrayList<>();
+    public final List<WaypointManager> waypointManagers = new ArrayList<>();
 
-	public XaeroMapState() {
-		buttons.add(OreVeinButton.instance);
-		renderers.add(OreVeinRenderer.instance);
-		waypointManagers.add(OreVeinWaypointManager.instance);
+    public XaeroMapState() {
+        buttons.add(OreVeinButton.instance);
+        renderers.add(OreVeinRenderer.instance);
+        waypointManagers.add(OreVeinWaypointManager.instance);
 
-		buttons.add(UndergroundFluidButton.instance);
-		renderers.add(UndergroundFluidChunkRenderer.instance);
-		renderers.add(UndergroundFluidRenderer.instance);
+        buttons.add(UndergroundFluidButton.instance);
+        renderers.add(UndergroundFluidChunkRenderer.instance);
+        renderers.add(UndergroundFluidRenderer.instance);
 
-		if(isTCNodeTrackerInstalled()) {
-			buttons.add(ThaumcraftNodeButton.instance);
-			renderers.add(ThaumcraftNodeRenderer.instance);
-			waypointManagers.add(ThaumcraftNodeWaypointManager.instance);
-		}
-	}
+        if (isTCNodeTrackerInstalled()) {
+            buttons.add(ThaumcraftNodeButton.instance);
+            renderers.add(ThaumcraftNodeRenderer.instance);
+            waypointManagers.add(ThaumcraftNodeWaypointManager.instance);
+        }
+    }
 }

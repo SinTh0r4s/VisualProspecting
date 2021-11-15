@@ -18,45 +18,45 @@ import java.util.List;
 
 public class OreVeinRenderStep implements InteractableRenderStep {
 
-	private final OreVeinLocation oreVeinLocation;
-	private final ResourceLocation depletedTextureLocation = new ResourceLocation(Tags.MODID, "textures/depleted.png");
-	private final IIcon blockStoneIcon = Blocks.stone.getIcon(0, 0);
-	private final double iconSize = 32;
-	private double iconX;
-	private double iconY;
+    private final OreVeinLocation oreVeinLocation;
+    private final ResourceLocation depletedTextureLocation = new ResourceLocation(Tags.MODID, "textures/depleted.png");
+    private final IIcon blockStoneIcon = Blocks.stone.getIcon(0, 0);
+    private final double iconSize = 32;
+    private double iconX;
+    private double iconY;
 
-	public OreVeinRenderStep(OreVeinLocation veinPosition) {
-		oreVeinLocation = veinPosition;
-	}
+    public OreVeinRenderStep(OreVeinLocation veinPosition) {
+        oreVeinLocation = veinPosition;
+    }
 
-	@Override
-	public void draw(GuiScreen gui, double cameraX, double cameraZ, double scale) {
-		final double iconSizeHalf = iconSize / 2;
-		final double scaleForGui = Math.max(1.0D, scale);
-		this.iconX = (oreVeinLocation.getBlockX() - 0.5 - cameraX) * scaleForGui - iconSizeHalf;
-		this.iconY = (oreVeinLocation.getBlockZ() - 0.5 - cameraZ) * scaleForGui - iconSizeHalf;
+    @Override
+    public void draw(GuiScreen gui, double cameraX, double cameraZ, double scale) {
+        final double iconSizeHalf = iconSize / 2;
+        final double scaleForGui = Math.max(1.0D, scale);
+        this.iconX = (oreVeinLocation.getBlockX() - 0.5 - cameraX) * scaleForGui - iconSizeHalf;
+        this.iconY = (oreVeinLocation.getBlockZ() - 0.5 - cameraZ) * scaleForGui - iconSizeHalf;
 
-		GL11.glPushMatrix();
-		GL11.glTranslated(oreVeinLocation.getBlockX() - 0.5 - cameraX, oreVeinLocation.getBlockZ() - 0.5 - cameraZ, 0);
-		GL11.glScaled(1 / scaleForGui, 1 / scaleForGui, 1);
-		DrawUtils.drawQuad(blockStoneIcon, -iconSizeHalf, -iconSizeHalf, iconSize, iconSize, 0xFFFFFF, 255);
+        GL11.glPushMatrix();
+        GL11.glTranslated(oreVeinLocation.getBlockX() - 0.5 - cameraX, oreVeinLocation.getBlockZ() - 0.5 - cameraZ, 0);
+        GL11.glScaled(1 / scaleForGui, 1 / scaleForGui, 1);
+        DrawUtils.drawQuad(blockStoneIcon, -iconSizeHalf, -iconSizeHalf, iconSize, iconSize, 0xFFFFFF, 255);
 
-		DrawUtils.drawQuad(oreVeinLocation.getIconFromPrimaryOre(), -iconSizeHalf, -iconSizeHalf, iconSize, iconSize, oreVeinLocation.getColor(), 255);
+        DrawUtils.drawQuad(oreVeinLocation.getIconFromPrimaryOre(), -iconSizeHalf, -iconSizeHalf, iconSize, iconSize, oreVeinLocation.getColor(), 255);
 
-		if(!oreVeinLocation.drawSearchHighlight() || oreVeinLocation.isDepleted()) {
-			DrawUtils.drawGradientRect(-iconSizeHalf, -iconSizeHalf, iconSizeHalf, iconSizeHalf, 0, 0x96000000, 0x96000000);
-			if(oreVeinLocation.isDepleted()) {
-				DrawUtils.drawQuad(depletedTextureLocation, -iconSizeHalf, -iconSizeHalf, iconSize, iconSize, 0xFFFFFF, 255);
-			}
-		}
+        if (!oreVeinLocation.drawSearchHighlight() || oreVeinLocation.isDepleted()) {
+            DrawUtils.drawGradientRect(-iconSizeHalf, -iconSizeHalf, iconSizeHalf, iconSizeHalf, 0, 0x96000000, 0x96000000);
+            if (oreVeinLocation.isDepleted()) {
+                DrawUtils.drawQuad(depletedTextureLocation, -iconSizeHalf, -iconSizeHalf, iconSize, iconSize, 0xFFFFFF, 255);
+            }
+        }
 
-		if(scale >= Utils.journeyMapScaleToLinear(Config.minZoomLevelForOreLabel) && !oreVeinLocation.isDepleted()) {
-			final int fontColor = oreVeinLocation.drawSearchHighlight() ? 0xFFFFFFFF : 0xFF7F7F7F;
-			String text = I18n.format(oreVeinLocation.getName());
-			DrawUtils.drawSimpleLabel(gui, text, 0, -iconSizeHalf - gui.mc.fontRenderer.FONT_HEIGHT - 5, fontColor, 0xB4000000, true);
-		}
+        if (scale >= Utils.journeyMapScaleToLinear(Config.minZoomLevelForOreLabel) && !oreVeinLocation.isDepleted()) {
+            final int fontColor = oreVeinLocation.drawSearchHighlight() ? 0xFFFFFFFF : 0xFF7F7F7F;
+            String text = I18n.format(oreVeinLocation.getName());
+            DrawUtils.drawSimpleLabel(gui, text, 0, -iconSizeHalf - gui.mc.fontRenderer.FONT_HEIGHT - 5, fontColor, 0xB4000000, true);
+        }
 
-		if(oreVeinLocation.isActiveAsWaypoint()) {
+        if (oreVeinLocation.isActiveAsWaypoint()) {
             final double thickness = iconSize / 8;
             final int color = 0xFFFFD700;
             DrawUtils.drawGradientRect(-iconSizeHalf - thickness, -iconSizeHalf - thickness, iconSizeHalf, -iconSizeHalf, 0, color, color);
@@ -65,55 +65,50 @@ public class OreVeinRenderStep implements InteractableRenderStep {
             DrawUtils.drawGradientRect(-iconSizeHalf - thickness, -iconSizeHalf, -iconSizeHalf, iconSizeHalf + thickness, 0, color, color);
         }
 
-		GL11.glPopMatrix();
-	}
+        GL11.glPopMatrix();
+    }
 
-	@Override
-	public boolean isMouseOver(double mouseX, double mouseY, double cameraX, double cameraZ, double scale) {
-		final double scaleForGui = Math.max(1.0D, scale);
-		mouseX = (mouseX - cameraX) * scaleForGui;
-		mouseY = (mouseY - cameraZ) * scaleForGui;
-		return mouseX >= iconX && mouseY >= iconY && mouseX <= iconX + iconSize && mouseY <= iconY + iconSize;
-	}
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY, double cameraX, double cameraZ, double scale) {
+        final double scaleForGui = Math.max(1.0D, scale);
+        mouseX = (mouseX - cameraX) * scaleForGui;
+        mouseY = (mouseY - cameraZ) * scaleForGui;
+        return mouseX >= iconX && mouseY >= iconY && mouseX <= iconX + iconSize && mouseY <= iconY + iconSize;
+    }
 
-	@Override
-	public void drawTooltip(GuiScreen gui, double mouseX, double mouseY, double cameraX, double cameraZ, double scale, int scaleAdj) {
-		//correct for gl matrix differences
-		mouseX = (mouseX - cameraX) * scale + gui.mc.displayWidth / 2.0;
-		mouseY = (mouseY - cameraZ) * scale + gui.mc.displayHeight / 2.0;
+    @Override
+    public void drawTooltip(GuiScreen gui, double mouseX, double mouseY, double cameraX, double cameraZ, double scale, int scaleAdj) {
+        //correct for gl matrix differences
+        mouseX = (mouseX - cameraX) * scale + gui.mc.displayWidth / 2.0;
+        mouseY = (mouseY - cameraZ) * scale + gui.mc.displayHeight / 2.0;
 
-		final List<String> tooltip = new ArrayList<>();
-		if(oreVeinLocation.isDepleted()) {
-			tooltip.add(oreVeinLocation.getDepletedHint());
-		}
-		if(oreVeinLocation.isActiveAsWaypoint()) {
-			tooltip.add(oreVeinLocation.getActiveWaypointHint());
-		}
-		tooltip.add(oreVeinLocation.getName());
-		if(!oreVeinLocation.isDepleted()) {
-			tooltip.addAll(oreVeinLocation.getMaterialNames());
-		}
-		tooltip.add(oreVeinLocation.getToggleDepletedHint());
+        final List<String> tooltip = new ArrayList<>();
+        if (oreVeinLocation.isDepleted()) {
+            tooltip.add(oreVeinLocation.getDepletedHint());
+        }
+        if (oreVeinLocation.isActiveAsWaypoint()) {
+            tooltip.add(oreVeinLocation.getActiveWaypointHint());
+        }
+        tooltip.add(oreVeinLocation.getName());
+        if (!oreVeinLocation.isDepleted()) {
+            tooltip.addAll(oreVeinLocation.getMaterialNames());
+        }
+        tooltip.add(oreVeinLocation.getToggleDepletedHint());
 
-		GL11.glPushMatrix();
+        GL11.glPushMatrix();
 
-		DrawUtils.drawSimpleTooltip(gui, tooltip, mouseX / scaleAdj + 6, mouseY / scaleAdj - 12, 0xFFFFFFFF, 0x86000000);
+        DrawUtils.drawSimpleTooltip(gui, tooltip, mouseX / scaleAdj + 6, mouseY / scaleAdj - 12, 0xFFFFFFFF, 0x86000000);
 
-		GL11.glPopMatrix();
-	}
+        GL11.glPopMatrix();
+    }
 
-	@Override
-	public void onDoubleClick() {
+    @Override
+    public void onActionButton() {
+        oreVeinLocation.toggleOreVein();
+    }
 
-	}
-
-	@Override
-	public void onActionButton() {
-		oreVeinLocation.toggleOreVein();
-	}
-
-	@Override
-	public IWaypointAndLocationProvider getLocationProvider() {
-		return oreVeinLocation;
-	}
+    @Override
+    public IWaypointAndLocationProvider getLocationProvider() {
+        return oreVeinLocation;
+    }
 }

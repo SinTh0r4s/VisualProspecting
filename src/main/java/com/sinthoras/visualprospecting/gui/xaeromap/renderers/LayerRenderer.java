@@ -10,27 +10,27 @@ import java.util.List;
 
 public abstract class LayerRenderer extends com.sinthoras.visualprospecting.gui.model.layers.LayerRenderer {
 
-	private final LayerManager manager;
-	protected List<RenderStep> renderSteps = new ArrayList<>();
+    private final LayerManager manager;
+    protected List<RenderStep> renderSteps = new ArrayList<>();
 
-	public LayerRenderer(LayerManager manager) {
-		super(manager, SupportedMods.XaeroMap);
-		this.manager = manager;
-	}
+    public LayerRenderer(LayerManager manager) {
+        super(manager, SupportedMods.XaeroMap);
+        this.manager = manager;
+    }
 
-	public List<RenderStep> getRenderSteps() {
-		return renderSteps;
-	}
+    public List<RenderStep> getRenderSteps() {
+        return renderSteps;
+    }
 
-	public boolean isLayerActive() {
-		return manager.isLayerActive();
-	}
+    public boolean isLayerActive() {
+        return manager.isLayerActive();
+    }
 
-	@Override
-	public void updateVisibleElements(List<? extends ILocationProvider> visibleElements) {
-		//noinspection unchecked
-		renderSteps = (List<RenderStep>) generateRenderSteps(visibleElements);
-	}
+    @Override
+    public void updateVisibleElements(List<? extends ILocationProvider> visibleElements) {
+        //noinspection unchecked
+        renderSteps = (List<RenderStep>) generateRenderSteps(visibleElements);
+    }
 
-	protected abstract List<? extends RenderStep> generateRenderSteps(List<? extends ILocationProvider> visibleElements);
+    protected abstract List<? extends RenderStep> generateRenderSteps(List<? extends ILocationProvider> visibleElements);
 }
