@@ -5,7 +5,7 @@
 
 ### For Minecraft 1.7.10
 
-This mod is intended for player convenience, but may also be used as API, since it provides the location of all GT ore veins in a cache. VisualProspecting tracks all GT Ore Veins a player has found and visualizes them in JourneyMap (optional, if installed). It also visualizes tracked Thaumcraft aura nodes if TCNodeTracker if installed.
+This mod is intended for player convenience, but may also be used as API, since it provides the location of all GT ore veins in a cache. VisualProspecting tracks all GT Ore Veins a player has found and visualizes them in JourneyMap and/or XaeroMap (optional, if installed). It also visualizes tracked Thaumcraft aura nodes if TCNodeTracker if installed.
 
 VisualProspecting tracks all ores that a player interacted with, by right or by left click. It also integrates prospecting data from GTs _Advanced Seismic Prospector_, although only books that are created after this mod was added will provide integration.
 You may share your findings with other players by crafting a _Prospector's Log_.
@@ -15,11 +15,34 @@ This mod is tailored to _GregTech: New Horizons 2_, but feel free to use it howe
 ![Underground fluids in JourneyMap overlay](https://i.ibb.co/crPhR1X/2021-10-12-15-45-25.png) \
 _Underground fluids in JourneyMap overlay._
 
+<details>
+ <summary>Other Maps</summary>
+
+![Underground fluids in XaeroMap overlay](https://i.ibb.co/d5Fw1px/2021-11-15-20-48-04.png) \
+_Underground fluids in XaeroMap overlay_
+</details>
+
+
+![GregTech ore veins in XaeroMap overlay](https://i.ibb.co/DGqQZ8g/2021-11-15-20-47-47.png) \
+_GregTech ore veins in XaeroMap overlay. You may double-click an ore vein to toggle it as waypoint._
+
+<details>
+ <summary>Other Maps</summary>
+
 ![GregTech ore veins in JourneyMap overlay](https://i.ibb.co/G5KLGjQ/2021-10-20-01-16-57.png) \
-_GregTech ore veins in JourneyMap overlay. You may double-click an ore vein to toggle it as waypoint._
+_GregTech ore veins in JourneyMap overlay_
+</details>
+
 
 ![Thaumcraft aura nodes in JourneyMap overlay](https://i.ibb.co/WDk41qd/2021-10-25-15-01-11.png) \
 _Thaumcraft aura nodes in JourneyMap overlay. You may double-click an aura node to toggle it as waypoint._
+
+<details>
+ <summary>Other Maps</summary>
+
+![Thaumcraft aura nodes in XaeroMap overlay](https://i.ibb.co/njQ14RK/2021-11-15-20-48-12.png) \
+_Thaumcraft aura nodes in XaeroMap overlay_
+</details>
 
 ### Reset Progress
 
@@ -28,6 +51,7 @@ You may use JourneyMap's Actions Menu to achieve this or type `/visualprospectin
 ### Other Maps
 
 Does VisualProspecting run with other maps? - I runs just fine, but it has no visualization or GUI integration. If you like to add integration into other maps yourself, feel free to contact me or open a Pull Request.
+ - [TheLastKumquat](https://github.com/kumquat-ir) integrated XaeroWorldMap and XaeroMiniMap
 
 ### Dependencies
 
@@ -40,9 +64,14 @@ Does VisualProspecting run with other maps? - I runs just fine, but it has no vi
  - [Enklumne](https://github.com/Hugobros3/Enklume) _by Hugobros3_
     - Automatically shipped. No manual handling is required.
 #### Optional Mods:
- - [JourneyMap](https://www.curseforge.com/minecraft/mc-mods/journeymap/files/2367915): Visualizes prospected ore veins and oil fields on custom overlay, that can be toggled on and off.
+ - [JourneyMap](https://www.curseforge.com/minecraft/mc-mods/journeymap/files/2367915): Visualizes prospected ore veins, oil fields and thaumcraft nodes on custom overlay, that can be toggled on and off. Visualizes active ore veins and thaumcraft nodes as waypoints.
     - Injected classes: [_Fullscreen_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/FullscreenMixin.java), [_FullscreenActions_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/FullscreenActionsMixin.java), [_RenderWaypointBeacon_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/RenderWaypointBeaconMixin.java), [_WaypointManager_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/WaypointManagerMixin.java)
- - [TCNodeTracker](https://github.com/GTNewHorizons/TCNodeTracker): Visualizes tracked aura nodes in JourneyMap. Requires JourneyMap  
+ - [XaeroWorldMap](https://www.curseforge.com/minecraft/mc-mods/xaeros-world-map): Visualizes prospected ore veins, oil fields and thaumcraft nodes on custom overlay, that can be toggled on and off.
+    - Injected class: [_GuiMap_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/xaerosworldmap/GuiMapMixin.java)
+ - [XaeroMiniMap](https://www.curseforge.com/minecraft/mc-mods/xaeros-minimap): Visualizes active ore veins and thaumcraft nodes as waypoints.
+    - Requires XaeroWorldMap
+    - Injected class: [_WaypointsIngameRenderer_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/xaerosworldmap/xaerosminimap/WaypointsIngameRendererMixin.java)
+ - [TCNodeTracker](https://github.com/GTNewHorizons/TCNodeTracker): Provides tracked aura nodes to maps for visualization.
     - Injected class: [_GuiMain_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/journeymap/tcnodetracker/GuiMainMixin.java)
  - [NEI](https://github.com/GTNewHorizons/NotEnoughItems): Ores on JourneyMap are highlighted according to NEI search if active (double click on search field).
  - [GalacticGreg](https://github.com/GTNewHorizons/GalacticGregGT5): Injects a notification call into ore vein generation.
