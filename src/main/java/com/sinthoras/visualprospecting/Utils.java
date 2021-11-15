@@ -54,6 +54,10 @@ public class Utils {
         return Loader.isModLoaded("journeymap");
     }
 
+    public static boolean isXaerosWorldMapInstalled() {
+        return Loader.isModLoaded("XaeroWorldMap");
+    }
+
     public static int coordBlockToChunk(int blockCoord) {
         return blockCoord < 0 ? -((-blockCoord - 1) >> 4) - 1 : blockCoord >> 4;
     }
@@ -77,6 +81,10 @@ public class Utils {
 
     public static int mapToCornerUndergroundFluidChunkCoord(final int chunkCoord) {
         return chunkCoord & 0xFFFFFFF8;
+    }
+
+    public static double journeyMapScaleToLinear(final int jzoom) {
+        return Math.pow(2, jzoom);
     }
 
     public static boolean isSmallOreId(short metaData) {
