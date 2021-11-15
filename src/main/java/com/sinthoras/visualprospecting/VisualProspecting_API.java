@@ -12,6 +12,7 @@ import com.sinthoras.visualprospecting.gui.model.buttons.ButtonManager;
 import com.sinthoras.visualprospecting.gui.model.layers.LayerManager;
 import com.sinthoras.visualprospecting.gui.model.layers.OreVeinLayerManager;
 import com.sinthoras.visualprospecting.gui.model.layers.UndergroundFluidLayerManager;
+import com.sinthoras.visualprospecting.gui.xaeromap.XaeroMapState;
 import com.sinthoras.visualprospecting.network.ProspectingNotification;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -23,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.sinthoras.visualprospecting.Utils.isJourneyMapInstalled;
+import static com.sinthoras.visualprospecting.Utils.isXaerosWorldMapInstalled;
 
 @SuppressWarnings("unused")
 public class VisualProspecting_API {
@@ -47,10 +49,24 @@ public class VisualProspecting_API {
             }
         }
 
+        // Register visualization for logical button in Xaero's World Map
+        public static void registerXaeroMapButton(com.sinthoras.visualprospecting.gui.xaeromap.buttons.LayerButton customButton) {
+            if(isXaerosWorldMapInstalled()) {
+                XaeroMapState.instance.buttons.add(customButton);
+            }
+        }
+
         // Add the JourneyMap renderer for a layer
         public static void registerJourneyMapRenderer(LayerRenderer customRenderer) {
             if(isJourneyMapInstalled()) {
                 JourneyMapState.instance.renderers.add(customRenderer);
+            }
+        }
+
+        // Add the Xaero's World Map renderer for a layer
+        public static void registerXaeroMapRenderer(com.sinthoras.visualprospecting.gui.xaeromap.renderers.LayerRenderer customRenderer) {
+            if(isXaerosWorldMapInstalled()) {
+                XaeroMapState.instance.renderers.add(customRenderer);
             }
         }
 

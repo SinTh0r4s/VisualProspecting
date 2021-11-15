@@ -15,8 +15,7 @@ import java.util.List;
 
 public class DrawUtils {
 
-    public static void drawGradientRect(double minPixelX, double minPixelY, double maxPixelX, double maxPixelY, double z, int colorA, int colorB)
-    {
+    public static void drawGradientRect(double minPixelX, double minPixelY, double maxPixelX, double maxPixelY, double z, int colorA, int colorB) {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -110,7 +109,7 @@ public class DrawUtils {
         GL11.glPushMatrix();
         final double scale = pixelSize / textureSize;
         GL11.glScaled(scale, scale, scale);
-        UtilsFX.drawTag((centerPixelX - pixelSize / 2) / scale, (centerPixelY - pixelSize / 2) / scale, aspect, amount, 0, 0.01, GL11.GL_ONE_MINUS_SRC_ALPHA, 1.0F, false);
+        UtilsFX.drawTag((centerPixelX - pixelSize / 2) / scale, (centerPixelY - pixelSize / 2) / scale, aspect, amount, 0, 0, GL11.GL_ONE_MINUS_SRC_ALPHA, 1.0F, false);
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
     }
@@ -132,12 +131,12 @@ public class DrawUtils {
     }
 
     public static void drawSimpleTooltip(GuiScreen gui, List<String> text, double x, double y, int fontColor, int bgColor) {
-        if(text.isEmpty()) return;
+        if (text.isEmpty()) return;
 
         int maxTextWidth = 0;
         for (String str : text) {
             int strWidth = gui.mc.fontRenderer.getStringWidth(str);
-            if(strWidth > maxTextWidth)
+            if (strWidth > maxTextWidth)
                 maxTextWidth = strWidth;
         }
 
@@ -159,6 +158,6 @@ public class DrawUtils {
     }
 
     public static float[] floats(int rgb) {
-        return new float[]{(float)(rgb >> 16 & 255) / 255.0F, (float)(rgb >> 8 & 255) / 255.0F, (float)(rgb & 255) / 255.0F};
+        return new float[]{(float) (rgb >> 16 & 255) / 255.0F, (float) (rgb >> 8 & 255) / 255.0F, (float) (rgb & 255) / 255.0F};
     }
 }
