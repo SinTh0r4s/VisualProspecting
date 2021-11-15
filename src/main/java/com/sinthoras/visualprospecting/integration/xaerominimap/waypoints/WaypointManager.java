@@ -16,7 +16,7 @@ public class WaypointManager extends com.sinthoras.visualprospecting.integration
     private final WaypointType waypointType;
 
     public WaypointManager(WaypointProviderManager layerManager, WaypointType waypointType) {
-        super(layerManager, SupportedMods.XaeroMap);
+        super(layerManager, SupportedMods.XaeroMiniMap);
         this.waypointType = waypointType;
     }
 

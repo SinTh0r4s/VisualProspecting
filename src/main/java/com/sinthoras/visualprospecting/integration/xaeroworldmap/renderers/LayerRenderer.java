@@ -16,7 +16,7 @@ public abstract class LayerRenderer extends com.sinthoras.visualprospecting.inte
     protected List<RenderStep> renderStepsReversed = new ArrayList<>();
 
     public LayerRenderer(LayerManager manager) {
-        super(manager, SupportedMods.XaeroMap);
+        super(manager, SupportedMods.XaeroWorldMap);
         this.manager = manager;
     }
 

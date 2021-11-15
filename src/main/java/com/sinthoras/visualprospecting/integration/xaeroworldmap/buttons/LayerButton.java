@@ -12,7 +12,7 @@ public class LayerButton extends com.sinthoras.visualprospecting.integration.mod
     public final ResourceLocation textureLocation;
 
     public LayerButton(ButtonManager manager) {
-        super(manager, SupportedMods.XaeroMap);
+        super(manager, SupportedMods.XaeroWorldMap);
         this.manager = manager;
         textureLocation = new ResourceLocation("xaeroworldmap", "textures/" + getIconName() + ".png");
     }
