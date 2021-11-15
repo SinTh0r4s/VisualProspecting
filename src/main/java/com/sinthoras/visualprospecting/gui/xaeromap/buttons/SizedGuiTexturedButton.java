@@ -12,10 +12,15 @@ import java.util.function.Consumer;
 
 public class SizedGuiTexturedButton extends GuiTexturedButton {
 
+    private static final int BUTTON_WIDTH = 20;
+    private static final int BUTTON_HEIGHT = 20;
+    private static final int ICON_WIDTH = 16;
+    private static final int ICON_HEIGHT = 16;
+
     protected boolean active;
 
-    public SizedGuiTexturedButton(int x, int y, int w, int h, int textureX, int textureY, int textureW, int textureH, ResourceLocation texture, Consumer<GuiButton> action, CursorBox tooltip) {
-        super(x, y, w, h, textureX, textureY, textureW, textureH, texture, action, tooltip);
+    public SizedGuiTexturedButton(int x, int y, ResourceLocation texture, Consumer<GuiButton> action, CursorBox tooltip) {
+        super(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, 0, 0, ICON_WIDTH, ICON_HEIGHT, texture, action, tooltip);
         active = false;
     }
 
@@ -25,11 +30,22 @@ public class SizedGuiTexturedButton extends GuiTexturedButton {
         int iconX = xPosition + width / 2 - textureW / 2;
         int iconY = yPosition + height / 2 - textureH / 2;
         if (enabled) {
-            if (isMouseOver(mouseX, mouseY)) {
-                --iconY;
-                GL11.glColor4f(0.9F, 0.9F, 0.9F, 1.0F);
-            } else {
-                GL11.glColor4f(0.9882F, 0.9882F, 0.9882F, 1.0F);
+            if (active) {
+                if (isMouseOver(mouseX, mouseY)) {
+                    iconY--;
+                    GL11.glColor4f(0.5F, 0.9F, 0.5F, 1.0F);
+                }
+                else {
+                    GL11.glColor4f(0.5882F, 0.9882F, 0.5882F, 1.0F);
+                }
+            }
+            else {
+                if (isMouseOver(mouseX, mouseY)) {
+                    iconY--;
+                    GL11.glColor4f(0.9F, 0.9F, 0.9F, 1.0F);
+                } else {
+                    GL11.glColor4f(0.9882F, 0.9882F, 0.9882F, 1.0F);
+                }
             }
         } else {
             GL11.glColor4f(0.25F, 0.25F, 0.25F, 1.0F);

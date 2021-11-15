@@ -32,9 +32,9 @@ public class OreVeinRenderStep implements InteractableRenderStep {
     @Override
     public void draw(GuiScreen gui, double cameraX, double cameraZ, double scale) {
         final double iconSizeHalf = iconSize / 2;
-        final double scaleForGui = Math.max(1.0D, scale);
-        this.iconX = (oreVeinLocation.getBlockX() - 0.5 - cameraX) * scaleForGui - iconSizeHalf;
-        this.iconY = (oreVeinLocation.getBlockZ() - 0.5 - cameraZ) * scaleForGui - iconSizeHalf;
+        final double scaleForGui = Math.max(1, scale);
+        iconX = (oreVeinLocation.getBlockX() - 0.5 - cameraX) * scaleForGui - iconSizeHalf;
+        iconY = (oreVeinLocation.getBlockZ() - 0.5 - cameraZ) * scaleForGui - iconSizeHalf;
 
         GL11.glPushMatrix();
         GL11.glTranslated(oreVeinLocation.getBlockX() - 0.5 - cameraX, oreVeinLocation.getBlockZ() - 0.5 - cameraZ, 0);
@@ -69,18 +69,18 @@ public class OreVeinRenderStep implements InteractableRenderStep {
     }
 
     @Override
-    public boolean isMouseOver(double mouseX, double mouseY, double cameraX, double cameraZ, double scale) {
-        final double scaleForGui = Math.max(1.0D, scale);
-        mouseX = (mouseX - cameraX) * scaleForGui;
-        mouseY = (mouseY - cameraZ) * scaleForGui;
+    public boolean isMouseOver(double mouseX, double mouseY, double scale) {
+        final double scaleForGui = Math.max(1, scale);
+        mouseX = mouseX * scaleForGui;
+        mouseY = mouseY * scaleForGui;
         return mouseX >= iconX && mouseY >= iconY && mouseX <= iconX + iconSize && mouseY <= iconY + iconSize;
     }
 
     @Override
-    public void drawTooltip(GuiScreen gui, double mouseX, double mouseY, double cameraX, double cameraZ, double scale, int scaleAdj) {
+    public void drawTooltip(GuiScreen gui, double mouseX, double mouseY, double scale, int scaleAdj) {
         //correct for gl matrix differences
-        mouseX = (mouseX - cameraX) * scale + gui.mc.displayWidth / 2.0;
-        mouseY = (mouseY - cameraZ) * scale + gui.mc.displayHeight / 2.0;
+        mouseX = mouseX * scale + (gui.mc.displayWidth >> 1);
+        mouseY = mouseY * scale + (gui.mc.displayHeight >> 1);
 
         final List<String> tooltip = new ArrayList<>();
         if (oreVeinLocation.isDepleted()) {

@@ -6,12 +6,14 @@ import com.sinthoras.visualprospecting.gui.model.locations.ILocationProvider;
 import com.sinthoras.visualprospecting.gui.xaeromap.rendersteps.RenderStep;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class LayerRenderer extends com.sinthoras.visualprospecting.gui.model.layers.LayerRenderer {
 
     private final LayerManager manager;
     protected List<RenderStep> renderSteps = new ArrayList<>();
+    protected List<RenderStep> renderStepsReversed = new ArrayList<>();
 
     public LayerRenderer(LayerManager manager) {
         super(manager, SupportedMods.XaeroMap);
@@ -22,6 +24,10 @@ public abstract class LayerRenderer extends com.sinthoras.visualprospecting.gui.
         return renderSteps;
     }
 
+    public List<RenderStep> getRenderStepsReversed() {
+        return renderStepsReversed;
+    }
+
     public boolean isLayerActive() {
         return manager.isLayerActive();
     }
@@ -30,6 +36,8 @@ public abstract class LayerRenderer extends com.sinthoras.visualprospecting.gui.
     public void updateVisibleElements(List<? extends ILocationProvider> visibleElements) {
         //noinspection unchecked
         renderSteps = (List<RenderStep>) generateRenderSteps(visibleElements);
+        renderStepsReversed = new ArrayList<>(renderSteps);
+        Collections.reverse(renderStepsReversed);
     }
 
     protected abstract List<? extends RenderStep> generateRenderSteps(List<? extends ILocationProvider> visibleElements);

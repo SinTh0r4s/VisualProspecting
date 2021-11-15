@@ -30,7 +30,7 @@ public class ThaumcraftNodeRenderStep implements InteractableRenderStep {
     public void draw(GuiScreen gui, double cameraX, double cameraZ, double scale) {
         final double borderSize = 44;
         final double borderSizeHalf = borderSize / 2;
-        final double scaleForGui = Math.max(0.5D, scale);
+        final double scaleForGui = Math.max(0.5, scale);
         centerPixelX = (thaumcraftNodeLocation.getBlockX() - cameraX) * scaleForGui;
         centerPixelY = (thaumcraftNodeLocation.getBlockZ() - cameraZ) * scaleForGui;
         clickableRadiusPixelSquared = borderSizeHalf * borderSizeHalf;
@@ -49,20 +49,20 @@ public class ThaumcraftNodeRenderStep implements InteractableRenderStep {
     }
 
     @Override
-    public boolean isMouseOver(double mouseX, double mouseY, double cameraX, double cameraZ, double scale) {
-        final double scaleForGui = Math.max(0.5D, scale);
-        final double deltaX = (mouseX - cameraX) * scaleForGui - centerPixelX;
-        final double deltaY = (mouseY - cameraZ) * scaleForGui - centerPixelY;
+    public boolean isMouseOver(double mouseX, double mouseY, double scale) {
+        final double scaleForGui = Math.max(0.5, scale);
+        final double deltaX = mouseX * scaleForGui - centerPixelX;
+        final double deltaY = mouseY * scaleForGui - centerPixelY;
         return deltaX * deltaX + deltaY * deltaY <= clickableRadiusPixelSquared;
     }
 
     @Override
-    public void drawTooltip(GuiScreen gui, double mouseX, double mouseY, double cameraX, double cameraZ, double scale, int scaleAdj) {
+    public void drawTooltip(GuiScreen gui, double mouseX, double mouseY, double scale, int scaleAdj) {
 
         GL11.glPushMatrix();
 
-        mouseX = ((mouseX - cameraX) * scale + gui.mc.displayWidth / 2.0) / scaleAdj;
-        mouseY = ((mouseY - cameraZ) * scale + gui.mc.displayHeight / 2.0) / scaleAdj;
+        mouseX = (mouseX * scale + (gui.mc.displayWidth >> 1)) / scaleAdj;
+        mouseY = (mouseY * scale + (gui.mc.displayHeight >> 1)) / scaleAdj;
 
         final boolean isWaypoint = thaumcraftNodeLocation.isActiveAsWaypoint();
         final String asWaypoint = thaumcraftNodeLocation.getActiveWaypointHint();

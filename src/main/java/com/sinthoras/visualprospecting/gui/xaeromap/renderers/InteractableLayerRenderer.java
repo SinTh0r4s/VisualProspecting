@@ -24,10 +24,10 @@ public abstract class InteractableLayerRenderer extends LayerRenderer {
     protected abstract List<? extends InteractableRenderStep> generateRenderSteps(List<? extends ILocationProvider> visibleElements);
 
     public void updateHovered(double mouseX, double mouseY, double cameraX, double cameraZ, double scale) {
-        mouseXForRender = mouseX;
-        mouseYForRender = mouseY;
-        for (RenderStep step : renderSteps) {
-            if (step instanceof InteractableRenderStep && ((InteractableRenderStep) step).isMouseOver(mouseX, mouseY, cameraX, cameraZ, scale)) {
+        mouseXForRender = mouseX - cameraX;
+        mouseYForRender = mouseY - cameraZ;
+        for (RenderStep step : renderStepsReversed) {
+            if (step instanceof InteractableRenderStep && ((InteractableRenderStep) step).isMouseOver(mouseXForRender, mouseYForRender, scale)) {
                 hovered = (InteractableRenderStep) step;
                 return;
             }
@@ -35,9 +35,9 @@ public abstract class InteractableLayerRenderer extends LayerRenderer {
         hovered = null;
     }
 
-    public void drawTooltip(GuiScreen gui, double cameraX, double cameraZ, double scale, int scaleAdj) {
+    public void drawTooltip(GuiScreen gui, double scale, int scaleAdj) {
         if (hovered != null) {
-            hovered.drawTooltip(gui, mouseXForRender, mouseYForRender, cameraX, cameraZ, scale, scaleAdj);
+            hovered.drawTooltip(gui, mouseXForRender, mouseYForRender, scale, scaleAdj);
         }
     }
 

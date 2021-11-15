@@ -143,7 +143,7 @@ public abstract class GuiMapMixin extends ScreenBase {
     private void injectDrawTooltip(int scaledMouseX, int scaledMouseY, float partialTicks, CallbackInfo ci) {
         for (LayerRenderer layer : XaeroMapState.instance.renderers) {
             if (layer instanceof InteractableLayerRenderer && layer.isLayerActive()) {
-                ((InteractableLayerRenderer) layer).drawTooltip(this, cameraX, cameraZ, scale, screenScale);
+                ((InteractableLayerRenderer) layer).drawTooltip(this, scale, screenScale);
             }
         }
     }
@@ -157,9 +157,10 @@ public abstract class GuiMapMixin extends ScreenBase {
     private void injectInitButtons(CallbackInfo ci) {
         for (int i = 0; i < XaeroMapState.instance.buttons.size(); i++) {
             LayerButton layerButton = XaeroMapState.instance.buttons.get(i);
-            GuiButton button = new SizedGuiTexturedButton(0, height - 20 * (i + 1), 20, 20, 0, 0, 16, 16,
+            SizedGuiTexturedButton button = new SizedGuiTexturedButton(0, height - 20 * (i + 1),
                     layerButton.textureLocation, (btn) -> layerButton.toggle(),
                     new CursorBox(layerButton.getButtonTextKey()));
+            layerButton.setButton(button);
             addGuiButton(button);
         }
     }
