@@ -2,8 +2,8 @@ package com.sinthoras.visualprospecting.mixins.tcnodetracker;
 
 import com.dyonovan.tcnodetracker.gui.GuiMain;
 import com.dyonovan.tcnodetracker.lib.AspectLoc;
-import com.sinthoras.visualprospecting.gui.model.layers.ThaumcraftNodeLayerManager;
-import com.sinthoras.visualprospecting.gui.model.waypoints.Waypoint;
+import com.sinthoras.visualprospecting.integration.model.layers.ThaumcraftNodeLayerManager;
+import com.sinthoras.visualprospecting.integration.model.waypoints.Waypoint;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import org.spongepowered.asm.lib.Opcodes;

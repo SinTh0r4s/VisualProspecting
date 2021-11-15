@@ -1,8 +1,8 @@
 package com.sinthoras.visualprospecting.mixins.journeymap;
 
-import com.sinthoras.visualprospecting.gui.model.MapState;
-import com.sinthoras.visualprospecting.gui.model.layers.LayerManager;
-import com.sinthoras.visualprospecting.gui.model.layers.WaypointProviderManager;
+import com.sinthoras.visualprospecting.integration.model.MapState;
+import com.sinthoras.visualprospecting.integration.model.layers.LayerManager;
+import com.sinthoras.visualprospecting.integration.model.layers.WaypointProviderManager;
 import journeymap.client.ui.waypoint.WaypointManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

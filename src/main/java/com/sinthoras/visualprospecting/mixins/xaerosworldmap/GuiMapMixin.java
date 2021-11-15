@@ -1,14 +1,14 @@
 package com.sinthoras.visualprospecting.mixins.xaerosworldmap;
 
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.gui.model.MapState;
-import com.sinthoras.visualprospecting.gui.model.layers.LayerManager;
-import com.sinthoras.visualprospecting.gui.xaeromap.XaeroMapState;
-import com.sinthoras.visualprospecting.gui.xaeromap.buttons.LayerButton;
-import com.sinthoras.visualprospecting.gui.xaeromap.buttons.SizedGuiTexturedButton;
-import com.sinthoras.visualprospecting.gui.xaeromap.renderers.InteractableLayerRenderer;
-import com.sinthoras.visualprospecting.gui.xaeromap.renderers.LayerRenderer;
-import com.sinthoras.visualprospecting.gui.xaeromap.rendersteps.RenderStep;
+import com.sinthoras.visualprospecting.integration.model.MapState;
+import com.sinthoras.visualprospecting.integration.model.layers.LayerManager;
+import com.sinthoras.visualprospecting.integration.xaeroworldmap.XaeroWorldMapState;
+import com.sinthoras.visualprospecting.integration.xaeroworldmap.buttons.LayerButton;
+import com.sinthoras.visualprospecting.integration.xaeroworldmap.buttons.SizedGuiTexturedButton;
+import com.sinthoras.visualprospecting.integration.xaeroworldmap.renderers.InteractableLayerRenderer;
+import com.sinthoras.visualprospecting.integration.xaeroworldmap.renderers.LayerRenderer;
+import com.sinthoras.visualprospecting.integration.xaeroworldmap.rendersteps.RenderStep;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -85,7 +85,7 @@ public abstract class GuiMapMixin extends ScreenBase {
         cameraX = Math.round(cameraX * scale) / scale;
         cameraZ = Math.round(cameraZ * scale) / scale;
 
-        for (LayerRenderer layer : XaeroMapState.instance.renderers) {
+        for (LayerRenderer layer : XaeroWorldMapState.instance.renderers) {
             if (layer instanceof InteractableLayerRenderer) {
                 ((InteractableLayerRenderer) layer).updateHovered(mousePosX, mousePosZ, cameraX, cameraZ, scale);
             }
@@ -115,7 +115,7 @@ public abstract class GuiMapMixin extends ScreenBase {
             }
         }
 
-        for (LayerRenderer renderer : XaeroMapState.instance.renderers) {
+        for (LayerRenderer renderer : XaeroWorldMapState.instance.renderers) {
             if (renderer.isLayerActive()) {
                 for (RenderStep step : renderer.getRenderSteps()) {
                     step.draw(this, cameraX, cameraZ, scale);
@@ -141,7 +141,7 @@ public abstract class GuiMapMixin extends ScreenBase {
             )
     )
     private void injectDrawTooltip(int scaledMouseX, int scaledMouseY, float partialTicks, CallbackInfo ci) {
-        for (LayerRenderer layer : XaeroMapState.instance.renderers) {
+        for (LayerRenderer layer : XaeroWorldMapState.instance.renderers) {
             if (layer instanceof InteractableLayerRenderer && layer.isLayerActive()) {
                 ((InteractableLayerRenderer) layer).drawTooltip(this, scale, screenScale);
             }
@@ -155,8 +155,8 @@ public abstract class GuiMapMixin extends ScreenBase {
             )
     )
     private void injectInitButtons(CallbackInfo ci) {
-        for (int i = 0; i < XaeroMapState.instance.buttons.size(); i++) {
-            LayerButton layerButton = XaeroMapState.instance.buttons.get(i);
+        for (int i = 0; i < XaeroWorldMapState.instance.buttons.size(); i++) {
+            LayerButton layerButton = XaeroWorldMapState.instance.buttons.get(i);
             SizedGuiTexturedButton button = new SizedGuiTexturedButton(0, height - 20 * (i + 1),
                     layerButton.textureLocation, (btn) -> layerButton.toggle(),
                     new CursorBox(layerButton.getButtonTextKey()));
@@ -170,7 +170,7 @@ public abstract class GuiMapMixin extends ScreenBase {
     )
     private void injectListenKeypress(boolean mouse, int code, CallbackInfoReturnable<Boolean> cir) {
         if (Misc.inputMatchesKeyBinding(mouse, code, VP.keyAction)) {
-            for (LayerRenderer layer : XaeroMapState.instance.renderers) {
+            for (LayerRenderer layer : XaeroWorldMapState.instance.renderers) {
                 if (layer instanceof InteractableLayerRenderer) {
                     ((InteractableLayerRenderer) layer).doActionKeyPress();
                 }
@@ -190,7 +190,7 @@ public abstract class GuiMapMixin extends ScreenBase {
             timeLastClick = isDoubleClick ? 0 : timestamp;
 
             if (isDoubleClick) {
-                for (LayerRenderer layer : XaeroMapState.instance.renderers) {
+                for (LayerRenderer layer : XaeroWorldMapState.instance.renderers) {
                     if (layer instanceof InteractableLayerRenderer && layer.isLayerActive()) {
                         ((InteractableLayerRenderer) layer).doDoubleClick();
                     }
