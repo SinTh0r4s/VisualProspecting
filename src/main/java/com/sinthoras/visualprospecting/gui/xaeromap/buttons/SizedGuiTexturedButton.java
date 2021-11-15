@@ -58,10 +58,6 @@ public class SizedGuiTexturedButton extends GuiTexturedButton {
         return mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
     }
 
-    public void toggle() {
-        active = !active;
-    }
-
     public void setActive(boolean active) {
         this.active = active;
     }
