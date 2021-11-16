@@ -15,6 +15,10 @@ dependencies {
 
     compile("curse.maven:journeymap-32274:2367915")
 
+    // to update: download files from curse, run them through BON2, update filenames here
+    compile files("libs/Xaeros_Minimap_21.10.11_Forge_1.7.10-deobf")
+    compile files("libs/XaerosWorldMap_1.14.1.10_Forge_1.7.10-deobf")
+
     compile("com.github.GTNewHorizons:TCNodeTracker:latest")
 
     compile("com.github.GTNewHorizons:IFU:1.9:dev")

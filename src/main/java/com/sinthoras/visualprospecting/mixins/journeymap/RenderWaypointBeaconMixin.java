@@ -1,7 +1,7 @@
 package com.sinthoras.visualprospecting.mixins.journeymap;
 
-import com.sinthoras.visualprospecting.gui.journeymap.JourneyMapState;
-import com.sinthoras.visualprospecting.gui.journeymap.waypoints.WaypointManager;
+import com.sinthoras.visualprospecting.integration.journeymap.JourneyMapState;
+import com.sinthoras.visualprospecting.integration.journeymap.waypoints.WaypointManager;
 import journeymap.client.model.Waypoint;
 import journeymap.client.render.ingame.RenderWaypointBeacon;
 import net.minecraft.client.Minecraft;

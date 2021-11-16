@@ -38,6 +38,9 @@ public enum Mixin {
 
     GuiMainMixin("tcnodetracker.GuiMainMixin", Side.CLIENT, TCNODETRACKER),
 
+    GuiMapMixin("xaerosworldmap.GuiMapMixin", Side.CLIENT, XAEROWORLDMAP),
+    WaypointsIngameRendererMixin("xaerosminimap.WaypointsIngameRendererMixin", Side.CLIENT, XAEROMINIMAP),
+
     ItemEditableBookMixin("minecraft.ItemEditableBookMixin", VANILLA);
 
     public final String mixinClass;

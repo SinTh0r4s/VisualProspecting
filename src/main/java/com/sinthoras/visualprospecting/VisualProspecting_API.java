@@ -4,14 +4,15 @@ import com.sinthoras.visualprospecting.database.ClientCache;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.database.ServerCache;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
-import com.sinthoras.visualprospecting.gui.journeymap.JourneyMapState;
-import com.sinthoras.visualprospecting.gui.journeymap.buttons.LayerButton;
-import com.sinthoras.visualprospecting.gui.journeymap.render.LayerRenderer;
-import com.sinthoras.visualprospecting.gui.model.MapState;
-import com.sinthoras.visualprospecting.gui.model.buttons.ButtonManager;
-import com.sinthoras.visualprospecting.gui.model.layers.LayerManager;
-import com.sinthoras.visualprospecting.gui.model.layers.OreVeinLayerManager;
-import com.sinthoras.visualprospecting.gui.model.layers.UndergroundFluidLayerManager;
+import com.sinthoras.visualprospecting.integration.journeymap.JourneyMapState;
+import com.sinthoras.visualprospecting.integration.journeymap.buttons.LayerButton;
+import com.sinthoras.visualprospecting.integration.journeymap.render.LayerRenderer;
+import com.sinthoras.visualprospecting.integration.model.MapState;
+import com.sinthoras.visualprospecting.integration.model.buttons.ButtonManager;
+import com.sinthoras.visualprospecting.integration.model.layers.LayerManager;
+import com.sinthoras.visualprospecting.integration.model.layers.OreVeinLayerManager;
+import com.sinthoras.visualprospecting.integration.model.layers.UndergroundFluidLayerManager;
+import com.sinthoras.visualprospecting.integration.xaeroworldmap.XaeroWorldMapState;
 import com.sinthoras.visualprospecting.network.ProspectingNotification;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -23,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.sinthoras.visualprospecting.Utils.isJourneyMapInstalled;
+import static com.sinthoras.visualprospecting.Utils.isXaerosWorldMapInstalled;
 
 @SuppressWarnings("unused")
 public class VisualProspecting_API {
@@ -47,10 +49,24 @@ public class VisualProspecting_API {
             }
         }
 
+        // Register visualization for logical button in Xaero's World Map
+        public static void registerXaeroMapButton(com.sinthoras.visualprospecting.integration.xaeroworldmap.buttons.LayerButton customButton) {
+            if(isXaerosWorldMapInstalled()) {
+                XaeroWorldMapState.instance.buttons.add(customButton);
+            }
+        }
+
         // Add the JourneyMap renderer for a layer
         public static void registerJourneyMapRenderer(LayerRenderer customRenderer) {
             if(isJourneyMapInstalled()) {
                 JourneyMapState.instance.renderers.add(customRenderer);
+            }
+        }
+
+        // Add the Xaero's World Map renderer for a layer
+        public static void registerXaeroMapRenderer(com.sinthoras.visualprospecting.integration.xaeroworldmap.renderers.LayerRenderer customRenderer) {
+            if(isXaerosWorldMapInstalled()) {
+                XaeroWorldMapState.instance.renderers.add(customRenderer);
             }
         }
 

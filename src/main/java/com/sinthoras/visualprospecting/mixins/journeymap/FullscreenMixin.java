@@ -1,12 +1,12 @@
 package com.sinthoras.visualprospecting.mixins.journeymap;
 
 import com.sinthoras.visualprospecting.VP;
-import com.sinthoras.visualprospecting.gui.journeymap.JourneyMapState;
-import com.sinthoras.visualprospecting.gui.journeymap.buttons.LayerButton;
-import com.sinthoras.visualprospecting.gui.journeymap.render.LayerRenderer;
-import com.sinthoras.visualprospecting.gui.journeymap.render.WaypointProviderLayerRenderer;
-import com.sinthoras.visualprospecting.gui.model.MapState;
-import com.sinthoras.visualprospecting.gui.model.layers.LayerManager;
+import com.sinthoras.visualprospecting.integration.journeymap.JourneyMapState;
+import com.sinthoras.visualprospecting.integration.journeymap.buttons.LayerButton;
+import com.sinthoras.visualprospecting.integration.journeymap.render.LayerRenderer;
+import com.sinthoras.visualprospecting.integration.journeymap.render.WaypointProviderLayerRenderer;
+import com.sinthoras.visualprospecting.integration.model.MapState;
+import com.sinthoras.visualprospecting.integration.model.layers.LayerManager;
 import journeymap.client.Constants;
 import journeymap.client.io.ThemeFileHandler;
 import journeymap.client.log.LogFormatter;

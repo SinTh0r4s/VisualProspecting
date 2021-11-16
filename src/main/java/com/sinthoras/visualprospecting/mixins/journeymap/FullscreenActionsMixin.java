@@ -1,6 +1,6 @@
 package com.sinthoras.visualprospecting.mixins.journeymap;
 
-import com.sinthoras.visualprospecting.gui.journeymap.ResetClientCacheConfirmation;
+import com.sinthoras.visualprospecting.integration.journeymap.ResetClientCacheConfirmation;
 import journeymap.client.ui.UIManager;
 import journeymap.client.ui.component.Button;
 import journeymap.client.ui.component.ButtonList;

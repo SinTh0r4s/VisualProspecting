@@ -7,7 +7,7 @@
       "mcversion": "${minecraftVersion}",
       "url": "https://github.com/SinTh0r4s/VisualProspecting",
       "updateUrl": "",
-      "authorList": ["SinTh0r4s"],
+      "authorList": ["SinTh0r4s", "TheLastKumquat"],
       "credits": "Special thanks to basdxz and Houstonruss for contributing CI and textures!",
       "logoFile": "",
       "screenshots": [],
