@@ -36,7 +36,7 @@ public class ItemOreFinderToolMixin extends Item {
   @Inject(
       method = "onUpdate",
       at = @At(value = "INVOKE", target = "Lcom/encraft/dz/items/ItemOreFinderTool;shouldKeepLooking()Z", shift = Shift.AFTER, remap = false, ordinal = 0),
-      locals = LocalCapture.CAPTURE_FAILHARD,
+      locals = LocalCapture.CAPTURE_FAILEXCEPTION,
       remap = true
   )
   public void onGtOreFound(
