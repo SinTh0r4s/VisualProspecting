@@ -1,12 +1,6 @@
 package com.sinthoras.visualprospecting.mixinplugin;
 
-import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.BARTWORKS;
-import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.GALACTICGREG;
-import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.GREGTECH;
-import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.IFU;
-import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.JOURNEYMAP;
-import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.TCNODETRACKER;
-import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.VANILLA;
+import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.*;
 
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import java.util.Arrays;
