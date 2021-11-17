@@ -104,7 +104,8 @@ public class MixinPlugin implements IMixinConfigPlugin {
                 .map(Path::toFile)
                 .findFirst()
                 .orElse(null);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
             return null;
         }

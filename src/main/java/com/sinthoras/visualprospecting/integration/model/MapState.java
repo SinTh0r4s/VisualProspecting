@@ -29,8 +29,4 @@ public class MapState {
         buttons.add(OreVeinButtonManager.instance);
         layers.add(OreVeinLayerManager.instance);
     }
-
-    public void onButtonClicked(LayerButton button) {
-        layers.forEach(layer -> layer.onButtonClicked(button));
-    }
 }
