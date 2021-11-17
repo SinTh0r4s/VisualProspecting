@@ -1,11 +1,10 @@
 package com.sinthoras.visualprospecting.mixinplugin;
 
-import cpw.mods.fml.relauncher.FMLLaunchHandler;
+import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.*;
 
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.*;
 
 public enum Mixin {
 
@@ -23,6 +22,8 @@ public enum Mixin {
     GT_MetaTileEntity_AdvSeismicProspectorMixin("gregtech.GT_MetaTileEntity_AdvSeismicProspectorMixin", GREGTECH),
     GT_MetaTileEntity_ScannerMixin("gregtech.GT_MetaTileEntity_ScannerMixin", GREGTECH),
     GT_WorldGenContainerMixin("gregtech.WorldGenContainerMixin", GREGTECH),
+
+    ItemOreFinderToolMixin("ifu.ItemOreFinderToolMixin",  IFU),
 
     FullscreenMixin("journeymap.FullscreenMixin", Side.CLIENT, JOURNEYMAP),
     FullscreenActionsMixin("journeymap.FullscreenActionsMixin", Side.CLIENT, JOURNEYMAP),
