@@ -13,6 +13,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static gregtech.common.GT_UndergroundOil.undergroundOil;
+
 public class ServerCache extends WorldCache {
 
     public static final ServerCache instance = new ServerCache();
@@ -78,7 +80,7 @@ public class ServerCache extends WorldCache {
                 Fluid fluid = null;
                 for (int offsetChunkX = 0; offsetChunkX < VP.undergroundFluidSizeChunkX; offsetChunkX++) {
                     for (int offsetChunkZ = 0; offsetChunkZ < VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
-                        final FluidStack prospectedFluid = Utils.prospectFluid(world, chunkX + offsetChunkX, chunkZ + offsetChunkZ);
+                        final FluidStack prospectedFluid = undergroundOil(world, chunkX + offsetChunkX, chunkZ + offsetChunkZ, -1);
                         if (prospectedFluid != null) {
                             fluid = prospectedFluid.getFluid();
                             chunks[offsetChunkX][offsetChunkZ] = prospectedFluid.amount;
