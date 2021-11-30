@@ -9,12 +9,14 @@ dependencies {
     compile("com.github.GTNewHorizons:StructureLib:master-SNAPSHOT:dev")
     compile("com.github.GTNewHorizons:NotEnoughItems:master-SNAPSHOT:dev")
     compile("com.github.GTNewHorizons:TCNodeTracker:master-SNAPSHOT:dev")
-    compile("com.github.GTNewHorizons:IFU:master-SNAPSHOT:dev")
 
     compile("curse.maven:journeymap-32274:2367915")
     compile files("libs/Xaeros_Minimap_21.10.11_Forge_1.7.10-deobf")
     compile files("libs/XaerosWorldMap_1.14.1.10_Forge_1.7.10-deobf")
 
+    compileOnly("com.github.GTNewHorizons:IFU:master-SNAPSHOT:dev") {
+        transitive = false
+    }
     compileOnly("com.github.GTNewHorizons:GalacticGregGT5:1.0.3") {
         transitive = false
     }
