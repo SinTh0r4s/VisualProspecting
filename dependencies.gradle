@@ -5,29 +5,22 @@ dependencies {
         transitive = false
         setChanging(true)
     }
-
-    // GT5U Dependencies
-    compile("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
-    compile("com.github.GTNewHorizons:StructureLib:1.0.6:deobf")
-    compile("codechicken:CodeChickenLib:1.7.10-1.1.3.140:dev")
-    compile("codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev")
-    compile("codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev")
+    compile("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")  // GT5U Dependency
+    compile("com.github.GTNewHorizons:StructureLib:master-SNAPSHOT:dev")
+    compile("com.github.GTNewHorizons:NotEnoughItems:master-SNAPSHOT:dev")
+    compile("com.github.GTNewHorizons:TCNodeTracker:master-SNAPSHOT:dev")
 
     compile("curse.maven:journeymap-32274:2367915")
-
-    // to update: download files from curse, run them through BON2, update filenames here
     compile files("libs/Xaeros_Minimap_21.10.11_Forge_1.7.10-deobf")
     compile files("libs/XaerosWorldMap_1.14.1.10_Forge_1.7.10-deobf")
 
-    compile("com.github.GTNewHorizons:TCNodeTracker:latest")
-
-    compile("com.github.GTNewHorizons:IFU:1.9:dev")
-
-    compileOnly("com.github.GTNewHorizons:bartworks:0.5.24") {
+    compileOnly("com.github.GTNewHorizons:IFU:master-SNAPSHOT:dev") {
         transitive = false
     }
-
     compileOnly("com.github.GTNewHorizons:GalacticGregGT5:1.0.3") {
+        transitive = false
+    }
+    compileOnly("com.github.GTNewHorizons:bartworks:0.5.24") {
         transitive = false
     }
 }
