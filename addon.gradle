@@ -9,7 +9,8 @@ buildscript {
 
 import de.undercouch.gradle.tasks.download.Download
 
-def voxelMapFile = file("libs/voxelmap_1.7.0b.jar")
+def voxelMapFile = file("dependencies/voxelmap_1.7.0b.jar")
+def voxelMapFileDeobf = file("dependencies/voxelmap_1.7.0b-deobf.jar")
 
 task getVoxelMap(type: Download) {
     onlyIf {
@@ -21,7 +22,15 @@ task getVoxelMap(type: Download) {
     mustRunAfter "repackMinecraft"
 }
 
-tasks.setupCIWorkspace.dependsOn getVoxelMap
-tasks.setupDevWorkspace.dependsOn getVoxelMap
-tasks.setupDecompWorkspace.dependsOn getVoxelMap
-tasks.compileJava.dependsOn getVoxelMap
+task deobfVoxelMap(dependsOn: getVoxelMap, type: Exec) {
+    onlyIf {
+        !voxelMapFileDeobf.exists()
+    }
+    // VoxelMap uese Notch names, so we have to deobfuscate them
+    commandLine 'java', '-jar', 'BON2-2.4.0.CUSTOM-all.jar', '--inputJar', voxelMapFile, '--outputJar', voxelMapFileDeobf, '--mcVer', '1.7.10', '--mappingsVer', 'stable_12-1.7.10', '--notch'
+}
+
+tasks.setupCIWorkspace.dependsOn deobfVoxelMap
+tasks.setupDevWorkspace.dependsOn deobfVoxelMap
+tasks.setupDecompWorkspace.dependsOn deobfVoxelMap
+tasks.compileJava.dependsOn deobfVoxelMap
