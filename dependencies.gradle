@@ -1,7 +1,7 @@
 dependencies {
     shadowImplementation("com.github.SinTh0r4s:Enklume:master-SNAPSHOT")
 
-    compile("com.github.GTNewHorizons:GT5-Unofficial:experimental-SNAPSHOT:dev") {
+    compile("com.github.GTNewHorizons:GT5-Unofficial:master-SNAPSHOT:dev") {
         transitive = false
         setChanging(true)
     }
@@ -14,10 +14,6 @@ dependencies {
     compile("codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev")
 
     compile("curse.maven:journeymap-32274:2367915")
-
-    // to update: download files from curse, run them through BON2, update filenames here
-    compile files("libs/Xaeros_Minimap_21.10.11_Forge_1.7.10-deobf")
-    compile files("libs/XaerosWorldMap_1.14.1.10_Forge_1.7.10-deobf")
 
     compile("com.github.GTNewHorizons:TCNodeTracker:latest")
 

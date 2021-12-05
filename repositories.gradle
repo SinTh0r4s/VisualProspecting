@@ -2,13 +2,18 @@ repositories {
     maven {
         name = "CodeChicken"
         url = "https://chickenbones.net/maven/"
-    }
-    maven {
-        url = "https://jitpack.io"
+        metadataSources {
+            mavenPom()
+            artifact()
+        }
     }
     maven {
         name = "ic2"
         url = "https://maven.ic2.player.to/"
+        metadataSources {
+            mavenPom()
+            artifact()
+        }
     }
     maven {
         url "https://cursemaven.com"
@@ -16,5 +21,8 @@ repositories {
     maven {
         name = "sponge"
         url = "https://repo.spongepowered.org/repository/maven-public"
+    }
+    maven {
+        url = "https://jitpack.io"
     }
 }

@@ -1,0 +1,27 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'de.undercouch:gradle-download-task:4.1.2'
+    }
+}
+
+import de.undercouch.gradle.tasks.download.Download
+
+def voxelMapFile = file("libs/voxelmap_1.7.0b.jar")
+
+task getVoxelMap(type: Download) {
+    onlyIf {
+        !voxelMapFile.exists()
+    }
+    src "https://media.forgecdn.net/files/2462/146/mod_voxelMap_1.7.0b_for_1.7.10.litemod" //direct link to VoxelMap on CurseForge
+    dest voxelMapFile
+    mustRunAfter "deobfBinJar"
+    mustRunAfter "repackMinecraft"
+}
+
+tasks.setupCIWorkspace.dependsOn getVoxelMap
+tasks.setupDevWorkspace.dependsOn getVoxelMap
+tasks.setupDecompWorkspace.dependsOn getVoxelMap
+tasks.compileJava.dependsOn getVoxelMap

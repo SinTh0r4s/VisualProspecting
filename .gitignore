@@ -27,3 +27,4 @@ world/
 *.ipr
 *.iws
 src/main/resources/mixins.*.json
+libs/voxelmap_1.7.0b.jar
