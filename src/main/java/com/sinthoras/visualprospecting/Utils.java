@@ -17,6 +17,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
@@ -30,7 +31,6 @@ import java.util.stream.Collectors;
 
 import static gregtech.api.objects.XSTR.XSTR_INSTANCE;
 import static gregtech.common.GT_Proxy.*;
-import static gregtech.common.GT_Proxy.GTOIL;
 
 public class Utils {
 
@@ -56,6 +56,15 @@ public class Utils {
 
     public static boolean isXaerosWorldMapInstalled() {
         return Loader.isModLoaded("XaeroWorldMap");
+    }
+    
+    public static boolean isVoxelMapInstalled() {
+    	try {
+    		Class.forName("com.thevoxelbox.voxelmap.litemod.LiteModVoxelMap");
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
     }
 
     public static int coordBlockToChunk(int blockCoord) {
