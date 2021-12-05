@@ -11,18 +11,11 @@ dependencies {
     compile("com.github.GTNewHorizons:TCNodeTracker:master-SNAPSHOT:dev")
 
     compile("curse.maven:journeymap-32274:2367915")
-
-    // to update: download files from curse, run them through BON2, update filenames here
     compile files("dependencies/Xaeros_Minimap_21.10.14_Forge_1.7.10-deobf.jar")
     compile files("dependencies/XaerosWorldMap_1.14.1.11_Forge_1.7.10-deobf.jar")
-
-    compile("com.github.GTNewHorizons:TCNodeTracker:latest")
-
-    compile("com.github.GTNewHorizons:IFU:master-SNAPSHOT:dev")
-
     compileOnly files("dependencies/voxelmap_1.7.0b-deobf.jar")
 
-    compileOnly("com.github.GTNewHorizons:bartworks:0.5.24") {
+    compileOnly("com.github.GTNewHorizons:IFU:master-SNAPSHOT:dev") {
         transitive = false
     }
     compileOnly("com.github.GTNewHorizons:GalacticGregGT5:1.0.3") {
