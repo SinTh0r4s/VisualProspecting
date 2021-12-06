@@ -9,7 +9,7 @@ buildscript {
 
 import de.undercouch.gradle.tasks.download.Download
 
-def voxelMapFile = file("dependencies/voxelmap_1.7.0b.jar")
+def voxelMapFile = file("data/voxelmap_1.7.0b.jar")
 def voxelMapFileDeobf = file("dependencies/voxelmap_1.7.0b-deobf.jar")
 
 task getVoxelMap(type: Download) {
@@ -27,7 +27,7 @@ task deobfVoxelMap(dependsOn: getVoxelMap, type: Exec) {
         !voxelMapFileDeobf.exists()
     }
     // VoxelMap uese Notch names, so we have to deobfuscate them
-    commandLine 'java', '-jar', 'BON2-2.4.0.CUSTOM-all.jar', '--inputJar', voxelMapFile, '--outputJar', voxelMapFileDeobf, '--mcVer', '1.7.10', '--mappingsVer', 'stable_12-1.7.10', '--notch'
+    commandLine 'java', '-jar', 'BON2-2.5.0.CUSTOM-all.jar', '--inputJar', voxelMapFile, '--outputJar', voxelMapFileDeobf, '--mcVer', '1.7.10', '--mappingsVer', 'stable_12-1.7.10', '--notch'
 }
 
 tasks.setupCIWorkspace.dependsOn deobfVoxelMap
