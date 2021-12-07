@@ -34,8 +34,6 @@ public enum Mixin {
 
     GuiMapMixin("xaerosworldmap.GuiMapMixin", Side.CLIENT, XAEROWORLDMAP),
     WaypointsIngameRendererMixin("xaerosminimap.WaypointsIngameRendererMixin", Side.CLIENT, XAEROMINIMAP),
-    
-    IWaypointManagerInvoker("voxelmap.IWaypointManagerInvoker", Side.CLIENT, VOXELMAP),
 
     ItemEditableBookMixin("minecraft.ItemEditableBookMixin", VANILLA);
 

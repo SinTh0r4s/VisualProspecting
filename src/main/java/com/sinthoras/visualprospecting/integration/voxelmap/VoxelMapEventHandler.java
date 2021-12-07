@@ -7,7 +7,6 @@ import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 import com.sinthoras.visualprospecting.hooks.ProspectingNotificationEvent;
-import com.sinthoras.visualprospecting.mixins.voxelmap.IWaypointManagerInvoker;
 import com.thevoxelbox.voxelmap.interfaces.AbstractVoxelMap;
 import com.thevoxelbox.voxelmap.interfaces.IWaypointManager;
 import com.thevoxelbox.voxelmap.util.Waypoint;
@@ -43,7 +42,7 @@ public class VoxelMapEventHandler {
 				(float) color[1] / 255.0f, // green
 				(float) color[2] / 255.0f, // blue
 				"Pickaxe", // icon
-				((IWaypointManagerInvoker) waypointManager).getCurrentSubworldDescriptor(false), // world
+				IWaypointManagerReflection.getCurrentSubworldDescriptor(waypointManager, false), // world
 				dim)); // dimension
 	}
 	
@@ -71,7 +70,7 @@ public class VoxelMapEventHandler {
 				(float) (color >>  8 & 0xFF) / 255.0f, // green
 				(float) (color       & 0xFF) / 255.0f, // blue
 				"Science", // icon
-				((IWaypointManagerInvoker) waypointManager).getCurrentSubworldDescriptor(false), // world
+				IWaypointManagerReflection.getCurrentSubworldDescriptor(waypointManager, false), // world
 				dim)); // dimension
 	}
 	
