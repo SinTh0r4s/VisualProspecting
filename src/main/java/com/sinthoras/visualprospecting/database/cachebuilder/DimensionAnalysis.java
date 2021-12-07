@@ -24,7 +24,7 @@ public class DimensionAnalysis {
         this.dimensionId = dimensionId;
     }
 
-    public void processMinecraftWorld(MinecraftWorld world) throws IOException, DataFormatException {
+    public void processMinecraftWorld(MinecraftWorld world) throws IOException {
         final Map<Long, Integer> veinBlockY = new ConcurrentHashMap<>();
         final List<File> regionFiles = world.getAllRegionFiles(dimensionId);
         AnalysisProgressTracker.setNumberOfRegionFiles(regionFiles.size());
