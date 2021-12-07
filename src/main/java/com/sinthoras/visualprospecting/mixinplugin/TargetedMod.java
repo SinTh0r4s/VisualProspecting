@@ -17,6 +17,7 @@ public enum TargetedMod {
     JOURNEYMAP("JourneyMap", "journeymap-1.7.10", true),
     XAEROWORLDMAP("Xaero's World Map", "XaerosWorldMap", true),
     XAEROMINIMAP("Xaero's Minimap", "Xaeros_Minimap", true),
+    VOXELMAP("VoxelMap", "mod_voxelmap", false),
     TCNODETRACKER("TCNodeTracker", "tcnodetracker-1.7.10", true),
     IFU("I will find you", "ifu", false),
     BARTWORKS("Bartworks", "bartworks", false),
@@ -38,7 +39,7 @@ public enum TargetedMod {
         final String nameLowerCase = Files.getNameWithoutExtension(pathString).toLowerCase();
         final String fileExtension = Files.getFileExtension(pathString);
         
-        return nameLowerCase.startsWith(jarNamePrefixLowercase) && "jar".equals(fileExtension);
+        return nameLowerCase.startsWith(jarNamePrefixLowercase) && ("jar".equals(fileExtension) || "litemod".equals(fileExtension));
     }
 
     @Override

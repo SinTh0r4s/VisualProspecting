@@ -1,7 +1,7 @@
 package com.sinthoras.visualprospecting.database;
 
 import com.sinthoras.visualprospecting.*;
-import com.sinthoras.visualprospecting.hooks.ProspectingEvent;
+import com.sinthoras.visualprospecting.hooks.ProspectingNotificationEvent;
 import com.sinthoras.visualprospecting.network.ProspectingRequest;
 import gregtech.common.blocks.GT_TileEntity_Ores;
 import net.minecraft.client.Minecraft;
@@ -46,22 +46,16 @@ public class ClientCache extends WorldCache {
         if(oreVeinPositions.size() == 1) {
             final OreVeinPosition oreVeinPosition = oreVeinPositions.get(0);
             if(putOreVein(oreVeinPosition) != DimensionCache.UpdateResult.AlreadyKnown) {
-            	ProspectingEvent.OreVein event = new ProspectingEvent.OreVein(oreVeinPosition);
-            	MinecraftForge.EVENT_BUS.post(event);
-            	if(!event.isCanceled()) {
-                    notifyNewOreVein(oreVeinPosition);
-            	}
+                MinecraftForge.EVENT_BUS.post(new ProspectingNotificationEvent.OreVein(oreVeinPosition));
+                notifyNewOreVein(oreVeinPosition);
             }
         }
         else if(oreVeinPositions.size() > 1) {
             int newOreVeins = 0;
             for(OreVeinPosition oreVeinPosition : oreVeinPositions) {
                 if(putOreVein(oreVeinPosition) != DimensionCache.UpdateResult.AlreadyKnown) {
-                	ProspectingEvent.OreVein event = new ProspectingEvent.OreVein(oreVeinPosition);
-                	MinecraftForge.EVENT_BUS.post(event);
-                	if(!event.isCanceled()) {
-                        newOreVeins++;
-                	}
+                    MinecraftForge.EVENT_BUS.post(new ProspectingNotificationEvent.OreVein(oreVeinPosition));
+                    newOreVeins++;
                 }
             }
             if(newOreVeins > 0) {
@@ -83,18 +77,12 @@ public class ClientCache extends WorldCache {
         for(UndergroundFluidPosition undergroundFluidPosition : undergroundFluids) {
             DimensionCache.UpdateResult updateResult = putUndergroundFluids(undergroundFluidPosition);
             if(updateResult == DimensionCache.UpdateResult.New) {
-            	ProspectingEvent.UndergroundFluid event = new ProspectingEvent.UndergroundFluid(undergroundFluidPosition);
-            	MinecraftForge.EVENT_BUS.post(event);
-                if(!event.isCanceled()) {
-                	newUndergroundFluids++;
-                }
+                MinecraftForge.EVENT_BUS.post(new ProspectingNotificationEvent.UndergroundFluid(undergroundFluidPosition));
+                newUndergroundFluids++;
             }
             else if(updateResult == DimensionCache.UpdateResult.Updated) {
-            	ProspectingEvent.UndergroundFluid event = new ProspectingEvent.UndergroundFluid(undergroundFluidPosition);
-            	MinecraftForge.EVENT_BUS.post(event);
-            	if(!event.isCanceled()) {
-            		updatedUndergroundFluids++;
-            	}
+                MinecraftForge.EVENT_BUS.post(new ProspectingNotificationEvent.UndergroundFluid(undergroundFluidPosition));
+                updatedUndergroundFluids++;
             }
         }
         if(newUndergroundFluids > 0 && updatedUndergroundFluids > 0) {

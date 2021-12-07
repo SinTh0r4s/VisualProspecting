@@ -3,6 +3,7 @@ package com.sinthoras.visualprospecting;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sinthoras.visualprospecting.hooks.HooksClient;
+
 import cpw.mods.fml.common.Loader;
 import gregtech.GT_Mod;
 import gregtech.api.objects.GT_UO_Dimension;
@@ -17,7 +18,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.io.*;
-import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
@@ -59,12 +59,14 @@ public class Utils {
     }
     
     public static boolean isVoxelMapInstalled() {
-    	try {
-    		Class.forName("com.thevoxelbox.voxelmap.litemod.LiteModVoxelMap");
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
+        try {
+            // If a LiteLoader mod is present cannot be checked by calling Loader#isModLoaded.
+            // Instead, we check if the VoxelMap main class is present.
+            Class.forName("com.thevoxelbox.voxelmap.litemod.LiteModVoxelMap");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public static int coordBlockToChunk(int blockCoord) {

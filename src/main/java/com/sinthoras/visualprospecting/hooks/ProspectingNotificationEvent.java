@@ -5,14 +5,14 @@ import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
 
 import cpw.mods.fml.common.eventhandler.Event;
 
-public class ProspectingEvent extends Event {
+public class ProspectingNotificationEvent extends Event {
 	
 	@Override
 	public boolean isCancelable() {
-		return true;
+		return false;
 	}
 	
-	public static class OreVein extends ProspectingEvent {
+	public static class OreVein extends ProspectingNotificationEvent {
 		
 		private final OreVeinPosition position;
 		
@@ -26,7 +26,7 @@ public class ProspectingEvent extends Event {
 		
 	}
 	
-	public static class UndergroundFluid extends ProspectingEvent {
+	public static class UndergroundFluid extends ProspectingNotificationEvent {
 		
 		private final UndergroundFluidPosition position;
 		

@@ -6,23 +6,23 @@ import com.sinthoras.visualprospecting.Config;
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.database.UndergroundFluidPosition;
-import com.sinthoras.visualprospecting.hooks.ProspectingEvent;
+import com.sinthoras.visualprospecting.hooks.ProspectingNotificationEvent;
+import com.sinthoras.visualprospecting.mixins.voxelmap.IWaypointManagerInvoker;
 import com.thevoxelbox.voxelmap.interfaces.AbstractVoxelMap;
 import com.thevoxelbox.voxelmap.interfaces.IWaypointManager;
 import com.thevoxelbox.voxelmap.util.Waypoint;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import gregtech.api.GregTech_API;
-import gregtech.api.items.GT_MetaGenerated_Tool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
-public class EventHandler {
+public class VoxelMapEventHandler {
 	
 	@SubscribeEvent
-	public void onVeinProspected(ProspectingEvent.OreVein event) {
+	public void onVeinProspected(ProspectingNotificationEvent.OreVein event) {
 		if(event.isCanceled()) {
 			return;
 		}
@@ -38,17 +38,17 @@ public class EventHandler {
 				pos.getBlockX(), // X
 				pos.getBlockZ(), // Z
 				getY(), // Y
-				Config.vmEnableWaypointsByDefault, // enabled
+				Config.enableVoxelMapWaypointsByDefault, // enabled
 				(float) color[0] / 255.0f, // red
 				(float) color[1] / 255.0f, // green
 				(float) color[2] / 255.0f, // blue
 				"Pickaxe", // icon
-				IWaypointManagerReflection.getCurrentSubworldDescriptor(waypointManager, false), // world
+				((IWaypointManagerInvoker) waypointManager).getCurrentSubworldDescriptor(false), // world
 				dim)); // dimension
 	}
 	
 	@SubscribeEvent
-	public void onFluidProspected(ProspectingEvent.UndergroundFluid event) {
+	public void onFluidProspected(ProspectingNotificationEvent.UndergroundFluid event) {
 		if(event.isCanceled()) {
 			return;
 		}
@@ -66,25 +66,22 @@ public class EventHandler {
 				x, // X
 				z, // Z
 				Minecraft.getMinecraft().theWorld.getHeightValue(x, z), // Y
-				Config.vmEnableWaypointsByDefault, // enabled
+				Config.enableVoxelMapWaypointsByDefault, // enabled
 				(float) (color >> 16 & 0xFF) / 255.0f, // red
 				(float) (color >>  8 & 0xFF) / 255.0f, // green
 				(float) (color       & 0xFF) / 255.0f, // blue
 				"Science", // icon
-				IWaypointManagerReflection.getCurrentSubworldDescriptor(waypointManager, false), // world
+				((IWaypointManagerInvoker) waypointManager).getCurrentSubworldDescriptor(false), // world
 				dim)); // dimension
 	}
 	
 	private static int getY() {
 		EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
 		ItemStack heldItem = player.getHeldItem();
-		if(heldItem == null) {
+		if(heldItem == null || !heldItem.getUnlocalizedName().contains("gt.detrav.metatool.01")) {
 			return (int) player.posY;
 		}
-		if(heldItem.getUnlocalizedName().contains("gt.detrav.metatool.01")) {
-			return 65;
-		}
-		return (int) player.posY;
+		return 65;
 	}
 
 }

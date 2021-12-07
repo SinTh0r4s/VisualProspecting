@@ -3,7 +3,7 @@ package com.sinthoras.visualprospecting.hooks;
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.database.ResetClientCacheCommand;
-import com.sinthoras.visualprospecting.integration.voxelmap.EventHandler;
+import com.sinthoras.visualprospecting.integration.voxelmap.VoxelMapEventHandler;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -43,7 +43,7 @@ public class HooksClient extends HooksShared {
 		super.fmlLifeCycleEvent(event);
 		ClientCommandHandler.instance.registerCommand(new ResetClientCacheCommand());
 		if(Utils.isVoxelMapInstalled()) {
-			MinecraftForge.EVENT_BUS.register(new EventHandler());
+			MinecraftForge.EVENT_BUS.register(new VoxelMapEventHandler());
 		}
 	}
 
