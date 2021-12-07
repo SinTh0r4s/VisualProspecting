@@ -1,7 +1,7 @@
 dependencies {
     shadowImplementation("com.github.SinTh0r4s:Enklume:master-SNAPSHOT")
 
-    compile("com.github.GTNewHorizons:GT5-Unofficial:experimental-SNAPSHOT:dev") {
+    compile("com.github.GTNewHorizons:GT5-Unofficial:master-SNAPSHOT:dev") {
         transitive = false
         setChanging(true)
     }
@@ -17,10 +17,10 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:IFU:master-SNAPSHOT:dev") {
         transitive = false
     }
-    compileOnly("com.github.GTNewHorizons:GalacticGregGT5:1.0.3") {
+    compileOnly("com.github.GTNewHorizons:GalacticGregGT5:master-SNAPSHOT:dev") {
         transitive = false
     }
-    compileOnly("com.github.GTNewHorizons:bartworks:0.5.24") {
+    compileOnly("com.github.GTNewHorizons:bartworks:master-SNAPSHOT:dev") {
         transitive = false
     }
 }
