@@ -23,7 +23,7 @@ public class ServerCache extends WorldCache {
         return Utils.getSubDirectory(Tags.SERVER_DIR);
     }
 
-    public void notifyOreVeinGeneration(int dimensionId, int chunkX, int chunkZ, final VeinType veinType) {
+    public synchronized void notifyOreVeinGeneration(int dimensionId, int chunkX, int chunkZ, final VeinType veinType) {
         if(veinType != VeinType.NO_VEIN) {
             super.putOreVein(new OreVeinPosition(dimensionId, chunkX, chunkZ, veinType));
         }
