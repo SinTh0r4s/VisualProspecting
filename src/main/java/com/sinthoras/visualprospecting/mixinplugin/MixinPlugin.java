@@ -1,7 +1,6 @@
 package com.sinthoras.visualprospecting.mixinplugin;
 
 import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.VANILLA;
-import static com.sinthoras.visualprospecting.mixinplugin.TargetedMod.VOXELMAP;
 import static java.nio.file.Files.walk;
 
 import com.sinthoras.visualprospecting.Tags;
@@ -55,7 +54,6 @@ public class MixinPlugin implements IMixinConfigPlugin {
         List<TargetedMod> loadedMods = Arrays.stream(TargetedMod.values())
                 .filter(mod -> mod == VANILLA
                         || (mod.loadInDevelopment && isDevelopmentEnvironment)
-                        //|| (mod == VOXELMAP && findJarOf(mod) != null)
                         || loadJarOf(mod))
                 .collect(Collectors.toList());
         
