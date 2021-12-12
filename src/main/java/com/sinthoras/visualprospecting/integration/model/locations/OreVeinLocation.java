@@ -4,9 +4,6 @@ import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.database.ClientCache;
 import com.sinthoras.visualprospecting.database.OreVeinPosition;
 import com.sinthoras.visualprospecting.integration.model.waypoints.Waypoint;
-import gregtech.api.GregTech_API;
-import gregtech.api.enums.Materials;
-import gregtech.api.enums.OrePrefixes;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
@@ -105,12 +102,10 @@ public class OreVeinLocation implements IWaypointAndLocationProvider {
     }
 
     public int getColor() {
-        final Materials aMaterial = GregTech_API.sGeneratedMaterials[oreVeinPosition.veinType.primaryOreMeta];
-        return (aMaterial.mRGBa[0] << 16) | (aMaterial.mRGBa[1]) << 8 | aMaterial.mRGBa[2];
+        return oreVeinPosition.veinType.oreMaterialProvider.getColor();
     }
 
     public IIcon getIconFromPrimaryOre() {
-        final Materials aMaterial = GregTech_API.sGeneratedMaterials[oreVeinPosition.veinType.primaryOreMeta];
-        return aMaterial.mIconSet.mTextures[OrePrefixes.ore.mTextureIndex].getIcon();
+        return oreVeinPosition.veinType.oreMaterialProvider.getIcon();
     }
 }

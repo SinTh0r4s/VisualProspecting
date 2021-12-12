@@ -16,6 +16,7 @@ public class VeinType {
 
     public final String name;
     public short veinId;
+    public final IOreMaterialProvider oreMaterialProvider;
     public final int blockSize;
     public final short primaryOreMeta;
     public final short secondaryOreMeta;
@@ -27,11 +28,12 @@ public class VeinType {
     private boolean isHighlighted = true;
 
     // Available after VisualProspecting post GT initialization
-    public static final VeinType NO_VEIN = new VeinType(Tags.ORE_MIX_NONE_NAME, 0, (short)-1, (short)-1, (short)-1, (short)-1, 0, 0);
+    public static final VeinType NO_VEIN = new VeinType(Tags.ORE_MIX_NONE_NAME, null, 0, (short)-1, (short)-1, (short)-1, (short)-1, 0, 0);
 
-    public VeinType(String name, int blockSize, short primaryOreMeta, short secondaryOreMeta, short inBetweenOreMeta, short sporadicOreMeta, int minBlockY, int maxBlockY)
+    public VeinType(String name, IOreMaterialProvider oreMaterialProvider, int blockSize, short primaryOreMeta, short secondaryOreMeta, short inBetweenOreMeta, short sporadicOreMeta, int minBlockY, int maxBlockY)
     {
         this.name = name;
+        this.oreMaterialProvider = oreMaterialProvider;
         this.blockSize = blockSize;
         this.primaryOreMeta = primaryOreMeta;
         this.secondaryOreMeta = secondaryOreMeta;

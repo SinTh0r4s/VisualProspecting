@@ -2,11 +2,14 @@ package com.sinthoras.visualprospecting.database.veintypes;
 
 import codechicken.nei.NEIClientConfig;
 import codechicken.nei.SearchField;
+import com.github.bartimaeusnek.bartworks.system.material.Werkstoff;
 import com.github.bartimaeusnek.bartworks.system.oregen.BW_OreLayer;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.Utils;
+import gregtech.api.GregTech_API;
+import gregtech.api.enums.Materials;
 import gregtech.common.GT_Worldgen_GT_Ore_Layer;
 import net.minecraft.client.resources.I18n;
 
@@ -38,8 +41,15 @@ public class VeinTypeCaching implements Runnable {
             if(vein.mWorldGenName.equals(Tags.ORE_MIX_NONE_NAME)) {
                 break;
             }
+            Materials material = GregTech_API.sGeneratedMaterials[vein.mPrimaryMeta];
+            if(material == null) {
+                // Some materials are not registered in dev when their usage mod is not available.
+                material = Materials.getAll().stream().filter(m -> m.mMetaItemSubID == vein.mPrimaryMeta).findAny().get();
+            }
+
             veinTypes.add(new VeinType(
                     vein.mWorldGenName,
+                    new GregTechOreMaterialProvider(material),
                     vein.mSize,
                     vein.mPrimaryMeta,
                     vein.mSecondaryMeta,
@@ -53,6 +63,7 @@ public class VeinTypeCaching implements Runnable {
             for(BW_OreLayer vein : BW_OreLayer.sList) {
                 veinTypes.add(new VeinType(
                         vein.mWorldGenName,
+                        new BartworksOreMaterialProvider(Werkstoff.werkstoffHashMap.get((short) vein.mPrimaryMeta)),
                         vein.mSize,
                         (short) vein.mPrimaryMeta,
                         (short) vein.mSecondaryMeta,
