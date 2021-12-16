@@ -18,14 +18,14 @@ import java.util.zip.DataFormatException;
 public class DimensionAnalysis {
 
     public final int dimensionId;
-    private final Map<Long, DetailedChunkAnalysis> chunksForSecondIdentificationPass = new ConcurrentHashMap<>();
+    private final Map<Integer, DetailedChunkAnalysis> chunksForSecondIdentificationPass = new ConcurrentHashMap<>();
 
     public DimensionAnalysis(int dimensionId) {
         this.dimensionId = dimensionId;
     }
 
     public void processMinecraftWorld(MinecraftWorld world) throws IOException {
-        final Map<Long, Integer> veinBlockY = new ConcurrentHashMap<>();
+        final Map<Integer, Integer> veinBlockY = new ConcurrentHashMap<>();
         final List<File> regionFiles = world.getAllRegionFiles(dimensionId);
         AnalysisProgressTracker.setNumberOfRegionFiles(regionFiles.size());
 
@@ -70,8 +70,7 @@ public class DimensionAnalysis {
             }
         });
 
-        chunksForSecondIdentificationPass.keySet().parallelStream().forEach(key -> {
-            final DetailedChunkAnalysis chunk = chunksForSecondIdentificationPass.get(key);
+        chunksForSecondIdentificationPass.values().parallelStream().forEach(chunk -> {
             chunk.cleanUpWithNeighbors(veinBlockY);
             ServerCache.instance.notifyOreVeinGeneration(dimensionId, chunk.chunkX, chunk.chunkZ, chunk.getMatchedVein());
         });

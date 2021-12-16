@@ -41,7 +41,7 @@ public class DetailedChunkAnalysis {
         }
     }
 
-    public void cleanUpWithNeighbors(final Map<Long, Integer> veinChunkY) {
+    public void cleanUpWithNeighbors(final Map<Integer, Integer> veinChunkY) {
         final OreVeinPosition[] neighbors = new OreVeinPosition[] {
                 ServerCache.instance.getOreVein(dimensionId, chunkX - 3, chunkZ + 3),
                 ServerCache.instance.getOreVein(dimensionId, chunkX, chunkZ + 3),
