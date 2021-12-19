@@ -17,11 +17,13 @@ public class Config {
         public static final int minZoomLevelForUndergroundFluidDetails = 2;
         public static final int uploadBandwidthBytes = 2000000;
         public static final int maxTransferCacheSizeMB = 50;
+        public static final int maxDimensionSizeMBForFastScanning = 10000;
     }
 
     private static class Categories {
         public static final String general = "general";
         public static final String network = "network";
+        public static final String caching = "caching";
     }
 
     public static final int uploadPacketsPerSecond = 10;
@@ -35,6 +37,7 @@ public class Config {
     public static double uploadBandwidthBytes = Defaults.uploadBandwidthBytes;
     public static int uploadSizePerPacket = (int)(uploadBandwidthBytes / uploadPacketsPerSecond);
     public static int maxTransferCacheSizeMB = Defaults.maxTransferCacheSizeMB;
+    public static int maxDimensionSizeMBForFastScanning = Defaults.maxDimensionSizeMBForFastScanning;
 
 
     public static void syncronizeConfiguration(File configFile) {
@@ -81,6 +84,12 @@ public class Config {
         if(recacheVeins) {
             recacheVeinsProperty.set(false);
         }
+
+        Property maxDimensionSizeMBForFastScanningProperty = configuration.get(Categories.caching, "maxDimensionSizeMBForFastScanning",
+                Defaults.maxDimensionSizeMBForFastScanning, "[Client + Server] Define the maximum size of a " +
+                        "dimension in MB that can be processed in a single pass. Reduce this number if you run into " +
+                        "memory issues during the initial world scan (OutOfMemoryException).");
+        maxDimensionSizeMBForFastScanning = maxDimensionSizeMBForFastScanningProperty.getInt();
 
         if(configuration.hasChanged()) {
             configuration.save();
