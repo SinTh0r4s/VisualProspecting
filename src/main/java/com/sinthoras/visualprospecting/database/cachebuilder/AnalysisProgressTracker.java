@@ -29,6 +29,22 @@ public class AnalysisProgressTracker {
         updateLog();
     }
 
+    public static synchronized void announceFastDimension(int dimensionId) {
+        final String message = "Processing dimension with id " + dimensionId + " with fast scanning.";
+        VP.info(message);
+        if(Utils.isLogicalClient()) {
+            MinecraftServer.getServer().userMessage = message;
+        }
+    }
+
+    public static synchronized void announceSlowDimension(int dimensionId) {
+        final String message = "Processing dimension with id " + dimensionId + " with slow (safe) scanning.";
+        VP.info(message);
+        if(Utils.isLogicalClient()) {
+            MinecraftServer.getServer().userMessage = message;
+        }
+    }
+
     public static synchronized void setNumberOfRegionFiles(int numberOfRegionFiles) {
         AnalysisProgressTracker.numberOfRegionFiles = numberOfRegionFiles;
         regionFilesProcessed = 0;

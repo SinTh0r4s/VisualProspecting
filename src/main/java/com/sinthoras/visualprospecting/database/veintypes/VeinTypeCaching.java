@@ -41,11 +41,7 @@ public class VeinTypeCaching implements Runnable {
             if(vein.mWorldGenName.equals(Tags.ORE_MIX_NONE_NAME)) {
                 break;
             }
-            Materials material = GregTech_API.sGeneratedMaterials[vein.mPrimaryMeta];
-            if(material == null) {
-                // Some materials are not registered in dev when their usage mod is not available.
-                material = Materials.getAll().stream().filter(m -> m.mMetaItemSubID == vein.mPrimaryMeta).findAny().get();
-            }
+            final Materials material = getGregTechMaterial(vein.mPrimaryMeta);
 
             veinTypes.add(new VeinType(
                     vein.mWorldGenName,
@@ -61,9 +57,13 @@ public class VeinTypeCaching implements Runnable {
 
         if(isBartworksInstalled()) {
             for(BW_OreLayer vein : BW_OreLayer.sList) {
+                final IOreMaterialProvider oreMaterialProvider = (vein.bwOres & 0b1000) == 0 ?
+                        new GregTechOreMaterialProvider(getGregTechMaterial((short) vein.mPrimaryMeta))
+                        : new BartworksOreMaterialProvider(Werkstoff.werkstoffHashMap.get((short) vein.mPrimaryMeta));
+
                 veinTypes.add(new VeinType(
                         vein.mWorldGenName,
-                        new BartworksOreMaterialProvider(Werkstoff.werkstoffHashMap.get((short) vein.mPrimaryMeta)),
+                        oreMaterialProvider,
                         vein.mSize,
                         (short) vein.mPrimaryMeta,
                         (short) vein.mSecondaryMeta,
@@ -110,6 +110,15 @@ public class VeinTypeCaching implements Runnable {
                 longesOreName = veinType.name.length();
             }
         }
+    }
+
+    private Materials getGregTechMaterial(short metaId) {
+        final Materials material = GregTech_API.sGeneratedMaterials[metaId];
+        if(material == null) {
+            // Some materials are not registered in dev when their usage mod is not available.
+            return Materials.getAll().stream().filter(m -> m.mMetaItemSubID == metaId).findAny().get();
+        }
+        return material;
     }
 
     public static int getLongesOreNameLength() {
