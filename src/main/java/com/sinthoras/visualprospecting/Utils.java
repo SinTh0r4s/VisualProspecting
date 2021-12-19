@@ -53,11 +53,8 @@ public class Utils {
         return chunkCoord < 0 ? -((-chunkCoord) << 4) : chunkCoord << 4;
     }
 
-    public static int chunkCoordsToKey(int chunkX, int chunkZ) {
-        // Compare net.minecraft.world.ChunkCoordIntPair.hashCode()
-        int i = 1664525 * chunkX + 1013904223;
-        int j = 1664525 * (chunkZ ^ -559038737) + 1013904223;
-        return i ^ j;
+    public static long chunkCoordsToKey(int chunkX, int chunkZ) {
+        return (((long)chunkX) << 32) | (chunkZ & 0xffffffffL);
     }
 
     public static int mapToCenterOreChunkCoord(final int chunkCoord) {

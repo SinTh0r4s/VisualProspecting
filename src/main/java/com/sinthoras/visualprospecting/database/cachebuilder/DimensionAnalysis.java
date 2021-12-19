@@ -19,7 +19,6 @@ import java.util.zip.DataFormatException;
 public class DimensionAnalysis {
 
     public final int dimensionId;
-    private final Map<Integer, DetailedChunkAnalysis> chunksForSecondIdentificationPass = new ConcurrentHashMap<>();
 
     public DimensionAnalysis(int dimensionId) {
         this.dimensionId = dimensionId;
@@ -29,15 +28,16 @@ public class DimensionAnalysis {
         void processChunk(NBTCompound root, int chunkX, int chunkZ);
     }
 
-
     public void processMinecraftWorld(MinecraftWorld world) throws IOException {
-        final Map<Integer, Integer> veinBlockY = new ConcurrentHashMap<>();
+        final Map<Long, Integer> veinBlockY = new ConcurrentHashMap<>();
         final List<File> regionFiles = world.getAllRegionFiles(dimensionId);
         final long dimensionSizeMB = regionFiles.stream().mapToLong(File::length).sum() >> 20;
 
         if (dimensionSizeMB <= Config.maxDimensionSizeMBForFastScanning) {
             AnalysisProgressTracker.announceFastDimension(dimensionId);
             AnalysisProgressTracker.setNumberOfRegionFiles(regionFiles.size());
+
+            final Map<Long, DetailedChunkAnalysis> chunksForSecondIdentificationPass = new ConcurrentHashMap<>();
 
             regionFiles.parallelStream().forEach(regionFile -> {
                 executeForEachGeneratedOreChunk(regionFile, (root, chunkX, chunkZ) -> {
