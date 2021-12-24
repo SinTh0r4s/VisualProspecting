@@ -90,6 +90,10 @@ public class DimensionAnalysis {
 
     private void executeForEachGeneratedOreChunk(File regionFile, IChunkHandler chunkHandler) {
         try {
+            if ( regionFile.getName().contains("(")) {
+                VP.warn("Invalid region file found! " + regionFile.getName() + " continuing");
+                return;
+            }
             final String[] parts = regionFile.getName().split("\\.");
             final int regionChunkX = Integer.parseInt(parts[1]) << 5;
             final int regionChunkZ = Integer.parseInt(parts[2]) << 5;
