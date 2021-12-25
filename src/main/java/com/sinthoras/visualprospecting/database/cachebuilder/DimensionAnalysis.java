@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
 
 public class DimensionAnalysis {
@@ -90,7 +92,7 @@ public class DimensionAnalysis {
 
     private void executeForEachGeneratedOreChunk(File regionFile, IChunkHandler chunkHandler) {
         try {
-            if ( regionFile.getName().contains("(")) {
+            if ( !Pattern.matches("^r\\.-?\\d+\\.-?\\d+.mca$", regionFile.getName())) {
                 VP.warn("Invalid region file found! " + regionFile.getName() + " continuing");
                 return;
             }
