@@ -92,8 +92,8 @@ public class DimensionAnalysis {
 
     private void executeForEachGeneratedOreChunk(File regionFile, IChunkHandler chunkHandler) {
         try {
-            if ( !Pattern.matches("^r\\.-?\\d+\\.-?\\d+.mca$", regionFile.getName())) {
-                VP.warn("Invalid region file found! " + regionFile.getName() + " continuing");
+            if ( !Pattern.matches("^r\\.-?\\d+\\.-?\\d+\\.mca$", regionFile.getName())) {
+                VP.warn("Invalid region file found! " + regionFile.getCanonicalPath() + " continuing");
                 return;
             }
             final String[] parts = regionFile.getName().split("\\.");
