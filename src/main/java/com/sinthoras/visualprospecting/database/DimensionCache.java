@@ -90,7 +90,7 @@ public class DimensionCache {
                         chunks[offsetChunkX][offsetChunkZ] = undergroundFluidsBuffer.getInt();
                     }
                 }
-                undergroundFluids.put(getOreVeinKey(chunkX, chunkZ), new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, fluid, chunks));
+                undergroundFluids.put(getUndergroundFluidKey(chunkX, chunkZ), new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, fluid, chunks));
             }
         }
     }
