@@ -44,7 +44,7 @@ public class ProspectorsLog extends Item {
             else {
                 final int random = VP.randomGeneration.nextInt(1000);
                 if(random < 5) {
-                    final String localizationKey = "visualprospecting.prospectorslog.creation.fail" + random;
+                    final String localizationKey = "item.visualprospecting.prospectorslog.creation.fail" + random;
                     final IChatComponent notification = new ChatComponentTranslation(localizationKey);
                     notification.getChatStyle().setItalic(true);
                     notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
@@ -52,7 +52,7 @@ public class ProspectorsLog extends Item {
                     player.destroyCurrentEquippedItem();
                 }
                 else {
-                    final IChatComponent notification = new ChatComponentTranslation("visualprospecting.prospectorslog.creation.begin");
+                    final IChatComponent notification = new ChatComponentTranslation("item.visualprospecting.prospectorslog.creation.begin");
                     notification.getChatStyle().setItalic(true);
                     notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
                     player.addChatMessage(notification);
@@ -65,7 +65,7 @@ public class ProspectorsLog extends Item {
             if(authorUuid.equals(player.getPersistentID().toString()) == false) {
                 final int random = VP.randomGeneration.nextInt(TransferCache.instance.isClientDataAvailable(authorUuid) ? 1000 : 5);
                 if(random < 5) {
-                    final String localizationKey = "visualprospecting.prospectorslog.reading.fail" + random;
+                    final String localizationKey = "item.visualprospecting.prospectorslog.reading.fail" + random;
                     final IChatComponent notification = new ChatComponentTranslation(localizationKey);
                     notification.getChatStyle().setItalic(true);
                     notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
@@ -73,7 +73,7 @@ public class ProspectorsLog extends Item {
                     player.destroyCurrentEquippedItem();
                 }
                 else {
-                    final IChatComponent notification = new ChatComponentTranslation("visualprospecting.prospectorslog.reading.begin");
+                    final IChatComponent notification = new ChatComponentTranslation("item.visualprospecting.prospectorslog.reading.begin");
                     notification.getChatStyle().setItalic(true);
                     notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
                     player.addChatMessage(notification);
@@ -93,10 +93,10 @@ public class ProspectorsLog extends Item {
     public void addInformation(ItemStack item, EntityPlayer player, List infoList, boolean ignored) {
         if(isFilledLog(item)) {
             final NBTTagCompound compound = item.getTagCompound();
-            infoList.add(I18n.format("visualprospecting.prospectorslog.author", compound.getString(Tags.PROSPECTORSLOG_AUTHOR)));
+            infoList.add(I18n.format("item.visualprospecting.prospectorslog.author", compound.getString(Tags.PROSPECTORSLOG_AUTHOR)));
         }
         else {
-            infoList.add(I18n.format("visualprospecting.prospectorslog.empty"));
+            infoList.add(I18n.format("item.visualprospecting.prospectorslog.empty"));
         }
     }
 
