@@ -85,11 +85,6 @@ public class ProspectorsLog extends Item {
     }
 
     @Override
-    public String getItemStackDisplayName(ItemStack item) {
-        return I18n.format("visualprospecting.prospectorslog.name");
-    }
-
-    @Override
     public void addInformation(ItemStack item, EntityPlayer player, List infoList, boolean ignored) {
         if(isFilledLog(item)) {
             final NBTTagCompound compound = item.getTagCompound();
