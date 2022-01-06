@@ -1,33 +1,101 @@
 package com.sinthoras.visualprospecting.database.cachebuilder;
 
+import com.sinthoras.visualprospecting.Config;
 import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.database.ServerCache;
+import com.sinthoras.visualprospecting.database.veintypes.VeinType;
 import io.xol.enklume.MinecraftRegion;
 import io.xol.enklume.MinecraftWorld;
 import io.xol.enklume.nbt.NBTCompound;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
 
 public class DimensionAnalysis {
 
     public final int dimensionId;
-    private final Map<Long, DetailedChunkAnalysis> chunksForSecondIdentificationPass = new HashMap<>();
 
     public DimensionAnalysis(int dimensionId) {
         this.dimensionId = dimensionId;
     }
 
-    public void processMinecraftWorld(MinecraftWorld world) throws IOException, DataFormatException {
-        final Map<Long, Integer> veinBlockY = new HashMap<>();
+    private interface IChunkHandler {
+        void processChunk(NBTCompound root, int chunkX, int chunkZ);
+    }
+
+    public void processMinecraftWorld(MinecraftWorld world) throws IOException {
+        final Map<Long, Integer> veinBlockY = new ConcurrentHashMap<>();
         final List<File> regionFiles = world.getAllRegionFiles(dimensionId);
-        AnalysisProgressTracker.setNumberOfRegionFiles(regionFiles.size());
-        for (File regionFile : regionFiles) {
+        final long dimensionSizeMB = regionFiles.stream().mapToLong(File::length).sum() >> 20;
+
+        if (dimensionSizeMB <= Config.maxDimensionSizeMBForFastScanning) {
+            AnalysisProgressTracker.announceFastDimension(dimensionId);
+            AnalysisProgressTracker.setNumberOfRegionFiles(regionFiles.size());
+
+            final Map<Long, DetailedChunkAnalysis> chunksForSecondIdentificationPass = new ConcurrentHashMap<>();
+
+            regionFiles.parallelStream().forEach(regionFile -> {
+                executeForEachGeneratedOreChunk(regionFile, (root, chunkX, chunkZ) -> {
+                    final ChunkAnalysis chunk = new ChunkAnalysis();
+                    chunk.processMinecraftChunk(root);
+
+                    if (chunk.matchesSingleVein()) {
+                        ServerCache.instance.notifyOreVeinGeneration(dimensionId, chunkX, chunkZ, chunk.getMatchedVein());
+                        veinBlockY.put(Utils.chunkCoordsToKey(chunkX, chunkZ), chunk.getVeinBlockY());
+                    } else {
+                        final DetailedChunkAnalysis detailedChunk = new DetailedChunkAnalysis(dimensionId, chunkX, chunkZ);
+                        detailedChunk.processMinecraftChunk(root);
+                        chunksForSecondIdentificationPass.put(Utils.chunkCoordsToKey(chunkX, chunkZ), detailedChunk);
+                    }
+                });
+            });
+
+            chunksForSecondIdentificationPass.values().parallelStream().forEach(chunk -> {
+                chunk.cleanUpWithNeighbors(veinBlockY);
+                ServerCache.instance.notifyOreVeinGeneration(dimensionId, chunk.chunkX, chunk.chunkZ, chunk.getMatchedVein());
+            });
+        } else {
+            AnalysisProgressTracker.announceSlowDimension(dimensionId);
+            AnalysisProgressTracker.setNumberOfRegionFiles(regionFiles.size() * 2);
+
+            regionFiles.parallelStream().forEach(regionFile -> {
+                executeForEachGeneratedOreChunk(regionFile, (root, chunkX, chunkZ) -> {
+                    final ChunkAnalysis chunk = new ChunkAnalysis();
+                    chunk.processMinecraftChunk(root);
+
+                    if (chunk.matchesSingleVein()) {
+                        ServerCache.instance.notifyOreVeinGeneration(dimensionId, chunkX, chunkZ, chunk.getMatchedVein());
+                        veinBlockY.put(Utils.chunkCoordsToKey(chunkX, chunkZ), chunk.getVeinBlockY());
+                    }
+                });
+            });
+
+            regionFiles.parallelStream().forEach(regionFile -> {
+                executeForEachGeneratedOreChunk(regionFile, (root, chunkX, chunkZ) -> {
+                    if (ServerCache.instance.getOreVein(dimensionId, chunkX, chunkZ).veinType == VeinType.NO_VEIN) {
+                        final DetailedChunkAnalysis detailedChunk = new DetailedChunkAnalysis(dimensionId, chunkX, chunkZ);
+                        detailedChunk.processMinecraftChunk(root);
+                        detailedChunk.cleanUpWithNeighbors(veinBlockY);
+                        ServerCache.instance.notifyOreVeinGeneration(dimensionId, detailedChunk.chunkX, detailedChunk.chunkZ, detailedChunk.getMatchedVein());
+                    }
+                });
+            });
+        }
+    }
+
+    private void executeForEachGeneratedOreChunk(File regionFile, IChunkHandler chunkHandler) {
+        try {
+            if ( !Pattern.matches("^r\\.-?\\d+\\.-?\\d+\\.mca$", regionFile.getName())) {
+                VP.warn("Invalid region file found! " + regionFile.getCanonicalPath() + " continuing");
+                return;
+            }
             final String[] parts = regionFile.getName().split("\\.");
             final int regionChunkX = Integer.parseInt(parts[1]) << 5;
             final int regionChunkZ = Integer.parseInt(parts[2]) << 5;
@@ -44,29 +112,15 @@ public class DimensionAnalysis {
 
                         // root == null occurs when a chunk is not yet generated
                         if (root != null) {
-                            final ChunkAnalysis chunk = new ChunkAnalysis();
-                            chunk.processMinecraftChunk(root);
-
-                            if (chunk.matchesSingleVein()) {
-                                ServerCache.instance.notifyOreVeinGeneration(dimensionId, chunkX, chunkZ, chunk.getMatchedVein());
-                                veinBlockY.put(Utils.chunkCoordsToKey(chunkX, chunkZ), chunk.getVeinBlockY());
-                            } else {
-                                final DetailedChunkAnalysis detailedChunk = new DetailedChunkAnalysis(dimensionId, chunkX, chunkZ);
-                                detailedChunk.processMinecraftChunk(root);
-                                chunksForSecondIdentificationPass.put(Utils.chunkCoordsToKey(chunkX, chunkZ), detailedChunk);
-                            }
+                            chunkHandler.processChunk(root, chunkX, chunkZ);
                         }
                     }
                 }
             }
             region.close();
             AnalysisProgressTracker.regionFileProcessed();
-        }
-
-        for(long key : chunksForSecondIdentificationPass.keySet()) {
-            final DetailedChunkAnalysis chunk = chunksForSecondIdentificationPass.get(key);
-            chunk.cleanUpWithNeighbors(veinBlockY);
-            ServerCache.instance.notifyOreVeinGeneration(dimensionId, chunk.chunkX, chunk.chunkZ, chunk.getMatchedVein());
+        } catch (DataFormatException | IOException e) {
+            AnalysisProgressTracker.notifyCorruptFile(regionFile);
         }
     }
 }

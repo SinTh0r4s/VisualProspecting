@@ -5,17 +5,8 @@ import com.google.gson.reflect.TypeToken;
 import com.sinthoras.visualprospecting.hooks.HooksClient;
 
 import cpw.mods.fml.common.Loader;
-import gregtech.GT_Mod;
-import gregtech.api.objects.GT_UO_Dimension;
-import gregtech.api.objects.GT_UO_Fluid;
-import gregtech.api.objects.XSTR;
-import gregtech.common.GT_UndergroundOil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -28,9 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static gregtech.api.objects.XSTR.XSTR_INSTANCE;
-import static gregtech.common.GT_Proxy.*;
 
 public class Utils {
 

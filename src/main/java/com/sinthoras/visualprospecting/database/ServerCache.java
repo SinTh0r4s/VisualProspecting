@@ -5,6 +5,7 @@ import com.sinthoras.visualprospecting.Tags;
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.database.veintypes.VeinType;
 import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
+import com.sinthoras.visualprospecting.integration.gregtech.UndergroundFluidsWrapper;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -12,8 +13,6 @@ import net.minecraftforge.fluids.FluidStack;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import static gregtech.common.GT_UndergroundOil.undergroundOil;
 
 public class ServerCache extends WorldCache {
 
@@ -23,7 +22,7 @@ public class ServerCache extends WorldCache {
         return Utils.getSubDirectory(Tags.SERVER_DIR);
     }
 
-    public void notifyOreVeinGeneration(int dimensionId, int chunkX, int chunkZ, final VeinType veinType) {
+    public synchronized void notifyOreVeinGeneration(int dimensionId, int chunkX, int chunkZ, final VeinType veinType) {
         if(veinType != VeinType.NO_VEIN) {
             super.putOreVein(new OreVeinPosition(dimensionId, chunkX, chunkZ, veinType));
         }
@@ -80,7 +79,7 @@ public class ServerCache extends WorldCache {
                 Fluid fluid = null;
                 for (int offsetChunkX = 0; offsetChunkX < VP.undergroundFluidSizeChunkX; offsetChunkX++) {
                     for (int offsetChunkZ = 0; offsetChunkZ < VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
-                        final FluidStack prospectedFluid = undergroundOil(world, chunkX + offsetChunkX, chunkZ + offsetChunkZ, -1);
+                        final FluidStack prospectedFluid = UndergroundFluidsWrapper.prospectFluid(world, chunkX + offsetChunkX, chunkZ + offsetChunkZ);
                         if (prospectedFluid != null) {
                             fluid = prospectedFluid.getFluid();
                             chunks[offsetChunkX][offsetChunkZ] = prospectedFluid.amount;

@@ -1,13 +1,8 @@
 dependencies {
     shadowImplementation("com.github.SinTh0r4s:Enklume:master-SNAPSHOT")
 
-    compile("com.github.GTNewHorizons:GT5-Unofficial:master-SNAPSHOT:dev") {
-        transitive = false
-        setChanging(true)
-    }
-    compile("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")  // GT5U Dependency
-    compile("com.github.GTNewHorizons:StructureLib:master-SNAPSHOT:dev")
-    compile("com.github.GTNewHorizons:NotEnoughItems:master-SNAPSHOT:dev")
+
+    compile("com.github.GTNewHorizons:GT5-Unofficial:master-SNAPSHOT:dev")
     compile("com.github.GTNewHorizons:TCNodeTracker:master-SNAPSHOT:dev")
 
     compile("curse.maven:journeymap-32274:2367915")
@@ -18,10 +13,10 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:IFU:master-SNAPSHOT:dev") {
         transitive = false
     }
-    compileOnly("com.github.GTNewHorizons:GalacticGregGT5:1.0.3") {
+    compileOnly("com.github.GTNewHorizons:GalacticGregGT5:master-SNAPSHOT:dev") {
         transitive = false
     }
-    compileOnly("com.github.GTNewHorizons:bartworks:0.5.24") {
+    compileOnly("com.github.GTNewHorizons:bartworks:master-SNAPSHOT:dev") {
         transitive = false
     }
 }

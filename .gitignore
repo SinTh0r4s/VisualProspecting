@@ -28,3 +28,4 @@ whitelist.json
 src/main/resources/mixins.*.json
 dependencies/voxelmap*.jar
 /data/
+*.bat

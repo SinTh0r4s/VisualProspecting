@@ -48,7 +48,7 @@ public class SnapshotDownloadTask implements ITask {
             VP.network.sendTo(packet, player);
 
             if(listsEmpty()) {
-                final IChatComponent notification = new ChatComponentTranslation("visualprospecting.prospectorslog.reading.end", player.getDisplayName());
+                final IChatComponent notification = new ChatComponentTranslation("item.visualprospecting.prospectorslog.reading.end", player.getDisplayName());
                 notification.getChatStyle().setItalic(true);
                 notification.getChatStyle().setColor(EnumChatFormatting.GRAY);
                 player.addChatMessage(notification);

@@ -4,6 +4,7 @@ import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.Utils;
 import com.sinthoras.visualprospecting.database.veintypes.VeinType;
 import com.sinthoras.visualprospecting.database.veintypes.VeinTypeCaching;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
@@ -18,12 +19,10 @@ public class DimensionCache {
         New
     }
 
-    private final Map<Long, OreVeinPosition> oreChunks = new HashMap<>();
-    private final Map<Long, UndergroundFluidPosition> undergroundFluids = new HashMap<>();
-    private final Set<Long> changedOrNewOreChunks = new HashSet<>();
-    private final Set<Long> changedOrNewUndergroundFluids = new HashSet<>();
-    private boolean oreChunksNeedsSaving = false;
-    private boolean undergroundFluidsNeedsSaving = false;
+    private final Map<ChunkCoordIntPair, OreVeinPosition> oreChunks = new HashMap<>();
+    private final Map<ChunkCoordIntPair, UndergroundFluidPosition> undergroundFluids = new HashMap<>();
+    private final Set<ChunkCoordIntPair> changedOrNewOreChunks = new HashSet<>();
+    private final Set<ChunkCoordIntPair> changedOrNewUndergroundFluids = new HashSet<>();
     public final int dimensionId;
 
     public DimensionCache(int dimensionId) {
@@ -31,18 +30,17 @@ public class DimensionCache {
     }
 
     public ByteBuffer saveOreChunks() {
-        if(oreChunksNeedsSaving) {
-            final ByteBuffer byteBuffer = ByteBuffer.allocate(changedOrNewOreChunks.size() * (Long.BYTES + Short.BYTES));
-            for (long key : changedOrNewOreChunks) {
-                byteBuffer.putLong(key);
-                final OreVeinPosition oreVeinPosition = oreChunks.get(key);
+        if(changedOrNewOreChunks.isEmpty() == false) {
+            final ByteBuffer byteBuffer = ByteBuffer.allocate(changedOrNewOreChunks.size() * (2 * Integer.BYTES + Short.BYTES));
+            changedOrNewOreChunks.stream().map(oreChunks::get).forEach(oreVeinPosition -> {
+                byteBuffer.putInt(oreVeinPosition.chunkX);
+                byteBuffer.putInt(oreVeinPosition.chunkZ);
                 short veinTypeId = VeinTypeCaching.getVeinTypeId(oreVeinPosition.veinType);
                 if(oreVeinPosition.isDepleted()) {
                     veinTypeId |= 0x8000;
                 }
                 byteBuffer.putShort(veinTypeId);
-            }
-            oreChunksNeedsSaving = false;
+            });
             changedOrNewOreChunks.clear();
             byteBuffer.flip();
             return byteBuffer;
@@ -51,19 +49,18 @@ public class DimensionCache {
     }
 
     public ByteBuffer saveUndergroundFluids() {
-        if(undergroundFluidsNeedsSaving) {
+        if(changedOrNewUndergroundFluids.isEmpty() == false) {
             final ByteBuffer byteBuffer = ByteBuffer.allocate(changedOrNewUndergroundFluids.size() * (Long.BYTES + Integer.BYTES * (1 + VP.undergroundFluidSizeChunkX * VP.undergroundFluidSizeChunkZ)));
-            for (long key : changedOrNewUndergroundFluids) {
-                byteBuffer.putLong(key);
-                final UndergroundFluidPosition undergroundFluid = undergroundFluids.get(key);
-                byteBuffer.putInt(undergroundFluid.fluid.getID());
+            changedOrNewUndergroundFluids.stream().map(undergroundFluids::get).forEach(undergroundFluidPosition -> {
+                byteBuffer.putInt(undergroundFluidPosition.chunkX);
+                byteBuffer.putInt(undergroundFluidPosition.chunkZ);
+                byteBuffer.putInt(undergroundFluidPosition.fluid.getID());
                 for(int offsetChunkX = 0; offsetChunkX < VP.undergroundFluidSizeChunkX; offsetChunkX++) {
                     for (int offsetChunkZ = 0; offsetChunkZ < VP.undergroundFluidSizeChunkZ; offsetChunkZ++) {
-                        byteBuffer.putInt(undergroundFluid.chunks[offsetChunkX][offsetChunkZ]);
+                        byteBuffer.putInt(undergroundFluidPosition.chunks[offsetChunkX][offsetChunkZ]);
                     }
                 }
-            }
-            undergroundFluidsNeedsSaving = false;
+            });
             changedOrNewUndergroundFluids.clear();
             byteBuffer.flip();
             return byteBuffer;
@@ -73,21 +70,19 @@ public class DimensionCache {
 
     public void loadCache(ByteBuffer oreChunksBuffer, ByteBuffer undergroundFluidsBuffer) {
         if(oreChunksBuffer != null) {
-            while (oreChunksBuffer.remaining() >= Long.BYTES + Short.BYTES) {
-                final long key = oreChunksBuffer.getLong();
-                final int chunkX = (int)(key >> 32);
-                final int chunkZ = (int)key;
+            while (oreChunksBuffer.remaining() >= Integer.BYTES * 2 + Short.BYTES) {
+                final int chunkX = oreChunksBuffer.getInt();
+                final int chunkZ = oreChunksBuffer.getInt();
                 final short veinTypeId = oreChunksBuffer.getShort();
                 final boolean depleted = (veinTypeId & 0x8000) > 0;
                 final VeinType veinType = VeinTypeCaching.getVeinType((short)(veinTypeId & 0x7FFF));
-                oreChunks.put(key, new OreVeinPosition(dimensionId, chunkX, chunkZ, veinType, depleted));
+                oreChunks.put(getOreVeinKey(chunkX, chunkZ), new OreVeinPosition(dimensionId, chunkX, chunkZ, veinType, depleted));
             }
         }
         if(undergroundFluidsBuffer != null) {
-            while (undergroundFluidsBuffer.remaining() >= Long.BYTES + Integer.BYTES * (1 + VP.undergroundFluidSizeChunkX * VP.undergroundFluidSizeChunkZ)) {
-                final long key = undergroundFluidsBuffer.getLong();
-                final int chunkX = (int)(key >> 32);
-                final int chunkZ = (int)key;
+            while (undergroundFluidsBuffer.remaining() >= Integer.BYTES * (3 + VP.undergroundFluidSizeChunkX * VP.undergroundFluidSizeChunkZ)) {
+                final int chunkX = undergroundFluidsBuffer.getInt();
+                final int chunkZ = undergroundFluidsBuffer.getInt();
                 final Fluid fluid = FluidRegistry.getFluid(undergroundFluidsBuffer.getInt());
                 final int[][] chunks = new int[VP.undergroundFluidSizeChunkX][VP.undergroundFluidSizeChunkZ];
                 for(int offsetChunkX = 0; offsetChunkX < VP.undergroundFluidSizeChunkX; offsetChunkX++) {
@@ -95,70 +90,65 @@ public class DimensionCache {
                         chunks[offsetChunkX][offsetChunkZ] = undergroundFluidsBuffer.getInt();
                     }
                 }
-                undergroundFluids.put(key, new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, fluid, chunks));
+                undergroundFluids.put(getUndergroundFluidKey(chunkX, chunkZ), new UndergroundFluidPosition(dimensionId, chunkX, chunkZ, fluid, chunks));
             }
         }
     }
 
-    private long getOreVeinKey(int chunkX, int chunkZ) {
-        return Utils.chunkCoordsToKey(Utils.mapToCenterOreChunkCoord(chunkX), Utils.mapToCenterOreChunkCoord(chunkZ));
+    private ChunkCoordIntPair getOreVeinKey(int chunkX, int chunkZ) {
+        return new ChunkCoordIntPair(Utils.mapToCenterOreChunkCoord(chunkX), Utils.mapToCenterOreChunkCoord(chunkZ));
     }
 
     public UpdateResult putOreVein(final OreVeinPosition oreVeinPosition) {
-        final long key = getOreVeinKey(oreVeinPosition.chunkX, oreVeinPosition.chunkZ);
+        final ChunkCoordIntPair key = getOreVeinKey(oreVeinPosition.chunkX, oreVeinPosition.chunkZ);
         if(oreChunks.containsKey(key) == false) {
             oreChunks.put(key, oreVeinPosition);
             changedOrNewOreChunks.add(key);
-            oreChunksNeedsSaving = true;
             return UpdateResult.New;
         }
         final OreVeinPosition storedOreVeinPosition = oreChunks.get(key);
         if(storedOreVeinPosition.veinType != oreVeinPosition.veinType) {
             oreChunks.put(key, oreVeinPosition.joinDepletedState(storedOreVeinPosition));
             changedOrNewOreChunks.add(key);
-            oreChunksNeedsSaving = true;
             return UpdateResult.New;
         }
         return UpdateResult.AlreadyKnown;
     }
 
     public void toggleOreVein(int chunkX, int chunkZ) {
-        final long key = getOreVeinKey(chunkX, chunkZ);
+        final ChunkCoordIntPair key = getOreVeinKey(chunkX, chunkZ);
         if(oreChunks.containsKey(key)) {
             oreChunks.get(key).toggleDepleted();
+            changedOrNewOreChunks.add(key);
         }
-        changedOrNewOreChunks.add(key);
-        oreChunksNeedsSaving = true;
     }
 
     public OreVeinPosition getOreVein(int chunkX, int chunkZ) {
-        final long key = getOreVeinKey(chunkX, chunkZ);
+        final ChunkCoordIntPair key = getOreVeinKey(chunkX, chunkZ);
         return oreChunks.getOrDefault(key, new OreVeinPosition(dimensionId, chunkX, chunkZ, VeinType.NO_VEIN, true));
     }
 
-    private long getUndergroundFluidKey(int chunkX, int chunkZ) {
-        return Utils.chunkCoordsToKey(Utils.mapToCornerUndergroundFluidChunkCoord(chunkX), Utils.mapToCornerUndergroundFluidChunkCoord(chunkZ));
+    private ChunkCoordIntPair getUndergroundFluidKey(int chunkX, int chunkZ) {
+        return new ChunkCoordIntPair(Utils.mapToCornerUndergroundFluidChunkCoord(chunkX), Utils.mapToCornerUndergroundFluidChunkCoord(chunkZ));
     }
 
     public UpdateResult putUndergroundFluid(final UndergroundFluidPosition undergroundFluid) {
-        final long key = getUndergroundFluidKey(undergroundFluid.chunkX, undergroundFluid.chunkZ);
+        final ChunkCoordIntPair key = getUndergroundFluidKey(undergroundFluid.chunkX, undergroundFluid.chunkZ);
         if(undergroundFluids.containsKey(key) == false) {
             changedOrNewUndergroundFluids.add(key);
             undergroundFluids.put(key, undergroundFluid);
-            undergroundFluidsNeedsSaving = true;
             return UpdateResult.New;
         }
         else if(undergroundFluids.get(key).equals(undergroundFluid) == false) {
             changedOrNewUndergroundFluids.add(key);
             undergroundFluids.put(key, undergroundFluid);
-            undergroundFluidsNeedsSaving = true;
             return UpdateResult.Updated;
         }
         return UpdateResult.AlreadyKnown;
     }
 
     public UndergroundFluidPosition getUndergroundFluid(int chunkX, int chunkZ) {
-        final long key = getUndergroundFluidKey(chunkX, chunkZ);
+        final ChunkCoordIntPair key = getUndergroundFluidKey(chunkX, chunkZ);
         return undergroundFluids.getOrDefault(key, UndergroundFluidPosition.getNotProspected(dimensionId, chunkX, chunkZ));
     }
 
