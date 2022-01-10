@@ -5,7 +5,7 @@
 
 ### For Minecraft 1.7.10
 
-This mod is intended for player convenience, but may also be used as API, since it provides the location of all GT ore veins in a cache. VisualProspecting tracks all GT Ore Veins a player has found and visualizes them in JourneyMap and/or XaeroWorldMap (optional, if installed). It also visualizes tracked Thaumcraft aura nodes if TCNodeTracker if installed.
+This mod is intended for player convenience, but may also be used as API, since it provides the location of all GT ore veins in a cache. VisualProspecting tracks all GT Ore Veins a player has found and visualizes them in JourneyMap and/or XaeroWorldMap (optional, if installed). It also visualizes tracked Thaumcraft aura nodes if TCNodeTracker if installed. VoxelMap will add waypoints for prospected ore veins and fluids.
 
 VisualProspecting tracks all ores that a player interacted with, by right or by left click. It also integrates prospecting data from GTs _Advanced Seismic Prospector_, although only books that are created after this mod was added will provide integration.
 You may share your findings with other players by crafting a _Prospector's Log_.
@@ -52,6 +52,7 @@ You may use JourneyMap's Actions Menu to achieve this or type `/visualprospectin
 
 Does VisualProspecting run with other maps? - I runs just fine, but it has no visualization or GUI integration. If you like to add integration into other maps yourself, feel free to contact me or open a Pull Request.
  - [TheLastKumquat](https://github.com/kumquat-ir) integrated XaeroWorldMap and XaeroMiniMap
+ - [glowredman](https://github.com/glowredman) integrated VoxelMap
 
 ### Dependencies
 
@@ -77,6 +78,9 @@ Does VisualProspecting run with other maps? - I runs just fine, but it has no vi
     - Injected class: [_GT_Worldgenerator_Space_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/galacticgreg/GT_Worldgenerator_SpaceMixin.java)
  - [Bartworks](https://github.com/GTNewHorizons/bartworks): Injects a notification call into ore vein generation.
     - Injected class: [_BW_WordGenerator.WorldGenContainer_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/bartworks/WorldGenContainerMixin.java)
+ - [IFU](https://github.com/GTNewHorizons/IFU): Injects a notification call to add found ore veins by the ore finder wand.
+    - Injected class: [_ItemOreFinderTool_](https://github.com/SinTh0r4s/VisualProspecting/blob/master/src/main/java/com/sinthoras/visualprospecting/mixins/ifu/ItemOreFinderToolMixin.java)
+ - [VoxelMap](https://www.curseforge.com/minecraft/mc-mods/voxelmap/files/2462146): Automatically adds waypoints for prospected ore veins and fluids.
 
 ### Add Visual Prospecting as API
 
