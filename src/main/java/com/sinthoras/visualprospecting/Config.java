@@ -17,12 +17,14 @@ public class Config {
         public static final int minZoomLevelForUndergroundFluidDetails = 2;
         public static final int uploadBandwidthBytes = 2000000;
         public static final int maxTransferCacheSizeMB = 50;
+        public static final boolean enableVoxelMapWaypointsByDefault = false;
         public static final int maxDimensionSizeMBForFastScanning = 10000;
     }
 
     private static class Categories {
         public static final String general = "general";
         public static final String network = "network";
+        public static final String integration = "integration";
         public static final String caching = "caching";
     }
 
@@ -37,6 +39,7 @@ public class Config {
     public static double uploadBandwidthBytes = Defaults.uploadBandwidthBytes;
     public static int uploadSizePerPacket = (int)(uploadBandwidthBytes / uploadPacketsPerSecond);
     public static int maxTransferCacheSizeMB = Defaults.maxTransferCacheSizeMB;
+    public static boolean enableVoxelMapWaypointsByDefault = Defaults.enableVoxelMapWaypointsByDefault;
     public static int maxDimensionSizeMBForFastScanning = Defaults.maxDimensionSizeMBForFastScanning;
 
 
@@ -84,6 +87,10 @@ public class Config {
         if(recacheVeins) {
             recacheVeinsProperty.set(false);
         }
+        
+        Property enableVoxelMapWaypointsByDefaultProperty = configuration.get(Categories.integration, "enableVoxelMapWaypointsByDefault", Defaults.enableVoxelMapWaypointsByDefault,
+        		"[CLIENT / VoxelMap] Enable waypoints added by prospecting GT ore veins or underground fluids by default");
+        enableVoxelMapWaypointsByDefault = enableVoxelMapWaypointsByDefaultProperty.getBoolean();
 
         Property maxDimensionSizeMBForFastScanningProperty = configuration.get(Categories.caching, "maxDimensionSizeMBForFastScanning",
                 Defaults.maxDimensionSizeMBForFastScanning, "[Client + Server] Define the maximum size of a " +

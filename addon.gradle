@@ -1,0 +1,37 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'de.undercouch:gradle-download-task:4.1.2'
+    }
+}
+
+import de.undercouch.gradle.tasks.download.Download
+
+def voxelMapFile = file("data/voxelmap_1.7.0b.jar")
+def voxelMapFileDeobf = file("dependencies/voxelmap_1.7.0b-deobf.jar")
+
+task getVoxelMap(type: Download) {
+    onlyIf {
+        !voxelMapFile.exists()
+    }
+    src "https://media.forgecdn.net/files/2462/146/mod_voxelMap_1.7.0b_for_1.7.10.litemod" //direct link to VoxelMap on CurseForge
+    dest voxelMapFile
+    mustRunAfter "deobfBinJar"
+    mustRunAfter "repackMinecraft"
+}
+
+task deobfVoxelMap(dependsOn: getVoxelMap, type: Exec) {
+    onlyIf {
+        !voxelMapFileDeobf.exists()
+    }
+    // VoxelMap uese Notch names, so we have to deobfuscate them
+    // Source for the BON2 version used: https://github.com/glowredman/BON2/tree/Official
+    commandLine 'java', '-jar', 'BON2-2.5.0.CUSTOM-all.jar', '--inputJar', voxelMapFile, '--outputJar', voxelMapFileDeobf, '--mcVer', '1.7.10', '--mappingsVer', 'stable_12-1.7.10', '--notch'
+}
+
+tasks.setupCIWorkspace.dependsOn deobfVoxelMap
+tasks.setupDevWorkspace.dependsOn deobfVoxelMap
+tasks.setupDecompWorkspace.dependsOn deobfVoxelMap
+tasks.compileJava.dependsOn deobfVoxelMap
