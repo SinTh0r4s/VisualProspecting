@@ -1,12 +1,14 @@
 dependencies {
     shadowImplementation("com.github.SinTh0r4s:Enklume:master-SNAPSHOT")
 
+
     compile("com.github.GTNewHorizons:GT5-Unofficial:master-SNAPSHOT:dev")
     compile("com.github.GTNewHorizons:TCNodeTracker:master-SNAPSHOT:dev")
 
     compile("curse.maven:journeymap-32274:2367915")
-    compile files("libs/Xaeros_Minimap_21.10.11_Forge_1.7.10-deobf")
-    compile files("libs/XaerosWorldMap_1.14.1.10_Forge_1.7.10-deobf")
+    compile files("dependencies/Xaeros_Minimap_21.10.14_Forge_1.7.10-deobf.jar")
+    compile files("dependencies/XaerosWorldMap_1.14.1.11_Forge_1.7.10-deobf.jar")
+    compileOnly files("dependencies/voxelmap_1.7.0b-deobf.jar")
 
     compileOnly("com.github.GTNewHorizons:IFU:master-SNAPSHOT:dev") {
         transitive = false

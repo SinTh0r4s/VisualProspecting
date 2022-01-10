@@ -3,6 +3,7 @@ package com.sinthoras.visualprospecting;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sinthoras.visualprospecting.hooks.HooksClient;
+
 import cpw.mods.fml.common.Loader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.launchwrapper.Launch;
@@ -43,6 +44,17 @@ public class Utils {
 
     public static boolean isXaerosWorldMapInstalled() {
         return Loader.isModLoaded("XaeroWorldMap");
+    }
+    
+    public static boolean isVoxelMapInstalled() {
+        try {
+            // If a LiteLoader mod is present cannot be checked by calling Loader#isModLoaded.
+            // Instead, we check if the VoxelMap main class is present.
+            Class.forName("com.thevoxelbox.voxelmap.litemod.LiteModVoxelMap");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public static int coordBlockToChunk(int blockCoord) {

@@ -26,4 +26,6 @@ whitelist.json
 *.ipr
 *.iws
 src/main/resources/mixins.*.json
+dependencies/voxelmap*.jar
+/data/
 *.bat

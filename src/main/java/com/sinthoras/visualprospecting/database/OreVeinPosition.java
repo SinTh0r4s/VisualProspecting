@@ -39,7 +39,7 @@ public class OreVeinPosition {
     }
 
     public boolean isDepleted() {
-        return  depleted;
+        return depleted;
     }
 
     public void toggleDepleted() {
