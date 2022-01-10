@@ -122,7 +122,7 @@ public abstract class FullscreenMixin extends JmUI {
         final int heightBlocks = minecraft.displayHeight >> gridRenderer.getZoom();
         for(LayerManager layerManager : MapState.instance.layers) {
             if(layerManager.isLayerActive()) {
-                layerManager.recacheVisibleElements(centerBlockX, centerBlockZ, widthBlocks, heightBlocks);
+                layerManager.recacheFullscreenMap(centerBlockX, centerBlockZ, widthBlocks, heightBlocks);
             }
         }
 

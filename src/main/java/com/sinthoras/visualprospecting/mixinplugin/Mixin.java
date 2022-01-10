@@ -27,6 +27,7 @@ public enum Mixin {
 
     FullscreenMixin("journeymap.FullscreenMixin", Side.CLIENT, JOURNEYMAP),
     FullscreenActionsMixin("journeymap.FullscreenActionsMixin", Side.CLIENT, JOURNEYMAP),
+    MiniMapMixin("journeymap.MiniMapMixin", Side.CLIENT, JOURNEYMAP),
     RenderWaypointBeaconMixin("journeymap.RenderWaypointBeaconMixin", Side.CLIENT, JOURNEYMAP),
     WaypointManagerMixin("journeymap.WaypointManagerMixin", Side.CLIENT, JOURNEYMAP),
 

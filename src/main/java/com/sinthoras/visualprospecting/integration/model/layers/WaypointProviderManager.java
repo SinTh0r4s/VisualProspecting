@@ -48,15 +48,8 @@ public abstract class WaypointProviderManager extends LayerManager {
 
     protected abstract List<? extends IWaypointAndLocationProvider> generateVisibleElements(int minBlockX, int minBlockZ, int maxBlockX, int maxBlockZ);
 
-    public void recacheVisibleElements(int centerBlockX, int centerBlockZ, int widthBlocks, int heightBlocks) {
-        final int radiusBlockX = (widthBlocks + 1) >> 1;
-        final int radiusBlockZ = (heightBlocks + 1) >> 1;
-
-        final int minBlockX = centerBlockX - radiusBlockX;
-        final int minBlockZ = centerBlockZ - radiusBlockZ;
-        final int maxBlockX = centerBlockX + radiusBlockX;
-        final int maxBlockZ = centerBlockZ + radiusBlockZ;
-
+    @Override
+    protected void checkAndUpdateElements(int minBlockX, int minBlockZ, int maxBlockX, int maxBlockZ) {
         if(forceRefresh || needsRegenerateVisibleElements(minBlockX, minBlockZ, maxBlockX, maxBlockZ)) {
             visibleElements = generateVisibleElements(minBlockX, minBlockZ, maxBlockX, maxBlockZ);
 

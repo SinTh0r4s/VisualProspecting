@@ -18,6 +18,10 @@ public abstract class LayerManager {
     protected boolean forceRefresh = false;
     private List<? extends ILocationProvider> visibleElements = new ArrayList<>();
     protected Map<SupportedMods, LayerRenderer> layerRenderer = new EnumMap<>(SupportedMods.class);
+    private int miniMapWidth = 0;
+    private int miniMapHeight = 0;
+    private int fullscreenMapWidth = 0;
+    private int fullscreenMapHeight = 0;
 
     public LayerManager(ButtonManager buttonManager) {
         this.buttonManager = buttonManager;
@@ -59,15 +63,35 @@ public abstract class LayerManager {
         return true;
     }
 
-    public void recacheVisibleElements(int centerBlockX, int centerBlockZ, int widthBlocks, int heightBlocks) {
-        final int radiusBlockX = (widthBlocks + 1) >> 1;
-        final int radiusBlockZ = (heightBlocks + 1) >> 1;
+    public void recacheMiniMap(int centerBlockX, int centerBlockZ, int blockRadius) {
+        recacheMiniMap(centerBlockX, centerBlockZ, blockRadius, blockRadius);
+    }
+
+    public void recacheMiniMap(int centerBlockX, int centerBlockZ, int blockWidth, int blockHeight) {
+        miniMapWidth = blockWidth;
+        miniMapHeight = blockHeight;
+        recacheVisibleElements(centerBlockX, centerBlockZ);
+    }
+
+    public void recacheFullscreenMap(int centerBlockX, int centerBlockZ, int blockWidth, int blockHeight) {
+        fullscreenMapWidth = blockWidth;
+        fullscreenMapHeight = blockHeight;
+        recacheVisibleElements(centerBlockX, centerBlockZ);
+    }
+
+    private void recacheVisibleElements(int centerBlockX, int centerBlockZ) {
+        final int radiusBlockX = (Math.max(miniMapWidth, fullscreenMapWidth) + 1) >> 1;
+        final int radiusBlockZ = (Math.max(miniMapHeight, fullscreenMapHeight) + 1) >> 1;
 
         final int minBlockX = centerBlockX - radiusBlockX;
         final int minBlockZ = centerBlockZ - radiusBlockZ;
         final int maxBlockX = centerBlockX + radiusBlockX;
         final int maxBlockZ = centerBlockZ + radiusBlockZ;
 
+        checkAndUpdateElements(minBlockX, minBlockZ, maxBlockX, maxBlockZ);
+    }
+
+    protected void checkAndUpdateElements(int minBlockX, int minBlockZ, int maxBlockX, int maxBlockZ) {
         if(forceRefresh || needsRegenerateVisibleElements(minBlockX, minBlockZ, maxBlockX, maxBlockZ)) {
             visibleElements = generateVisibleElements(minBlockX, minBlockZ, maxBlockX, maxBlockZ);
             layerRenderer.values().forEach(layer -> layer.updateVisibleElements(visibleElements));

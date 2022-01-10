@@ -111,7 +111,7 @@ public abstract class GuiMapMixin extends ScreenBase {
         for (LayerManager layerManager : MapState.instance.layers) {
             if (layerManager.isLayerActive()) {
                 // +20s are to work around precision loss from casting to int and right-shifting
-                layerManager.recacheVisibleElements((int) cameraX, (int) cameraZ, (int) (mc.displayWidth / scale) + 20, (int) (mc.displayHeight / scale) + 20);
+                layerManager.recacheFullscreenMap((int) cameraX, (int) cameraZ, (int) (mc.displayWidth / scale) + 20, (int) (mc.displayHeight / scale) + 20);
             }
         }
 
