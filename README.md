@@ -1,7 +1,7 @@
 # GregTech5U Add-On: VisualProspecting
 
 [![](https://jitpack.io/v/SinTh0r4s/VisualProspecting.svg)](https://jitpack.io/#SinTh0r4s/VisualProspecting)
-[![](https://github.com/SinTh0r4s/VisualProspecting/actions/workflows/gradle.yml/badge.svg)](https://github.com/SinTh0r4s/VisualProspecting/actions/workflows/gradle.yml)
+[![Build and test](https://github.com/SinTh0r4s/VisualProspecting/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/SinTh0r4s/VisualProspecting/actions/workflows/build-and-test.yml)
 
 ### For Minecraft 1.7.10
 
