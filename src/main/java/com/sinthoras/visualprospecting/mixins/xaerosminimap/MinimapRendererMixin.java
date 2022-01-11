@@ -1,11 +1,13 @@
 package com.sinthoras.visualprospecting.mixins.xaerosminimap;
 
+import com.sinthoras.visualprospecting.VP;
 import com.sinthoras.visualprospecting.integration.model.MapState;
 import com.sinthoras.visualprospecting.integration.model.layers.LayerManager;
 import com.sinthoras.visualprospecting.integration.xaeroworldmap.XaeroWorldMapState;
 import com.sinthoras.visualprospecting.integration.xaeroworldmap.renderers.LayerRenderer;
 import com.sinthoras.visualprospecting.integration.xaeroworldmap.rendersteps.RenderStep;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import xaero.common.XaeroMinimapSession;
 import xaero.common.minimap.MinimapProcessor;
 import xaero.common.minimap.render.MinimapRenderer;
-import xaero.common.minimap.render.MinimapRendererHelper;
 import xaero.common.settings.ModSettings;
 
 import java.util.ArrayList;
@@ -27,9 +28,11 @@ import java.util.ArrayList;
 @Mixin(value = MinimapRenderer.class, remap = false)
 public class MinimapRendererMixin {
 
+    @Unique private boolean stencilEnabled = true;
+
     @Shadow protected Minecraft mc;
 
-    @Shadow protected MinimapRendererHelper helper;
+    @Shadow protected double zoom;
 
     @Inject(method = "renderMinimap",
             at = @At(value = "INVOKE",
@@ -46,27 +49,30 @@ public class MinimapRendererMixin {
         for (LayerManager layerManager : MapState.instance.layers) {
             if (layerManager.isLayerActive()) {
                 if (circleShape) {
-                    layerManager.recacheMiniMap((int) mc.thePlayer.posX, (int) mc.thePlayer.posZ, minimapFrameSize);
+                    layerManager.recacheMiniMap((int) mc.thePlayer.posX, (int) mc.thePlayer.posZ, minimapFrameSize * 2);
                 }
                 else {
-                    layerManager.recacheMiniMap((int) mc.thePlayer.posX, (int) mc.thePlayer.posZ, minimapFrameSize, minimapFrameSize);
+                    layerManager.recacheMiniMap((int) mc.thePlayer.posX, (int) mc.thePlayer.posZ, minimapFrameSize * 2, minimapFrameSize * 2);
                 }
             }
         }
 
-        GL11.glPushMatrix();
-        GL11.glEnable(GL11.GL_STENCIL_TEST);
-        GL11.glRotated(Math.toDegrees(angle) + 90, 0.0, 0.0, 1.0);
-        GL11.glStencilFunc(GL11.GL_EQUAL, 1, 1);
-        for (LayerRenderer renderer : XaeroWorldMapState.instance.renderers) {
-            if (renderer.isLayerActive() && mc.currentScreen != null) {
-                for (RenderStep renderStep : renderer.getRenderSteps()) {
-                    renderStep.draw(mc.currentScreen, playerX, playerZ, scale);
+        if (stencilEnabled) {
+            GL11.glPushMatrix();
+            GL11.glEnable(GL11.GL_STENCIL_TEST);
+            GL11.glRotated(Math.toDegrees(angle) - 90, 0.0, 0.0, 1.0);
+            GL11.glScaled(zoom, zoom, 0);
+            GL11.glStencilFunc(GL11.GL_EQUAL, 1, 1);
+            for (LayerRenderer renderer : XaeroWorldMapState.instance.renderers) {
+                if (renderer.isLayerActive()) {
+                    for (RenderStep renderStep : renderer.getRenderSteps()) {
+                        renderStep.draw(null, playerX, playerZ, scale);
+                    }
                 }
             }
+            GL11.glDisable(GL11.GL_STENCIL_TEST);
+            GL11.glPopMatrix();
         }
-        GL11.glDisable(GL11.GL_STENCIL_TEST);
-        GL11.glPopMatrix();
     }
 
     @Inject(method = "renderMinimap",
@@ -80,6 +86,11 @@ public class MinimapRendererMixin {
             )
     )
     private void injectBeginStencil(XaeroMinimapSession minimapSession, MinimapProcessor minimap, int x, int y, int width, int height, int scale, int size, float partial, CallbackInfo ci) {
+        if (stencilEnabled && MinecraftForgeClient.getStencilBits() == 0) {
+            stencilEnabled = false;
+            VP.warn("Could not enable stencils! Xaero's minimap overlays will not render");
+        }
+        // if stencil is not enabled, this code will do nothing
         GL11.glEnable(GL11.GL_STENCIL_TEST);
         GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 1);
         GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);

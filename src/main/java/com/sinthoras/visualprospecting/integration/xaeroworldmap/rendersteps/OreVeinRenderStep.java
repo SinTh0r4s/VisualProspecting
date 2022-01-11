@@ -13,6 +13,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class OreVeinRenderStep implements InteractableRenderStep {
     }
 
     @Override
-    public void draw(GuiScreen gui, double cameraX, double cameraZ, double scale) {
+    public void draw(@Nullable GuiScreen gui, double cameraX, double cameraZ, double scale) {
         final double iconSizeHalf = iconSize / 2;
         final double scaleForGui = Math.max(1, scale);
         iconX = (oreVeinLocation.getBlockX() - 0.5 - cameraX) * scaleForGui - iconSizeHalf;
@@ -50,7 +51,7 @@ public class OreVeinRenderStep implements InteractableRenderStep {
             }
         }
 
-        if (scale >= Utils.journeyMapScaleToLinear(Config.minZoomLevelForOreLabel) && !oreVeinLocation.isDepleted()) {
+        if (gui != null && scale >= Utils.journeyMapScaleToLinear(Config.minZoomLevelForOreLabel) && !oreVeinLocation.isDepleted()) {
             final int fontColor = oreVeinLocation.drawSearchHighlight() ? 0xFFFFFFFF : 0xFF7F7F7F;
             String text = I18n.format(oreVeinLocation.getName());
             DrawUtils.drawSimpleLabel(gui, text, 0, -iconSizeHalf - gui.mc.fontRenderer.FONT_HEIGHT - 5, fontColor, 0xB4000000, true);

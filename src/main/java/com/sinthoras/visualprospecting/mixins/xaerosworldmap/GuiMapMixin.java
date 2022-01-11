@@ -82,7 +82,7 @@ public abstract class GuiMapMixin extends ScreenBase {
                                  double oldMousePosZ, double preScale, double fboScale, double secondaryScale, double mousePosX, double mousePosZ, int mouseFromCentreX,
                                  int mouseFromCentreY, double oldMousePosX, int textureLevel, int leveledRegionShift) {
         // snap the camera to whole pixel values. works around a rendering issue but causes another when framerate is uncapped
-        if (mc.gameSettings.limitFramerate >= 255 && !mc.gameSettings.enableVsync) {
+        if (mc.gameSettings.limitFramerate < 255 || mc.gameSettings.enableVsync) {
             cameraX = Math.round(cameraX * scale) / scale;
             cameraZ = Math.round(cameraZ * scale) / scale;
         }

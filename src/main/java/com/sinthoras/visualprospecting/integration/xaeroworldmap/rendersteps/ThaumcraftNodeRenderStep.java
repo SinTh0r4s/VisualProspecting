@@ -11,6 +11,8 @@ import org.lwjgl.opengl.GL11;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.client.lib.UtilsFX;
 
+import javax.annotation.Nullable;
+
 public class ThaumcraftNodeRenderStep implements InteractableRenderStep {
 
     private static final ResourceLocation markedTextureLocation = new ResourceLocation(Tags.MODID, "textures/node_marked.png");
@@ -27,7 +29,7 @@ public class ThaumcraftNodeRenderStep implements InteractableRenderStep {
     }
 
     @Override
-    public void draw(GuiScreen gui, double cameraX, double cameraZ, double scale) {
+    public void draw(@Nullable GuiScreen gui, double cameraX, double cameraZ, double scale) {
         final double borderSize = 44;
         final double borderSizeHalf = borderSize / 2;
         final double scaleForGui = Math.max(0.5, scale);
