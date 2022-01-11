@@ -29,7 +29,7 @@ import xaero.map.gui.GuiMap;
 import xaero.map.gui.ScreenBase;
 import xaero.map.misc.Misc;
 
-@SuppressWarnings({"MixinAnnotationTarget", "UnresolvedMixinReference"})
+@SuppressWarnings({"MixinAnnotationTarget", "UnresolvedMixinReference", "UnusedMixin"})
 @Mixin(value = GuiMap.class, remap = false)
 public abstract class GuiMapMixin extends ScreenBase {
 
@@ -81,9 +81,11 @@ public abstract class GuiMapMixin extends ScreenBase {
                                  int direction, Object var12, boolean mapLoaded, boolean noWorldMapEffect, int mouseXPos, int mouseYPos, double scaleMultiplier,
                                  double oldMousePosZ, double preScale, double fboScale, double secondaryScale, double mousePosX, double mousePosZ, int mouseFromCentreX,
                                  int mouseFromCentreY, double oldMousePosX, int textureLevel, int leveledRegionShift) {
-        // snap the camera to whole pixel values. works around a rendering issue
-        cameraX = Math.round(cameraX * scale) / scale;
-        cameraZ = Math.round(cameraZ * scale) / scale;
+        // snap the camera to whole pixel values. works around a rendering issue but causes another when framerate is uncapped
+        if (mc.gameSettings.limitFramerate >= 255 && !mc.gameSettings.enableVsync) {
+            cameraX = Math.round(cameraX * scale) / scale;
+            cameraZ = Math.round(cameraZ * scale) / scale;
+        }
 
         for (LayerRenderer layer : XaeroWorldMapState.instance.renderers) {
             if (layer instanceof InteractableLayerRenderer) {
@@ -99,13 +101,13 @@ public abstract class GuiMapMixin extends ScreenBase {
                     ordinal = 1,
                     shift = At.Shift.AFTER
             ), slice = @Slice(
-            from = @At(value = "INVOKE",
-                    target = "Lorg/lwjgl/opengl/GL14;glBlendFuncSeparate(IIII)V"
-            ),
-            to = @At(value = "INVOKE",
-                    target = "Lxaero/map/mods/SupportXaeroMinimap;renderWaypoints(Lnet/minecraft/client/gui/GuiScreen;DDIIDDDDLjava/util/regex/Pattern;Ljava/util/regex/Pattern;FLxaero/map/mods/gui/Waypoint;Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/gui/ScaledResolution;)Lxaero/map/mods/gui/Waypoint;"
+                    from = @At(value = "INVOKE",
+                            target = "Lorg/lwjgl/opengl/GL14;glBlendFuncSeparate(IIII)V"
+                    ),
+                    to = @At(value = "INVOKE",
+                            target = "Lxaero/map/mods/SupportXaeroMinimap;renderWaypoints(Lnet/minecraft/client/gui/GuiScreen;DDIIDDDDLjava/util/regex/Pattern;Ljava/util/regex/Pattern;FLxaero/map/mods/gui/Waypoint;Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/gui/ScaledResolution;)Lxaero/map/mods/gui/Waypoint;"
+                    )
             )
-    )
     )
     private void injectDraw(int scaledMouseX, int scaledMouseY, float partialTicks, CallbackInfo ci) {
         for (LayerManager layerManager : MapState.instance.layers) {
