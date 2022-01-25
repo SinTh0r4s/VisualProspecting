@@ -6,6 +6,8 @@ import com.sinthoras.visualprospecting.integration.model.locations.UndergroundFl
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
+
 public class UndergroundFluidRenderStep implements RenderStep {
 
     private final UndergroundFluidLocation undergroundFluidLocation;
@@ -15,7 +17,7 @@ public class UndergroundFluidRenderStep implements RenderStep {
     }
 
     @Override
-    public void draw(GuiScreen gui, double cameraX, double cameraZ, double scale) {
+    public void draw(@Nullable GuiScreen gui, double cameraX, double cameraZ, double scale) {
         final int maxAmountInField = undergroundFluidLocation.getMaxProduction();
         // < 0.5 scale is when scaling issues show up
         if (maxAmountInField > 0 && scale >= 0.5) {
@@ -31,7 +33,7 @@ public class UndergroundFluidRenderStep implements RenderStep {
             DrawUtils.drawGradientRect(0, 2, 2, lenZ + 2, 0, borderColor, borderColor);
 
             // min scale that journeymap can go to
-            if (scale >= 1) {
+            if (scale >= 1 && gui != null) {
                 GL11.glScaled(1 / scale, 1 / scale, 1);
                 final String label = undergroundFluidLocation.getMinProduction() + "L - " + maxAmountInField + "L  " + undergroundFluidLocation.getFluid().getLocalizedName();
                 DrawUtils.drawSimpleLabel(gui, label, VP.chunkWidth * scale, 0, 0xFFFFFFFF, 0xB4000000, false);

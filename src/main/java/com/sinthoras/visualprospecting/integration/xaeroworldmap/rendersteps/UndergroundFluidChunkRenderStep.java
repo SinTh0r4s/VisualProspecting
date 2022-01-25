@@ -8,6 +8,8 @@ import com.sinthoras.visualprospecting.integration.model.locations.UndergroundFl
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
+
 public class UndergroundFluidChunkRenderStep implements RenderStep {
     private final UndergroundFluidChunkLocation undergroundFluidChunkLocation;
 
@@ -23,7 +25,7 @@ public class UndergroundFluidChunkRenderStep implements RenderStep {
     }
 
     @Override
-    public void draw(GuiScreen gui, double cameraX, double cameraZ, double scale) {
+    public void draw(@Nullable GuiScreen gui, double cameraX, double cameraZ, double scale) {
         if (undergroundFluidChunkLocation.getFluidAmount() > 0 && scale >= Utils.journeyMapScaleToLinear(Config.minZoomLevelForUndergroundFluidDetails)) {
             GL11.glPushMatrix();
             GL11.glTranslated(undergroundFluidChunkLocation.getBlockX() - 0.5 - cameraX, undergroundFluidChunkLocation.getBlockZ() - 0.5 - cameraZ, 0);
@@ -43,7 +45,9 @@ public class UndergroundFluidChunkRenderStep implements RenderStep {
             }
 
             GL11.glScaled(1 / scale, 1 / scale, 1);
-            DrawUtils.drawSimpleLabel(gui, getFluidAmountFormatted(), 13, 13, 0xFFFFFFFF, 0xB4000000, false);
+            if (gui != null) {
+                DrawUtils.drawSimpleLabel(gui, getFluidAmountFormatted(), 13, 13, 0xFFFFFFFF, 0xB4000000, false);
+            }
             GL11.glPopMatrix();
         }
     }
