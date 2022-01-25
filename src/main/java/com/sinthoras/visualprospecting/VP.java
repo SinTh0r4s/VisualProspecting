@@ -28,6 +28,7 @@ public class VP {
     public static final int chunkHeight = 16;
     public static final int chunkDepth = 16;
     public static final int undergroundFluidChunkProspectingBlockRadius = undergroundFluidSizeChunkX * chunkWidth;
+    public static int uploadSizePerPacketInBytes = 30000; // Larger then 32kB will kick the player!
 
 
     public static void debug(String message) {

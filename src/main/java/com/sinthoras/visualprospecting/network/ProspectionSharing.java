@@ -36,7 +36,7 @@ public class ProspectionSharing implements IMessage {
     }
 
     public int putOreVeins(List<OreVeinPosition> oreVeins) {
-        final int availableBytes = Config.uploadSizePerPacket - bytesUsed;
+        final int availableBytes = VP.uploadSizePerPacketInBytes - bytesUsed;
         final int maxAddedOreVeins = availableBytes / OreVeinPosition.getMaxBytes();
         final int addedOreVeins = Math.min(oreVeins.size(), maxAddedOreVeins);
         this.oreVeins.addAll(oreVeins.subList(0, addedOreVeins));
@@ -45,7 +45,7 @@ public class ProspectionSharing implements IMessage {
     }
 
     public int putOreUndergroundFluids(List<UndergroundFluidPosition> undergroundFluids) {
-        final int availableBytes = Config.uploadSizePerPacket - bytesUsed;
+        final int availableBytes = VP.uploadSizePerPacketInBytes - bytesUsed;
         final int maxAddedUndergroundFluids = availableBytes / UndergroundFluidPosition.BYTES;
         final int addedUndergroundFluids = Math.min(undergroundFluids.size(), maxAddedUndergroundFluids);
         this.undergroundFluids.addAll(undergroundFluids.subList(0, addedUndergroundFluids));
@@ -135,7 +135,7 @@ public class ProspectionSharing implements IMessage {
             final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 
             // Optional todo: Integrate over time for proper checking
-            if(message.getBytes() > Config.uploadSizePerPacket) {
+            if(message.getBytes() > VP.uploadSizePerPacketInBytes) {
                 player.playerNetServerHandler.kickPlayerFromServer("Do not spam the server! Change your VisualProcessing configuration back to the servers!");
             }
             if(message.isFirstMessage) {

@@ -28,16 +28,14 @@ public class Config {
         public static final String caching = "caching";
     }
 
-    public static final int uploadPacketsPerSecond = 10;
-
     public static boolean enableProspecting = Defaults.enableProspecting;
     public static int cacheGenerationLogUpdateMinTime = Defaults.cacheGenerationLogUpdateMinTime;
     public static boolean recacheVeins = Defaults.recacheVeins;
     public static int minDelayBetweenVeinRequests = Defaults.minDelayBetweenVeinRequests;
     public static int minZoomLevelForOreLabel = Defaults.minZoomLevelForOreLabel;
     public static int minZoomLevelForUndergroundFluidDetails = Defaults.minZoomLevelForUndergroundFluidDetails;
-    public static double uploadBandwidthBytes = Defaults.uploadBandwidthBytes;
-    public static int uploadSizePerPacket = (int)(uploadBandwidthBytes / uploadPacketsPerSecond);
+    public static int uploadBandwidthBytes = Defaults.uploadBandwidthBytes;
+    public static int uploadPacketsPerSecond = uploadBandwidthBytes / VP.uploadSizePerPacketInBytes;
     public static int maxTransferCacheSizeMB = Defaults.maxTransferCacheSizeMB;
     public static boolean enableVoxelMapWaypointsByDefault = Defaults.enableVoxelMapWaypointsByDefault;
     public static int maxDimensionSizeMBForFastScanning = Defaults.maxDimensionSizeMBForFastScanning;
@@ -72,8 +70,8 @@ public class Config {
         Property uploadBandwidthProperty = configuration.get(Categories.network, "uploadBandwidth", Defaults.uploadBandwidthBytes,
                 "[CLIENT + SERVER] Limit the bandwidth (in B/s) a client is allowed to transmit when uploading its prospection data." +
                         " If exceeded, the client will be kicked!");
-        uploadBandwidthBytes = uploadBandwidthProperty.getDouble();
-        uploadSizePerPacket = (int)(uploadBandwidthBytes / uploadPacketsPerSecond);
+        uploadBandwidthBytes = uploadBandwidthProperty.getInt();
+        uploadPacketsPerSecond = uploadBandwidthBytes / VP.uploadSizePerPacketInBytes;
 
         Property maxTransferCacheSizeMBProperty = configuration.get(Categories.general, "maxTransferCacheSizeMB",
                 Defaults.maxTransferCacheSizeMB, "[Server] Limit the RAM size in MB of what can players use to" +
