@@ -13,7 +13,7 @@ import java.util.Set;
 
 public abstract class WorldCache {
 
-    protected Map<Integer, DimensionCache> dimensions = new HashMap<>();
+    protected final Map<Integer, DimensionCache> dimensions = new HashMap<>();
     private boolean needsSaving = false;
     protected File oreVeinCacheDirectory;
     protected File undergroundFluidCacheDirectory;
@@ -65,7 +65,7 @@ public abstract class WorldCache {
     }
 
     public void reset() {
-        dimensions = new HashMap<>();
+        dimensions.clear();
         needsSaving = false;
         isLoaded = false;
     }
