@@ -12,7 +12,7 @@ import com.sinthoras.visualprospecting.integration.xaeroworldmap.rendersteps.Ren
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.Entity;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -62,7 +62,7 @@ public abstract class GuiMapMixin extends ScreenBase {
     @Inject(method = "<init>",
             at = @At("RETURN")
     )
-    private void injectConstruct(GuiScreen parent, GuiScreen escape, MapProcessor mapProcessor, EntityPlayer player, CallbackInfo ci) {
+    private void injectConstruct(GuiScreen parent, GuiScreen escape, MapProcessor mapProcessor, Entity player, CallbackInfo ci) {
         MapState.instance.layers.forEach(LayerManager::onOpenMap);
     }
 
